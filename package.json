@@ -18,7 +18,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "redux": "^4.0.0"
   },
   "devDependencies": {
     "webpack": "^4.16.5",
