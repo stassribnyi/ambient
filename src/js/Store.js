@@ -1,18 +1,39 @@
-import { createStore } from 'redux';
+import { combineReducers, createStore } from 'redux';
 import ActionConstants from './ActionConstants';
 
-const reducer = function(state, action) {
-  switch (action.type) {
-    case ActionConstants.INCREMENT:
-      return state + 1;
-    case ActionConstants.DECREMENT:
-      return state - 1;
-    default:
-      return state;
-  }
+const randomize = text => {
+  return `${text}: ${new Date().getSeconds()}`;
 };
 
+const userReducer = function(state = {}, action) {
+  switch (action.type) {
+    case ActionConstants.SET_RANDOM_NAME:
+      state = { ...state, name: randomize('My name is') };
+      break;
+    default:
+      break;
+  }
 
-const store = createStore(reducer, 0);
+  return state;
+};
+
+const infoReducer = function(state = {}, action) {
+  switch (action.type) {
+    case ActionConstants.SET_RANDOM_INFO:
+      state = { ...state, details: randomize('My info is') };
+      break;
+    default:
+      break;
+  }
+
+  return state;
+};
+
+const reducers = combineReducers({
+  user: userReducer,
+  info: infoReducer
+});
+
+const store = createStore(reducers);
 
 export default store;

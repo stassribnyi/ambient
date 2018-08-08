@@ -8,7 +8,8 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      number: 0
+      user: null,
+      info: null
     };
   }
 
@@ -20,27 +21,29 @@ export default class App extends Component {
     this.unsubscribe();
   }
 
-  handleDecrement = () => { 
-      Actions.decrement();
+  handleSetRandomInfo = () => { 
+      Actions.setRandomInfo();
   };
 
-  handleIncrement = () => {
-    Actions.increment();
+  handleSetRandomName = () => {
+    Actions.setRandomName();
   };
 
   render() {
     return (
       <div>
-        <h1>{this.state.number}</h1>
-        <button onClick={this.handleIncrement}>Increment</button>
-        <button onClick={this.handleDecrement}>Decrement</button>
+        <h1>{this.state.user && this.state.user.name}</h1>
+        <h1>{this.state.info && this.state.info.details}</h1>
+        <button onClick={this.handleSetRandomName}>Set random name</button>
+        <button onClick={this.handleSetRandomInfo}>Set random info</button>
       </div>
     );
   }
 
   updateState = () =>  {      
       this.setState({
-          number: store.getState()
+          user: store.getState().user,
+          info: store.getState().info,
       });
   }
 }
