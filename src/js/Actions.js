@@ -1,11 +1,14 @@
-
-import store from './Store';
-import ActionConstants from './ActionConstants';
+import actionConstants from './actionConstants';
 
 export function setRandomName() {
-    store.dispatch({type: ActionConstants.SET_RANDOM_NAME});
+  debugger
+  return {
+    type: actionConstants.SET_RANDOM_NAME
+  };
 }
 
 export function setRandomInfo() {
-    store.dispatch({type: ActionConstants.SET_RANDOM_INFO});
+  return {
+    type: actionConstants.SET_RANDOM_INFO
+  };
 }
