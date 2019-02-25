@@ -1,11 +1,11 @@
 import actionConstants from '../actionConstants';
-import randomize from './randomize';
+import { randomizeFirstName } from './randomize';
 
 export default (state = {}, action) => {
   switch (action.type) {
     case actionConstants.SET_RANDOM_NAME:
-      return { ...state, name: randomize('My name is') };
+      return { ...state, name: `My first name is: ${randomizeFirstName()}` };
     default:
       return state;
   }
-}
+};

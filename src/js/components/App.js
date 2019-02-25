@@ -19,12 +19,29 @@ export default class App extends Component {
   };
 
   render() {
+    const randomName =
+      (this.props.user && this.props.user.name) ||
+      'The magic name will be here!';
+
+    const randomInfo =
+      (this.props.info && this.props.info.details) ||
+      'The magic info will be here!';
+
     return (
-      <div>
-        <h1>{this.props.user && this.props.user.name}</h1>
-        <h1>{this.props.info && this.props.info.details}</h1>
-        <button onClick={this.handleSetRandomName}>Set random name</button>
-        <button onClick={this.handleSetRandomInfo}>Set random info</button>
+      <div className="magic-container">
+        <h1>Magic App (Redux)</h1>
+        <div className="random-text-container">
+          <span className="random-text">{randomName}</span>
+          <span className="random-text">{randomInfo}</span>
+        </div>
+        <div className="btn-container">
+          <button className="magic-btn" onClick={this.handleSetRandomName}>
+            Get magic name
+          </button>
+          <button className="magic-btn" onClick={this.handleSetRandomInfo}>
+            Get magic info
+          </button>
+        </div>
       </div>
     );
   }
