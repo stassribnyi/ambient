@@ -29,7 +29,7 @@ export default class App extends Component {
 
     return (
       <div className="magic-container">
-        <h1>Magic App (Redux)</h1>
+        <h1 className="magic-logo">Magic App (Redux)</h1>
         <div className="random-text-container">
           <span className="random-text">{randomName}</span>
           <span className="random-text">{randomInfo}</span>
