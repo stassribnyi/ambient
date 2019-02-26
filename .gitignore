@@ -9,8 +9,12 @@
 # production
 /build
 
+#serve
+/dist
+
 # misc
 .DS_Store
+.cache
 .env.local
 .env.development.local
 .env.test.local
