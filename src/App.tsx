@@ -2,22 +2,47 @@ import { useEffect, useState } from 'react';
 import { WeatherInfo } from './vite-env';
 
 import './App.css';
-import { getWMOInfo } from './getWMOInfo';
+import { getWMOInfo, getWMOInfoDaily, getWMOInfoHourly } from './getWMOInfo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMagnifyingGlass,
   faWater,
   faWind,
 } from '@fortawesome/free-solid-svg-icons';
+import { addHours, compareAsc, format, isToday, subHours } from 'date-fns';
 
 const DETAILS_QUERY = {
   latitude: 50.4547,
   longitude: 30.5238,
-  current:
-    'temperature_2m,relativehumidity_2m,apparent_temperature,is_day,precipitation_probability,rain,showers,snowfall,weathercode,cloudcover,pressure_msl,surface_pressure,windspeed_10m',
-  hourly:
-    'temperature_2m,relativehumidity_2m,apparent_temperature,precipitation_probability,precipitation,rain',
-  daily: 'weathercode,sunrise,sunset',
+  current: [
+    'temperature_2m',
+    'relativehumidity_2m',
+    'apparent_temperature',
+    'is_day',
+    'precipitation_probability',
+    'rain',
+    'showers',
+    'snowfall',
+    'weathercode',
+    'cloudcover',
+    'pressure_msl',
+    'surface_pressure',
+    'windspeed_10m',
+  ].join(','),
+  hourly: [
+    'temperature_2m',
+    'weathercode',
+    'relativehumidity_2m',
+    'precipitation_probability',
+    'rain',
+  ].join(','),
+  daily: [
+    'weathercode',
+    'sunrise',
+    'sunset',
+    'temperature_2m_max',
+    'temperature_2m_min',
+  ].join(','),
   timezone: 'auto',
 };
 
@@ -56,7 +81,9 @@ function App() {
     const url = new URL('https://api.open-meteo.com/v1/forecast');
 
     const params = url.searchParams;
+    params.set('daily', DETAILS_QUERY.daily);
     params.set('current', DETAILS_QUERY.current);
+    params.set('hourly', DETAILS_QUERY.hourly);
 
     params.set('latitude', `${city.latitude}`);
     params.set('longitude', `${city.longitude}`);
@@ -99,36 +126,6 @@ function App() {
       <div
         style={{
           display: 'flex',
-          gap: '1rem',
-          marginBottom: '1rem',
-        }}
-      >
-        <input
-          value={search}
-          style={{ width: '100%' }}
-          list='city-options'
-          placeholder='What is your city?'
-          onChange={({ target }) => setSearch(target.value)}
-          onKeyDown={(event) => {
-            if (event.code === 'Enter') {
-              handleSearch();
-            }
-          }}
-        />
-        <datalist id='city-options'>
-          {options.map((option) => (
-            <option key={option.id} value={option.name}>
-              {option.name} {option.admin1}
-            </option>
-          ))}
-        </datalist>
-        <button onClick={handleSearch}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </button>
-      </div>
-      <div
-        style={{
-          display: 'flex',
           flexDirection: 'column',
           gap: '2rem',
           alignItems: 'start',
@@ -137,7 +134,8 @@ function App() {
         {weatherInfo && (
           <div
             style={{
-              minWidth: 300,
+              boxSizing: 'border-box',
+              width: '100%',
               padding: '2rem',
               display: 'flex',
               flexDirection: 'column',
@@ -151,7 +149,39 @@ function App() {
               }),
             }}
           >
-            <p style={{ fontSize: '2rem', margin: 0, fontWeight: 700 }}>{city?.name}</p>
+            <div
+              style={{
+                display: 'flex',
+                gap: '2rem',
+                marginBottom: '1rem',
+              }}
+            >
+              <input
+                value={search}
+                style={{ width: '100%' }}
+                list='city-options'
+                placeholder='What is your city?'
+                onChange={({ target }) => setSearch(target.value)}
+                onKeyDown={(event) => {
+                  if (event.code === 'Enter') {
+                    handleSearch();
+                  }
+                }}
+              />
+              <datalist id='city-options'>
+                {options.map((option) => (
+                  <option key={option.id} value={option.name}>
+                    {option.name} {option.admin1}
+                  </option>
+                ))}
+              </datalist>
+              <button onClick={handleSearch}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </button>
+            </div>
+            <p style={{ fontSize: '2rem', margin: 0, fontWeight: 700 }}>
+              {city?.name}
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -190,12 +220,6 @@ function App() {
                 </p>
               </div>
             </div>
-
-            {/* <p>
-            Precipitation: {weatherInfo.current.precipitation_probability}
-            {weatherInfo?.current_units.precipitation_probability}
-          </p> */}
-
             <div
               style={{
                 display: 'flex',
@@ -233,6 +257,80 @@ function App() {
                 <p style={{ fontSize: '0.85rem', margin: 0 }}>Humidity</p>
               </div>
             </div>
+            <ul className='horizontal-scroll '>
+              {weatherInfo.hourly.time
+                .map((t, idx) => ({
+                  idx,
+                  time: new Date(t),
+                }))
+                .filter((slot) => {
+                  const from = subHours(Date.now(), 1);
+                  const to = addHours(from, 12);
+
+                  return (
+                    compareAsc(from, slot.time) - compareAsc(slot.time, to) ===
+                    0
+                  );
+                })
+                .map(({ time, idx }) => (
+                  <li key={idx}>
+                    <div>
+                      <p style={{ margin: 0 }}>{format(time, 'HH:mm')}</p>
+                      <img
+                        src={getWMOInfoHourly(weatherInfo, idx)?.image}
+                        style={{ width: '40px', height: '40px' }}
+                      />
+                      <p style={{ margin: 0 }}>
+                        {weatherInfo.hourly.temperature_2m[idx]}
+                        {weatherInfo.hourly_units.temperature_2m}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+            </ul>
+            <details>
+              <summary style={{ cursor: 'pointer' }}>
+                7 Days Weather Report
+              </summary>
+              <ul style={{ listStyle: 'none', margin: '1rem 0 0', padding: 0 }}>
+                {weatherInfo.daily.time
+                  .map((t, idx) => ({
+                    idx,
+                    time: new Date(t),
+                  }))
+                  .map(({ time, idx }) => (
+                    <li key={idx}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          fontSize: '0.75rem',
+                          // justifyContent: 'space-between',
+                        }}
+                      >
+                        <p style={{ margin: 0 }}>{format(time, 'LLL d')}</p>
+                        <p style={{ margin: 0, width: '38px' }}>
+                          {isToday(time) ? 'Today' : format(time, 'EEE')}
+                        </p>
+                        <img
+                          src={getWMOInfoDaily(weatherInfo, idx)?.image}
+                          style={{ width: '38px', height: '38px' }}
+                        />
+                        <p style={{ margin: 0, width: '60px' }}>
+                          {getWMOInfoDaily(weatherInfo, idx)?.description}
+                        </p>
+                        <p style={{ margin: 0 }}>
+                          {weatherInfo.daily.temperature_2m_max[idx]}
+                          {weatherInfo.daily_units.temperature_2m_max}/
+                          {weatherInfo.daily.temperature_2m_min[idx]}
+                          {weatherInfo.daily_units.temperature_2m_min}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            </details>
           </div>
         )}
 

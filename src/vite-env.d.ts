@@ -61,6 +61,7 @@ export interface HourlyUnits {
   apparent_temperature: string;
   precipitation_probability: string;
   precipitation: string;
+  weathercode: string;
   rain: string;
 }
 
@@ -72,6 +73,7 @@ export interface Hourly {
   precipitation_probability: number[];
   precipitation: number[];
   rain: number[];
+  weathercode: Array<keyof typeof WMO>
 }
 
 export interface DailyUnits {
@@ -79,11 +81,15 @@ export interface DailyUnits {
   weathercode: string;
   sunrise: string;
   sunset: string;
+  temperature_2m_max: string;
+  temperature_2m_min: string;
 }
 
 export interface Daily {
   time: string[];
-  weathercode: number[];
+  weathercode: Array<keyof typeof WMO>;
   sunrise: string[];
   sunset: string[];
+  temperature_2m_max: number[];
+  temperature_2m_min: number[];
 }
