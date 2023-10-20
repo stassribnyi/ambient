@@ -88,6 +88,7 @@ function App() {
     params.set('latitude', `${city.latitude}`);
     params.set('longitude', `${city.longitude}`);
     params.set('timezone', city.timezone);
+    params.set('past_days', '1');
 
     fetch(url.toString())
       .then((resp) => resp.json())
