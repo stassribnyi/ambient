@@ -3,6 +3,8 @@ import { WeatherInfo } from './vite-env';
 
 import './App.css';
 import { getWMOInfo } from './getWMOInfo';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWater, faWind } from '@fortawesome/free-solid-svg-icons';
 
 const query = {
   latitude: '50.4547',
@@ -34,53 +36,124 @@ function App() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem', alignItems: 'start' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem',
+        alignItems: 'start',
+      }}
+    >
       {weatherInfo && (
         <div
           style={{
-            textAlign: 'center',
-            minWidth: 380,
+            minWidth: 300,
+            padding: '2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem',
+            color: '#346284e8',
+            border: '2px solid #346284e8',
 
-            ...(!weatherInfo?.current.is_day && {
+            ...(weatherInfo?.current.is_day && {
               color: 'white',
-              backgroundColor: 'black',
+              backgroundColor: '#346284e8',
             }),
           }}
         >
-          <p>
-            Temperature: {weatherInfo.current.temperature_2m}
-            {weatherInfo?.current_units.temperature_2m}
-          </p>
-          <p>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'start',
+              }}
+            >
+              <p style={{ fontSize: '3.5rem', margin: 0 }}>
+                {weatherInfo.current.temperature_2m}
+                {weatherInfo?.current_units.temperature_2m}
+              </p>
+              <p style={{ fontSize: '0.85rem', margin: 0 }}>
+                Feels like {weatherInfo.current.apparent_temperature}
+                {weatherInfo?.current_units.apparent_temperature}
+              </p>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={getWMOInfo(weatherInfo)?.image}
+                style={{ width: '84px', height: '84px' }}
+              />
+              <p style={{ fontSize: '0.85rem', margin: 0 }}>
+                {getWMOInfo(weatherInfo)?.description}
+              </p>
+            </div>
+          </div>
+
+          {/* <p>
             Precipitation: {weatherInfo.current.precipitation_probability}
             {weatherInfo?.current_units.precipitation_probability}
-          </p>
-          <p>
-            Humidity: {weatherInfo.current.relativehumidity_2m}
-            {weatherInfo?.current_units.relativehumidity_2m}
-          </p>
-          <p>
-            Feels like: {weatherInfo.current.apparent_temperature}
-            {weatherInfo?.current_units.apparent_temperature}
-          </p>
-          <p>
-            Wind speed: {weatherInfo.current.windspeed_10m}
-            {weatherInfo?.current_units.windspeed_10m}
-          </p>
-          <p>{getWMOInfo(weatherInfo)?.description}</p>
-          <img
-            src={getWMOInfo(weatherInfo)?.image}
-            style={{ width: '100px', height: '100px' }}
-          />
+          </p> */}
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+                alignItems: 'center',
+              }}
+            >
+              <p style={{ fontSize: '1.5rem', margin: 0 }}>
+                <FontAwesomeIcon icon={faWind} />{' '}
+                {weatherInfo.current.windspeed_10m}
+                {weatherInfo.current_units.windspeed_10m}
+              </p>
+              <p style={{ fontSize: '0.85rem', margin: 0 }}>Wind speed</p>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+                alignItems: 'center',
+              }}
+            >
+              <p style={{ fontSize: '1.5rem', margin: 0 }}>
+                <FontAwesomeIcon icon={faWater} />{' '}
+                {weatherInfo.current.relativehumidity_2m}
+                {weatherInfo.current_units.relativehumidity_2m}
+              </p>
+              <p style={{ fontSize: '0.85rem', margin: 0 }}>Humidity</p>
+            </div>
+          </div>
         </div>
       )}
 
-      <pre
-        className='prettyprint'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(weatherInfo, undefined, 2),
-        }}
-      />
+      <details>
+        <summary>API response</summary>
+        <pre
+          className='prettyprint'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(weatherInfo, undefined, 2),
+          }}
+        />
+      </details>
     </div>
   );
 }
