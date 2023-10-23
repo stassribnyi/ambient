@@ -133,13 +133,17 @@ const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
 const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
   weatherInfo,
 }) => {
-  const ref = useRef<HTMLElement>();
+  const ref = useRef<HTMLElement>() as React.MutableRefObject<HTMLElement>;
   const { events } = useDraggable(ref);
 
   return (
-    <figure  {...events} ref={ref} style={{
-      userSelect: 'none'
-    }}>
+    <figure
+      {...events}
+      ref={ref}
+      style={{
+        userSelect: 'none',
+      }}
+    >
       <table>
         <tr>
           {getHourlyInfo(weatherInfo).map(
