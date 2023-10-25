@@ -27,7 +27,7 @@ function getHourlyInfo(weatherInfo: WeatherInfo) {
       time,
       imageUrl: getWMOInfoHourly(weatherInfo, idx)?.image,
       temperature: {
-        value: weatherInfo.hourly.temperature_2m[idx],
+        value: Math.floor(weatherInfo.hourly.temperature_2m[idx]),
         units: '°',
       },
     }));
@@ -40,7 +40,7 @@ export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
   // const { events } = useDraggable(ref);
 
   return (
-    <TableContainer sx={{ padding: 2 }}>
+    <TableContainer sx={{ padding: '1rem 0' }}>
       <Table size='small'>
         <TableBody>
           <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>

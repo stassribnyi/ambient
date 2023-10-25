@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Table, TableBody, TableRow, TableCell } from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, Stack } from '@mui/material';
 import { isToday, format } from 'date-fns';
 
 import { WeatherInfo } from '../vite-env';
@@ -16,8 +16,8 @@ function getDailyInfo(weatherInfo: WeatherInfo) {
       imageUrl: getWMOInfoDaily(weatherInfo, idx)?.image,
       description: getWMOInfoDaily(weatherInfo, idx)?.description,
       temperature: {
-        min: weatherInfo.daily.temperature_2m_min[idx],
-        max: weatherInfo.daily.temperature_2m_max[idx],
+        min: Math.floor(weatherInfo.daily.temperature_2m_min[idx]),
+        max: Math.floor(weatherInfo.daily.temperature_2m_max[idx]),
         units: '°',
       },
     }));
@@ -52,21 +52,26 @@ export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
                   style={{ minWidth: '48px', width: '48px' }}
                   alt={description}
                 />
-                {/* <figcaption
+                <figcaption
                   style={{
                     color: 'inherit',
                   }}
                 >
                   {description}
-                </figcaption> */}
+                </figcaption>
               </figure>
             </TableCell>
-            <TableCell align='center' sx={{ p: 0 }}>
-              {temperature.max}
-              {temperature.units}
-              &nbsp;
-              {temperature.min}
-              {temperature.units}
+            <TableCell align='center' sx={{ p: 0, width: '4rem' }}>
+              <Stack direction="row" gap={1} justifyContent='space-between'>
+                <span>
+                  {temperature.max}
+                  {temperature.units}
+                </span>
+                <span>
+                  {temperature.min}
+                  {temperature.units}
+                </span>
+              </Stack>
             </TableCell>
           </TableRow>
         )

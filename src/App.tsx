@@ -1,7 +1,13 @@
 import { forwardRef, useEffect, useState } from 'react';
 import { GeocodingInfo } from './vite-env';
 
-import { ChevronLeft, Menu, Search } from '@mui/icons-material';
+import {
+  ChevronLeft,
+  LocationCity,
+  LocationOn,
+  Menu,
+  Search,
+} from '@mui/icons-material';
 import {
   Alert,
   AppBar,
@@ -32,6 +38,7 @@ import './App.css';
 import { useWeather } from './hooks';
 import { TransitionProps } from '@mui/material/transitions';
 import React from 'react';
+import { format } from 'date-fns';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -189,7 +196,12 @@ function LocationSearchDialog({
             ))}
           </List>
         ) : (
-          <DialogContent>
+          <DialogContent
+            sx={{
+              display: 'grid',
+              placeItems: 'center',
+            }}
+          >
             <DialogContentText>
               {search.trim().length === 0
                 ? 'Please enter your location.'
@@ -203,14 +215,22 @@ function LocationSearchDialog({
 }
 
 function App() {
-  const [city, setCity] = useState<
-    Pick<GeocodingInfo, 'latitude' | 'longitude' | 'name' | 'timezone'>
-  >({
-    latitude: 50.4547,
+  const [city, setCity] = useState<GeocodingInfo>({
+    admin1: 'Kyiv City',
+    admin1_id: 703447,
+    country: 'Ukraine',
+    country_code: 'UA',
+    country_id: 690791,
+    elevation: 187,
+    feature_code: 'PPLC',
+    id: 703448,
+    latitude: 50.45466,
     longitude: 30.5238,
     name: 'Kyiv',
-    timezone: 'auto',
+    population: 2797553,
+    timezone: 'Europe/Kyiv',
   });
+
 
   const { forecast, loading, error } = useWeather(city);
 
@@ -234,6 +254,7 @@ function App() {
         {forecast && (
           <Grid container spacing={2}>
             <Grid xs={12}>
+                <Stack>
               <Stack
                 direction='row'
                 alignItems='center'
@@ -241,7 +262,23 @@ function App() {
               >
                 <LocationSearchDialog handleSubmit={setCity} />
 
-                <Typography variant='h5'>{city?.name}</Typography>
+                  <Typography variant='body1'>
+                    {format(new Date(forecast.current.time), 'EEEE, MMM dd')}
+                  </Typography>
+                  
+                </Stack>
+                <Typography
+                    color='secondary'
+                    variant='caption'
+                    sx={{
+                      alignSelf: 'end',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                    }}
+                  >
+                    <LocationOn /> {city.name}, {city.admin1}, {city.country}
+                  </Typography>
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
@@ -254,7 +291,7 @@ function App() {
                 </Box>
                 <Card>
                   <CardContent>
-                    <h3>Today's forecast</h3>
+                    <h3>Today</h3>
                     <HourlyReport weatherInfo={forecast} />
                   </CardContent>
                 </Card>
@@ -263,7 +300,7 @@ function App() {
             <Grid xs={12} md={6}>
               <Card>
                 <CardContent>
-                  <h3>7-days forecast</h3>
+                  <h3>7-Days Forecast</h3>
                   <DailyReport weatherInfo={forecast} />
                 </CardContent>
               </Card>

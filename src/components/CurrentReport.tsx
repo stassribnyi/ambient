@@ -3,6 +3,7 @@ import { Air, Water } from '@mui/icons-material';
 
 import { getWMOInfo } from '../getWMOInfo';
 import { WeatherInfo } from '../vite-env';
+import { Box, Stack, Typography } from '@mui/material';
 
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
   weatherInfo,
@@ -11,19 +12,19 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
 
   const current = {
     temperature: {
-      value: weatherInfo.current.temperature_2m,
-      units: weatherInfo.current_units.temperature_2m,
+      value: Math.floor(weatherInfo.current.temperature_2m),
+      units: '°',
     },
     apparentTemperature: {
-      value: weatherInfo.current.apparent_temperature,
-      units: weatherInfo.current_units.apparent_temperature,
+      value: Math.floor(weatherInfo.current.apparent_temperature),
+      units: '°',
     },
     windspeed: {
-      value: weatherInfo.current.windspeed_10m,
+      value: Math.round(weatherInfo.current.windspeed_10m),
       units: weatherInfo.current_units.windspeed_10m,
     },
     relativeHumidity: {
-      value: weatherInfo.current.relativehumidity_2m,
+      value: Math.round(weatherInfo.current.relativehumidity_2m),
       units: weatherInfo.current_units.relativehumidity_2m,
     },
     imageUrl: wmoInfo?.image,
@@ -33,43 +34,49 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
   return (
     <>
       <div
-        style={{
-          display: 'grid',
-          gridTemplate: '1fr 1fr / 3fr minmax(100px, 1fr)',
-          gap: '2rem',
-        }}
+      // style={{
+      //   display: 'grid',
+      //   gridTemplate: '1fr 1fr / 3fr minmax(100px, 1fr)',
+      //   gap: '2rem',
+      // }}
       >
-        <div>
-          <p style={{ fontSize: '3.5rem', margin: 0 }}>
-            {current.temperature.value}
-            {current.temperature.units}
-          </p>
-          <p style={{ margin: 0 }}>
-            Feels like {current.apparentTemperature.value}
-            {current.apparentTemperature.units}
-          </p>
-        </div>
-        <div style={{ justifySelf: 'end' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
           <img
             src={current.imageUrl}
-            style={{ width: '84px', height: '84px' }}
+            style={{ width: '184px', height: '184px' }}
           />
-          <p style={{ margin: 0 }}>{current.description}</p>
-        </div>
-        <div>
-          <p style={{ fontSize: '1.5rem', margin: 0 }}>
-            <Air /> {current.windspeed.value}
-            {current.windspeed.units}
-          </p>
-          <p style={{ margin: 0 }}>Wind speed</p>
-        </div>
-        <div style={{ justifySelf: 'end' }}>
-          <p style={{ fontSize: '1.5rem', margin: 0 }}>
-            <Water /> {current.relativeHumidity.value}
-            {current.relativeHumidity.units}
-          </p>
-          <p style={{ margin: 0 }}>Humidity</p>
-        </div>
+          <Typography variant='h1' sx={{ mt: -8 }}>
+            {current.temperature.value}
+            {current.temperature.units}
+          </Typography>
+          <Typography variant='h6'>{current.description}</Typography>
+          <Typography color='secondary' variant='caption'>
+            Feels like {current.apparentTemperature.value}
+            {current.apparentTemperature.units}
+          </Typography>
+        </Box>
+        <Stack direction='row' justifyContent='space-between'>
+          <div>
+            <p style={{ fontSize: '1.5rem', margin: 0 }}>
+              <Air /> {current.windspeed.value}
+              {current.windspeed.units}
+            </p>
+            <p style={{ margin: 0 }}>Wind speed</p>
+          </div>
+          <div style={{ justifySelf: 'end' }}>
+            <p style={{ fontSize: '1.5rem', margin: 0 }}>
+              <Water /> {current.relativeHumidity.value}
+              {current.relativeHumidity.units}
+            </p>
+            <p style={{ margin: 0 }}>Humidity</p>
+          </div>
+        </Stack>
       </div>
     </>
   );
