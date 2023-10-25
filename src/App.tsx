@@ -1,4 +1,4 @@
-import { FC, forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { GeocodingInfo } from './vite-env';
 
 import { ChevronLeft, Menu, Search } from '@mui/icons-material';
@@ -10,10 +10,16 @@ import {
   CardContent,
   Container,
   Dialog,
+  DialogContent,
+  DialogContentText,
+  Divider,
   Unstable_Grid2 as Grid,
   IconButton,
   InputBase,
   LinearProgress,
+  List,
+  ListItem,
+  ListItemText,
   Slide,
   Snackbar,
   Stack,
@@ -27,9 +33,80 @@ import { useWeather } from './hooks';
 import { TransitionProps } from '@mui/material/transitions';
 import React from 'react';
 
-const LocationForm: FC<
-  Readonly<{ handleSubmit: (option: GeocodingInfo) => void }>
-> = ({ handleSubmit }) => {
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction='right' ref={ref} {...props} />;
+});
+
+// const LocationForm: FC<
+//   Readonly<{ handleSubmit: (option: GeocodingInfo) => void }>
+// > = ({ handleSubmit }) => {
+//   const [options, setOptions] = useState<Array<GeocodingInfo>>([]);
+//   const [search, setSearch] = useState<string>('Kyiv');
+
+//   useEffect(() => {
+//     if (!search?.trim().length) {
+//       return;
+//     }
+
+//     const url = new URL(
+//       `https://geocoding-api.open-meteo.com/v1/search?name=${search}&count=10&language=en&format=json`
+//     );
+//     fetch(url.toString())
+//       .then((resp) => resp.json())
+//       .then((res) =>
+//         setOptions(
+//           ((res.results || []) as Array<GeocodingInfo>).filter(
+//             (x) => x.latitude && x.longitude
+//           )
+//         )
+//       )
+//       .catch(console.log);
+//   }, [search]);
+
+//   const handleSearch = () => {
+//     const value = options.find((x) => x.name === search);
+
+//     if (!value) {
+//       setSearch('');
+
+//       return;
+//     }
+
+//     handleSubmit(value);
+//   };
+
+//   return (
+//     <Stack direction='row' gap={0.5} sx={{ width: '100%' }}>
+//       <InputBase
+//         value={search}
+//         style={{ width: '100%' }}
+//         placeholder='What is your city?'
+//         onChange={({ target }) => setSearch(target.value)}
+//         onKeyDown={(event) => {
+//           if (event.code === 'Enter') {
+//             handleSearch();
+//           }
+//         }}
+//       />
+
+//       <IconButton sx={{ minWidth: 56 }} onClick={handleSearch}>
+//         <Search />
+//       </IconButton>
+//     </Stack>
+//   );
+// };
+
+function LocationSearchDialog({
+  handleSubmit,
+}: {
+  handleSubmit: (value: GeocodingInfo) => void;
+}) {
+  const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<Array<GeocodingInfo>>([]);
   const [search, setSearch] = useState<string>('Kyiv');
 
@@ -52,55 +129,6 @@ const LocationForm: FC<
       )
       .catch(console.log);
   }, [search]);
-
-  const handleSearch = () => {
-    const value = options.find((x) => x.name === search);
-
-    if (!value) {
-      setSearch('');
-
-      return;
-    }
-
-    handleSubmit(value);
-  };
-
-  return (
-    <Stack direction='row' gap={0.5} sx={{ width: '100%' }}>
-      <InputBase
-        value={search}
-        style={{ width: '100%' }}
-        placeholder='What is your city?'
-        onChange={({ target }) => setSearch(target.value)}
-        onKeyDown={(event) => {
-          if (event.code === 'Enter') {
-            handleSearch();
-          }
-        }}
-      />
-
-      <IconButton sx={{ minWidth: 56 }} onClick={handleSearch}>
-        <Search />
-      </IconButton>
-    </Stack>
-  );
-};
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction='right' ref={ref} {...props} />;
-});
-
-function LocationSearchDialog({
-  handleSubmit,
-}: {
-  handleSubmit: (value: GeocodingInfo) => void;
-}) {
-  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -131,25 +159,44 @@ function LocationSearchDialog({
             >
               <ChevronLeft />
             </IconButton>
-            <LocationForm
-              handleSubmit={(city) => {
-                handleSubmit(city);
-                handleClose();
-              }}
-            />
+            <Stack direction='row' gap={0.5} sx={{ width: '100%' }}>
+              <InputBase
+                value={search}
+                style={{ width: '100%' }}
+                placeholder='What is your city?'
+                onChange={({ target }) => setSearch(target.value)}
+              />
+
+              <IconButton sx={{ minWidth: 56 }} onClick={() => setSearch('')}>
+                <Search />
+              </IconButton>
+            </Stack>
           </Toolbar>
         </AppBar>
 
-        {/* <DialogTitle>Looking for your city?</DialogTitle> */}
-        {/* <DialogContent>
-          <DialogContentText id='alert-dialog-slide-description'>
-           
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
-        </DialogActions> */}
+        {options.length ? (
+          <List>
+            {options.map((option, idx) => (
+              <>
+                <ListItem onClick={() => handleSubmit(option)}>
+                  <ListItemText
+                    primary={option.name}
+                    secondary={option.admin1}
+                  />
+                </ListItem>
+                {idx !== options.length - 1 && <Divider />}
+              </>
+            ))}
+          </List>
+        ) : (
+          <DialogContent>
+            <DialogContentText>
+              {search.trim().length === 0
+                ? 'Please enter your location.'
+                : 'Nothing has been found.'}
+            </DialogContentText>
+          </DialogContent>
+        )}
       </Dialog>
     </>
   );
