@@ -220,6 +220,11 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@bybas/weather-icons@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@bybas/weather-icons/-/weather-icons-2.0.0.tgz#eca742defd0f96cdbd77d75c494423affeb91afb"
+  integrity sha512-sUcp8kbQZYoYgTpHkQ1vrxKVSHdc4SxzXLuluVZYa5u8Nqq/GhDYOtWrWLqgN/GhwsZ74dja8TlMvyTll4yl0Q==
+
 "@emotion/babel-plugin@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.11.0.tgz#c2d872b6a7767a9d176d007f5b31f7d504bb5d6c"

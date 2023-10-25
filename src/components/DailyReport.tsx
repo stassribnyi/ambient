@@ -49,7 +49,7 @@ export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
               >
                 <img
                   src={imageUrl}
-                  style={{ minWidth: '48px', width: '48px' }}
+                  style={{ minWidth: '36px', width: '36px' }}
                   alt={description}
                 />
                 <figcaption

@@ -34,43 +34,37 @@ function getHourlyInfo(weatherInfo: WeatherInfo) {
 }
 export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
   weatherInfo,
-}) => {
-  // TODO: is it required for desktop?
-  // const ref = useRef<HTMLElement>() as React.MutableRefObject<HTMLElement>;
-  // const { events } = useDraggable(ref);
-
-  return (
-    <TableContainer sx={{ padding: '1rem 0' }}>
-      <Table size='small'>
-        <TableBody>
-          <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            {getHourlyInfo(weatherInfo).map(
-              ({ time, imageUrl, temperature }, idx) => (
-                <TableCell key={idx} sx={{ p: 0 }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <p style={{ margin: 0 }}>{format(time, 'HH:mm')}</p>
-                    <img
-                      draggable={false}
-                      src={imageUrl}
-                      style={{ width: '56px', minWidth: '56px' }}
-                    />
-                    <strong style={{ margin: 0 }}>
-                      {temperature.value}
-                      {temperature.units}
-                    </strong>
-                  </div>
-                </TableCell>
-              )
-            )}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-};
+}) => (
+  <TableContainer sx={{ pb: '1rem' }}>
+    <Table size='small'>
+      <TableBody>
+        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          {getHourlyInfo(weatherInfo).map(
+            ({ time, imageUrl, temperature }, idx) => (
+              <TableCell key={idx} sx={{ p: 0 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  <p style={{ margin: 0 }}>{format(time, 'HH')}</p>
+                  <img
+                    draggable={false}
+                    src={imageUrl}
+                    style={{ width: '48px', minWidth: '48px' }}
+                  />
+                  <strong style={{ fontSize: '1rem', margin: 0 }}>
+                    {temperature.value}
+                    {temperature.units}
+                  </strong>
+                </div>
+              </TableCell>
+            )
+          )}
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+);

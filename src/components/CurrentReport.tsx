@@ -1,9 +1,11 @@
 import { FC } from 'react';
-import { Air, Water } from '@mui/icons-material';
 
 import { getWMOInfo } from '../getWMOInfo';
 import { WeatherInfo } from '../vite-env';
 import { Box, Stack, Typography } from '@mui/material';
+
+import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
+import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
 
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
   weatherInfo,
@@ -33,51 +35,64 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
 
   return (
     <>
-      <div
-      // style={{
-      //   display: 'grid',
-      //   gridTemplate: '1fr 1fr / 3fr minmax(100px, 1fr)',
-      //   gap: '2rem',
-      // }}
-      >
+      <Stack gap={2}>
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
+            gap: 2,
+            justifyContent: 'space-between',
           }}
         >
           <img
             src={current.imageUrl}
             style={{ width: '184px', height: '184px' }}
           />
-          <Typography variant='h1' sx={{ mt: -8 }}>
-            {current.temperature.value}
-            {current.temperature.units}
-          </Typography>
-          <Typography variant='h6'>{current.description}</Typography>
-          <Typography color='secondary' variant='caption'>
-            Feels like {current.apparentTemperature.value}
-            {current.apparentTemperature.units}
-          </Typography>
+          <Stack alignItems='center'>
+            <Typography variant='h2'>
+              {current.temperature.value}
+              {current.temperature.units}
+            </Typography>
+            <Typography variant='h6'>{current.description}</Typography>
+            <Typography color='secondary' variant='caption'>
+              Feels like {current.apparentTemperature.value}
+              {current.apparentTemperature.units}
+            </Typography>
+          </Stack>
         </Box>
         <Stack direction='row' justifyContent='space-between'>
-          <div>
-            <p style={{ fontSize: '1.5rem', margin: 0 }}>
-              <Air /> {current.windspeed.value}
-              {current.windspeed.units}
-            </p>
-            <p style={{ margin: 0 }}>Wind speed</p>
-          </div>
           <div style={{ justifySelf: 'end' }}>
-            <p style={{ fontSize: '1.5rem', margin: 0 }}>
-              <Water /> {current.relativeHumidity.value}
+            <p
+              style={{
+                fontSize: '1.25rem',
+                margin: 0,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+              }}
+            >
+              <img src={humidity} style={{ width: '36px' }} />{' '}
+              {current.relativeHumidity.value}
               {current.relativeHumidity.units}
             </p>
-            <p style={{ margin: 0 }}>Humidity</p>
+          </div>
+          <div style={{ justifySelf: 'end' }}>
+            <p
+              style={{
+                fontSize: '1.25rem',
+                margin: 0,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+              }}
+            >
+              <img src={windSock} style={{ width: '36px' }} />{' '}
+              {current.windspeed.value}
+              {current.windspeed.units}
+            </p>
           </div>
         </Stack>
-      </div>
+      </Stack>
     </>
   );
 };
