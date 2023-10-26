@@ -25,7 +25,7 @@ import { GeocodingInfo } from '../vite-env';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<unknown, unknown>;
+    children: React.ReactElement<unknown, string>;
   },
   ref: React.Ref<unknown>,
 ) {
