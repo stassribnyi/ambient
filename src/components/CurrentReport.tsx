@@ -6,6 +6,7 @@ import { Box, Stack, Typography } from '@mui/material';
 
 import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
+import uvIdx from '@bybas/weather-icons/production/fill/all/uv-index-10.svg';
 
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const wmoInfo = getWMOInfo(weatherInfo);
@@ -56,32 +57,44 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
           </Stack>
         </Box>
         <Stack direction="row" justifyContent="space-between">
-          <div style={{ justifySelf: 'end' }}>
+          <div>
             <p
               style={{
-                fontSize: '1.25rem',
+                fontSize: '1rem',
                 margin: 0,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.25rem',
               }}
             >
-              <img src={humidity} style={{ width: '36px' }} /> {current.relativeHumidity.value}
+              <img src={humidity} style={{ width: '42px' }} /> {current.relativeHumidity.value}
               {current.relativeHumidity.units}
             </p>
           </div>
-          <div style={{ justifySelf: 'end' }}>
+
+          <div>
             <p
               style={{
-                fontSize: '1.25rem',
+                fontSize: '1rem',
                 margin: 0,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.25rem',
               }}
             >
-              <img alt="windspeed" src={windSock} style={{ width: '36px' }} /> {current.windspeed.value}
+              <img alt="windspeed" src={windSock} style={{ width: '42px' }} /> {current.windspeed.value}
               {current.windspeed.units}
+            </p>
+          </div>
+
+          <div>
+            <p
+              style={{
+                fontSize: '1rem',
+                margin: 0,
+                display: 'inline-flex',
+                alignItems: 'center',
+              }}
+            >
+              <img alt="uv index 10" src={uvIdx} style={{ width: '42px' }} />
             </p>
           </div>
         </Stack>

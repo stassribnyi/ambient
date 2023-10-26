@@ -33,9 +33,13 @@ const FORECAST_OPTIONS = {
   timezone: 'auto',
   past_days: 1,
   forecast_days: 10,
+  temperature_unit: 'celsius',
 };
 
-export const useWeather = (city: Pick<GeocodingInfo, 'latitude' | 'longitude' | 'name' | 'timezone'>) => {
+export const useWeather = (
+  city: Pick<GeocodingInfo, 'latitude' | 'longitude' | 'name' | 'timezone'>,
+  unit: 'fahrenheit' | 'celsius',
+) => {
   const [forecast, setForecast] = useState<null | WeatherInfo>(null);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -49,12 +53,14 @@ export const useWeather = (city: Pick<GeocodingInfo, 'latitude' | 'longitude' | 
           ...FORECAST_OPTIONS,
           latitude: city.latitude,
           longitude: city.longitude,
+          temperature_unit: unit,
+          windspeed_unit: unit === 'celsius' ? 'kmh' : 'mph',
         },
       })
       .then(({ data }) => setForecast(data))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
-  }, [city]);
+  }, [city, unit]);
 
   return { forecast, error, loading };
 };

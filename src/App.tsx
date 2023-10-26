@@ -71,6 +71,7 @@ const UnitsSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function App() {
+  const [unit, setUnit] = useState<'celsius' | 'fahrenheit'>('celsius');
   const [city, setCity] = useState<GeocodingInfo>({
     admin1: 'Kyiv City',
     admin1_id: 703447,
@@ -87,7 +88,7 @@ function App() {
     timezone: 'Europe/Kyiv',
   });
 
-  const { forecast, loading, error } = useWeather(city);
+  const { forecast, loading, error } = useWeather(city, unit);
 
   return (
     <>
@@ -109,7 +110,10 @@ function App() {
                 <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
                   <LocationSearchDialog handleSubmit={setCity} />
                   <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
-                  <UnitsSwitch sx={{ ml: 'auto' }} />
+                  <UnitsSwitch
+                    sx={{ ml: 'auto' }}
+                    onClick={() => setUnit(unit === 'celsius' ? 'fahrenheit' : 'celsius')}
+                  />
                 </Stack>
                 <Typography
                   color="secondary"
