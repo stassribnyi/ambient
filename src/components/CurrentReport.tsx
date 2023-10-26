@@ -7,9 +7,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
 
-export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
-  weatherInfo,
-}) => {
+export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const wmoInfo = getWMOInfo(weatherInfo);
 
   const current = {
@@ -44,23 +42,20 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
             justifyContent: 'space-between',
           }}
         >
-          <img
-            src={current.imageUrl}
-            style={{ width: '184px', height: '184px' }}
-          />
-          <Stack alignItems='center'>
-            <Typography variant='h2'>
+          <img alt={current.description} src={current.imageUrl} style={{ width: '184px', height: '184px' }} />
+          <Stack alignItems="center">
+            <Typography variant="h2">
               {current.temperature.value}
               {current.temperature.units}
             </Typography>
-            <Typography variant='h6'>{current.description}</Typography>
-            <Typography color='secondary' variant='caption'>
+            <Typography variant="h6">{current.description}</Typography>
+            <Typography color="secondary" variant="caption">
               Feels like {current.apparentTemperature.value}
               {current.apparentTemperature.units}
             </Typography>
           </Stack>
         </Box>
-        <Stack direction='row' justifyContent='space-between'>
+        <Stack direction="row" justifyContent="space-between">
           <div style={{ justifySelf: 'end' }}>
             <p
               style={{
@@ -71,8 +66,7 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
                 gap: '0.25rem',
               }}
             >
-              <img src={humidity} style={{ width: '36px' }} />{' '}
-              {current.relativeHumidity.value}
+              <img src={humidity} style={{ width: '36px' }} /> {current.relativeHumidity.value}
               {current.relativeHumidity.units}
             </p>
           </div>
@@ -86,8 +80,7 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
                 gap: '0.25rem',
               }}
             >
-              <img src={windSock} style={{ width: '36px' }} />{' '}
-              {current.windspeed.value}
+              <img alt="windspeed" src={windSock} style={{ width: '36px' }} /> {current.windspeed.value}
               {current.windspeed.units}
             </p>
           </div>

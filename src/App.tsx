@@ -4,7 +4,6 @@ import { GeocodingInfo } from './vite-env';
 import celsius from '@bybas/weather-icons/production/fill/all/celsius.svg';
 import fahrenheit from '@bybas/weather-icons/production/fill/all/fahrenheit.svg';
 
-
 import { LocationOn } from '@mui/icons-material';
 import {
   Alert,
@@ -20,12 +19,7 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import {
-  CurrentReport,
-  DailyReport,
-  HourlyReport,
-  LocationSearchDialog,
-} from './components';
+import { CurrentReport, DailyReport, HourlyReport, LocationSearchDialog } from './components';
 
 import './App.css';
 import { useWeather } from './hooks';
@@ -99,36 +93,27 @@ function App() {
     <>
       {loading && (
         <Box sx={{ width: '100%', top: '1rem', position: 'absolute' }}>
-          <LinearProgress color='secondary' />
+          <LinearProgress color="secondary" />
         </Box>
       )}
-      <Snackbar
-        open={!!error}
-        autoHideDuration={3000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity='error' sx={{ width: '100%' }}>
+      <Snackbar open={!!error} autoHideDuration={3000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="error" sx={{ width: '100%' }}>
           {error?.message}
         </Alert>
       </Snackbar>
-      <Container maxWidth='xl' sx={{ pt: 2, pb: 2 }}>
+      <Container maxWidth="xl" sx={{ pt: 2, pb: 2 }}>
         {forecast && (
           <Grid container spacing={2}>
             <Grid xs={12}>
               <Stack>
-                <Stack
-                  direction='row'
-                  alignItems='center'
-                >
+                <Stack direction="row" alignItems="center">
                   <LocationSearchDialog handleSubmit={setCity} />
-                  <Typography variant='body1'>
-                    {format(new Date(forecast.current.time), 'EEEE, MMM dd')}
-                  </Typography>
+                  <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
                   <UnitsSwitch sx={{ ml: 'auto' }} />
                 </Stack>
                 <Typography
-                  color='secondary'
-                  variant='caption'
+                  color="secondary"
+                  variant="caption"
                   sx={{
                     pl: 1,
                     display: 'inline-flex',
@@ -141,16 +126,13 @@ function App() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Stack
-                gap={2}
-                sx={{ justifyContent: 'space-between', height: '100%' }}
-              >
+              <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
                 <Box sx={{ p: 1 }}>
                   <CurrentReport weatherInfo={forecast} />
                 </Box>
                 <Card>
                   <CardContent>
-                    <Typography gutterBottom variant='h6'>
+                    <Typography gutterBottom variant="h6">
                       Today
                     </Typography>
                     <HourlyReport weatherInfo={forecast} />
@@ -159,9 +141,9 @@ function App() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Card sx={{  height: '100%' }}>
+              <Card sx={{ height: '100%' }}>
                 <CardContent>
-                  <Typography gutterBottom variant='h6'>
+                  <Typography gutterBottom variant="h6">
                     10-Days Forecast
                   </Typography>
                   <DailyReport weatherInfo={forecast} />

@@ -73,7 +73,7 @@ export interface Hourly {
   precipitation_probability: number[];
   precipitation: number[];
   rain: number[];
-  weathercode: Array<keyof typeof WMO>
+  weathercode: Array<keyof typeof WMO>;
 }
 
 export interface DailyUnits {
@@ -95,7 +95,6 @@ export interface Daily {
   temperature_2m_min: number[];
   precipitation_probability_max: number[];
 }
-
 
 export interface GeocodingInfo {
   id: number;

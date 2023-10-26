@@ -2,14 +2,9 @@ import React, { FC, PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
-import {
-  CssBaseline,
-  GlobalStyles,
-  GlobalStylesProps,
-  ThemeProvider,
-  createTheme,
-  useMediaQuery,
-} from '@mui/material';
+import { CssBaseline, GlobalStyles, ThemeProvider, createTheme, useMediaQuery } from '@mui/material';
+
+import type { GlobalStylesProps } from '@mui/material';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -39,16 +34,16 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
       createTheme({
         palette: {
           background: {
-            default:  '#11191f',
-            paper: '#11191f'
+            default: '#11191f',
+            paper: '#11191f',
           },
           mode: prefersDarkMode ? 'dark' : 'light',
         },
         shape: {
-          borderRadius: 16
-        }
+          borderRadius: 16,
+        },
       }),
-    [prefersDarkMode]
+    [prefersDarkMode],
   );
 
   return (
@@ -65,5 +60,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Layout>
       <App />
     </Layout>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

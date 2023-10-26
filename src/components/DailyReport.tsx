@@ -1,12 +1,10 @@
 import { FC } from 'react';
-import { Table, TableBody, TableRow, TableCell, Stack, Box } from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, Stack } from '@mui/material';
 import { isToday, format } from 'date-fns';
-
 
 import { WeatherInfo } from '../vite-env';
 import { getWMOInfoDaily } from '../getWMOInfo';
 import { Precipitation } from './Precipitation';
-
 
 function getDailyInfo(weatherInfo: WeatherInfo) {
   return weatherInfo.daily.time
@@ -30,83 +28,68 @@ function getDailyInfo(weatherInfo: WeatherInfo) {
     }));
 }
 
-
-export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({
-  weatherInfo,
-}) => (
-  <Table aria-label='10 Days forecast' size='small' >
+export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => (
+  <Table aria-label="10 Days forecast" size="small">
     <TableBody>
-      {getDailyInfo(weatherInfo).map(
-        ({ time, description, imageUrl, temperature, precipitationProbability }, idx) => (
-          <TableRow
-            key={idx}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-          >
-            <TableCell sx={{ p: 0 }}>
-              {isToday(time) ? 'Today' : format(time, 'eeee')}
-            </TableCell>
-            <TableCell align='center' sx={{ p: 0, width: '4rem' }}>
-              {/* // TODO: move to precipitation component */}
-              <figure
+      {getDailyInfo(weatherInfo).map(({ time, description, imageUrl, temperature, precipitationProbability }, idx) => (
+        <TableRow key={idx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableCell sx={{ p: 0 }}>{isToday(time) ? 'Today' : format(time, 'eeee')}</TableCell>
+          <TableCell align="center" sx={{ p: 0, width: '4rem' }}>
+            {/* // TODO: move to precipitation component */}
+            <figure
+              style={{
+                margin: 0,
+                fontSize: 'inherit',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+              }}
+            >
+              <Precipitation level={precipitationProbability.value} size={18} />
+              <figcaption
                 style={{
-                  margin: 0,
-                  fontSize: 'inherit',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.25rem'
+                  color: 'inherit',
                 }}
               >
-                <Precipitation level={precipitationProbability.value} size={18} />
-                <figcaption
-                  style={{
-                    color: 'inherit',
-                  }}
-                >
-                  {precipitationProbability.value}
-                  {precipitationProbability.units}
-                </figcaption>
-              </figure>
-
-            </TableCell>
-            <TableCell align='center' sx={{ p: 0 }}>
-              <figure
-                style={{
-                  margin: 0,
-                  fontSize: 'inherit',
-                  display: 'flex',
-                  gap: '0.5rem',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  src={imageUrl}
-                  style={{ minWidth: '32px', width: '32px' }}
-                  alt={description}
-                />
-                {/* <figcaption
+                {precipitationProbability.value}
+                {precipitationProbability.units}
+              </figcaption>
+            </figure>
+          </TableCell>
+          <TableCell align="center" sx={{ p: 0 }}>
+            <figure
+              style={{
+                margin: 0,
+                fontSize: 'inherit',
+                display: 'flex',
+                gap: '0.5rem',
+                alignItems: 'center',
+              }}
+            >
+              <img src={imageUrl} style={{ minWidth: '32px', width: '32px' }} alt={description} />
+              {/* <figcaption
                   style={{
                     color: 'inherit',
                   }}
                 >
                   {description}
                 </figcaption> */}
-              </figure>
-            </TableCell>
-            <TableCell align='center' sx={{ p: 0, width: '4rem' }}>
-              <Stack direction="row" gap={1} justifyContent='space-between'>
-                <span>
-                  {temperature.max}
-                  {temperature.units}
-                </span>
-                <span>
-                  {temperature.min}
-                  {temperature.units}
-                </span>
-              </Stack>
-            </TableCell>
-          </TableRow>
-        )
-      )}
+            </figure>
+          </TableCell>
+          <TableCell align="center" sx={{ p: 0, width: '4rem' }}>
+            <Stack direction="row" gap={1} justifyContent="space-between">
+              <span>
+                {temperature.max}
+                {temperature.units}
+              </span>
+              <span>
+                {temperature.min}
+                {temperature.units}
+              </span>
+            </Stack>
+          </TableCell>
+        </TableRow>
+      ))}
     </TableBody>
   </Table>
 );

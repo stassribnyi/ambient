@@ -1,4 +1,4 @@
-import { Add, BackspaceOutlined, ChevronLeft, Close, Menu, PlusOne } from '@mui/icons-material';
+import { Add, BackspaceOutlined, ChevronLeft, Menu } from '@mui/icons-material';
 import {
   Slide,
   IconButton,
@@ -19,35 +19,28 @@ import {
   useMediaQuery,
   Box,
 } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import { forwardRef, useState, useEffect } from 'react';
 import { GeocodingInfo } from '../vite-env';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>;
+    children: React.ReactElement<unknown, unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return <Slide direction={isMobile ? 'right' : 'down'} ref={ref} {...props} />;
 });
 
-export function LocationSearchDialog({
-  handleSubmit,
-}: {
-  handleSubmit: (value: GeocodingInfo) => void;
-}) {
+export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: GeocodingInfo) => void }) {
   const [open, setOpen] = useState(false);
   const [isNewSearch, setNewSearch] = useState(false);
   const [options, setOptions] = useState<Array<GeocodingInfo>>([]);
   const [favorite, setFavorite] = useState<null | GeocodingInfo>(null);
-  const [previousOptions, setPreviousOptions] = useState<Array<GeocodingInfo>>(
-    []
-  );
+  const [previousOptions, setPreviousOptions] = useState<Array<GeocodingInfo>>([]);
   const [search, setSearch] = useState<string>('');
 
   const theme = useTheme();
@@ -59,17 +52,11 @@ export function LocationSearchDialog({
     }
 
     const url = new URL(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${search}&count=10&language=en&format=json`
+      `https://geocoding-api.open-meteo.com/v1/search?name=${search}&count=10&language=en&format=json`,
     );
     fetch(url.toString())
       .then((resp) => resp.json())
-      .then((res) =>
-        setOptions(
-          ((res.results || []) as Array<GeocodingInfo>).filter(
-            (x) => x.latitude && x.longitude
-          )
-        )
-      )
+      .then((res) => setOptions(((res.results || []) as Array<GeocodingInfo>).filter((x) => x.latitude && x.longitude)))
       .catch(console.log);
   }, [search]);
 
@@ -102,8 +89,7 @@ export function LocationSearchDialog({
       <Dialog
         sx={{
           '& .MuiPaper-root': {
-            backgroundImage:
-              'linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06))',
+            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06))',
           },
           '& header': {
             boxShadow: 'none',
@@ -124,12 +110,7 @@ export function LocationSearchDialog({
         >
           <AppBar sx={{ position: 'relative' }}>
             <Toolbar>
-              <IconButton
-                edge='start'
-                color='inherit'
-                onClick={handleClose}
-                aria-label='close'
-              >
+              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                 <ChevronLeft />
               </IconButton>
               {isNewSearch ? (
@@ -138,7 +119,7 @@ export function LocationSearchDialog({
                     autoFocus
                     value={search}
                     sx={{ width: '100%' }}
-                    placeholder='What is your city?'
+                    placeholder="What is your city?"
                     onChange={({ target }) => setSearch(target.value)}
                   />
 
@@ -147,12 +128,7 @@ export function LocationSearchDialog({
                   </IconButton>
                 </>
               ) : (
-                <Stack
-                  direction='row'
-                  alignItems='center'
-                  justifyContent='space-between'
-                  sx={{ width: '100%' }}
-                >
+                <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
                   <Typography>Manage your location</Typography>
                   <IconButton onClick={() => setNewSearch(true)}>
                     <Add />
@@ -173,10 +149,7 @@ export function LocationSearchDialog({
                           handleOptionSelect(option);
                         }}
                       >
-                        <ListItemText
-                          primary={option.name}
-                          secondary={option.admin1}
-                        />
+                        <ListItemText primary={option.name} secondary={option.admin1} />
                       </ListItem>
                       {idx !== options.length - 1 && <Divider />}
                     </>
@@ -192,9 +165,7 @@ export function LocationSearchDialog({
                   }}
                 >
                   <DialogContentText>
-                    {search.trim().length === 0
-                      ? 'Please enter your location.'
-                      : 'Nothing has been found.'}
+                    {search.trim().length === 0 ? 'Please enter your location.' : 'Nothing has been found.'}
                   </DialogContentText>
                 </DialogContent>
               )}
@@ -203,25 +174,18 @@ export function LocationSearchDialog({
           {!isNewSearch && (
             <>
               {favorite && (
-                <List
-                  subheader={<ListSubheader>Current location</ListSubheader>}
-                >
+                <List subheader={<ListSubheader>Current location</ListSubheader>}>
                   <ListItem
                     onClick={() => {
                       handleOptionSelect(favorite);
                     }}
                   >
-                    <ListItemText
-                      primary={favorite.name}
-                      secondary={favorite.admin1}
-                    />
+                    <ListItemText primary={favorite.name} secondary={favorite.admin1} />
                   </ListItem>
                 </List>
               )}
               {previousOptions.length ? (
-                <List
-                  subheader={<ListSubheader>Other locations</ListSubheader>}
-                >
+                <List subheader={<ListSubheader>Other locations</ListSubheader>}>
                   {previousOptions.map((option, idx) => (
                     <>
                       <ListItem
@@ -229,10 +193,7 @@ export function LocationSearchDialog({
                           handleOptionSelect(option);
                         }}
                       >
-                        <ListItemText
-                          primary={option.name}
-                          secondary={option.admin1}
-                        />
+                        <ListItemText primary={option.name} secondary={option.admin1} />
                       </ListItem>
                       {idx !== previousOptions.length - 1 && <Divider />}
                     </>

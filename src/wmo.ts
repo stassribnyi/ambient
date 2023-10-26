@@ -16,7 +16,6 @@ import rainNight from '@bybas/weather-icons/production/fill/openweathermap/10n.s
 import drizzleDay from '@bybas/weather-icons/production/fill/openweathermap/09d.svg';
 import drizzleNight from '@bybas/weather-icons/production/fill/openweathermap/09n.svg';
 
-
 import snowDay from '@bybas/weather-icons/production/fill/openweathermap/13d.svg';
 import snowNight from '@bybas/weather-icons/production/fill/openweathermap/13n.svg';
 
@@ -24,284 +23,284 @@ import thunderstormDay from '@bybas/weather-icons/production/fill/openweathermap
 import thunderstormNight from '@bybas/weather-icons/production/fill/openweathermap/11n.svg';
 
 export const WMO = {
-    '0': {
-        day: {
-            description: 'Sunny',
-            image: sunny,
-        },
-        night: {
-            description: 'Clear',
-            image: clear,
-        },
+  '0': {
+    day: {
+      description: 'Sunny',
+      image: sunny,
     },
-    '1': {
-        day: {
-            description: 'Mainly Sunny',
-            image: sunny,
-        },
-        night: {
-            description: 'Mainly Clear',
-            image: clear,
-        },
+    night: {
+      description: 'Clear',
+      image: clear,
     },
-    '2': {
-        day: {
-            description: 'Partly Cloudy',
-            image: partlySunny,
-        },
-        night: {
-            description: 'Partly Cloudy',
-            image: partlyClear,
-        },
+  },
+  '1': {
+    day: {
+      description: 'Mainly Sunny',
+      image: sunny,
     },
-    '3': {
-        day: {
-            description: 'Cloudy',
-            image: cloudyDay,
-        },
-        night: {
-            description: 'Cloudy',
-            image: cloudyNight,
-        },
+    night: {
+      description: 'Mainly Clear',
+      image: clear,
     },
-    '45': {
-        day: {
-            description: 'Foggy',
-            image: foggyDay,
-        },
-        night: {
-            description: 'Foggy',
-            image: foggyNight,
-        },
+  },
+  '2': {
+    day: {
+      description: 'Partly Cloudy',
+      image: partlySunny,
     },
-    '48': {
-        day: {
-            description: 'Rime Fog',
-            image: foggyDay,
-        },
-        night: {
-            description: 'Rime Fog',
-            image: foggyNight,
-        },
+    night: {
+      description: 'Partly Cloudy',
+      image: partlyClear,
     },
-    '51': {
-        day: {
-            description: 'Light Drizzle',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Light Drizzle',
-            image: drizzleNight,
-        },
+  },
+  '3': {
+    day: {
+      description: 'Cloudy',
+      image: cloudyDay,
     },
-    '53': {
-        day: {
-            description: 'Drizzle',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Drizzle',
-            image: drizzleNight,
-        },
+    night: {
+      description: 'Cloudy',
+      image: cloudyNight,
     },
-    '55': {
-        day: {
-            description: 'Heavy Drizzle',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Heavy Drizzle',
-            image: drizzleNight,
-        },
+  },
+  '45': {
+    day: {
+      description: 'Foggy',
+      image: foggyDay,
     },
-    '56': {
-        day: {
-            description: 'Light Freezing Drizzle',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Light Freezing Drizzle',
-            image: drizzleNight,
-        },
+    night: {
+      description: 'Foggy',
+      image: foggyNight,
     },
-    '57': {
-        day: {
-            description: 'Freezing Drizzle',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Freezing Drizzle',
-            image: drizzleNight,
-        },
+  },
+  '48': {
+    day: {
+      description: 'Rime Fog',
+      image: foggyDay,
     },
-    '61': {
-        day: {
-            description: 'Light Rain',
-            image: rainDay,
-        },
-        night: {
-            description: 'Light Rain',
-            image: rainNight,
-        },
+    night: {
+      description: 'Rime Fog',
+      image: foggyNight,
     },
-    '63': {
-        day: {
-            description: 'Rain',
-            image: rainDay,
-        },
-        night: {
-            description: 'Rain',
-            image: rainNight,
-        },
+  },
+  '51': {
+    day: {
+      description: 'Light Drizzle',
+      image: drizzleDay,
     },
-    '65': {
-        day: {
-            description: 'Heavy Rain',
-            image: rainDay,
-        },
-        night: {
-            description: 'Heavy Rain',
-            image: rainNight,
-        },
+    night: {
+      description: 'Light Drizzle',
+      image: drizzleNight,
     },
-    '66': {
-        day: {
-            description: 'Light Freezing Rain',
-            image: rainDay,
-        },
-        night: {
-            description: 'Light Freezing Rain',
-            image: rainNight,
-        },
+  },
+  '53': {
+    day: {
+      description: 'Drizzle',
+      image: drizzleDay,
     },
-    '67': {
-        day: {
-            description: 'Freezing Rain',
-            image: rainDay,
-        },
-        night: {
-            description: 'Freezing Rain',
-            image: rainNight,
-        },
+    night: {
+      description: 'Drizzle',
+      image: drizzleNight,
     },
-    '71': {
-        day: {
-            description: 'Light Snow',
-            image: snowDay,
-        },
-        night: {
-            description: 'Light Snow',
-            image: snowNight,
-        },
+  },
+  '55': {
+    day: {
+      description: 'Heavy Drizzle',
+      image: drizzleDay,
     },
-    '73': {
-        day: {
-            description: 'Snow',
-            image: snowDay,
-        },
-        night: {
-            description: 'Snow',
-            image: snowNight,
-        },
+    night: {
+      description: 'Heavy Drizzle',
+      image: drizzleNight,
     },
-    '75': {
-        day: {
-            description: 'Heavy Snow',
-            image: snowDay,
-        },
-        night: {
-            description: 'Heavy Snow',
-            image: snowNight,
-        },
+  },
+  '56': {
+    day: {
+      description: 'Light Freezing Drizzle',
+      image: drizzleDay,
     },
-    '77': {
-        day: {
-            description: 'Snow Grains',
-            image: snowDay,
-        },
-        night: {
-            description: 'Snow Grains',
-            image: snowNight,
-        },
+    night: {
+      description: 'Light Freezing Drizzle',
+      image: drizzleNight,
     },
-    '80': {
-        day: {
-            description: 'Light Showers',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Light Showers',
-            image: drizzleNight,
-        },
+  },
+  '57': {
+    day: {
+      description: 'Freezing Drizzle',
+      image: drizzleDay,
     },
-    '81': {
-        day: {
-            description: 'Showers',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Showers',
-            image: drizzleNight,
-        },
+    night: {
+      description: 'Freezing Drizzle',
+      image: drizzleNight,
     },
-    '82': {
-        day: {
-            description: 'Heavy Showers',
-            image: drizzleDay,
-        },
-        night: {
-            description: 'Heavy Showers',
-            image: drizzleNight,
-        },
+  },
+  '61': {
+    day: {
+      description: 'Light Rain',
+      image: rainDay,
     },
-    '85': {
-        day: {
-            description: 'Light Snow Showers',
-            image: snowDay,
-        },
-        night: {
-            description: 'Light Snow Showers',
-            image: snowNight,
-        },
+    night: {
+      description: 'Light Rain',
+      image: rainNight,
     },
-    '86': {
-        day: {
-            description: 'Snow Showers',
-            image: snowDay,
-        },
-        night: {
-            description: 'Snow Showers',
-            image: snowNight,
-        },
+  },
+  '63': {
+    day: {
+      description: 'Rain',
+      image: rainDay,
     },
-    '95': {
-        day: {
-            description: 'Thunderstorm',
-            image: thunderstormDay,
-        },
-        night: {
-            description: 'Thunderstorm',
-            image: thunderstormNight,
-        },
+    night: {
+      description: 'Rain',
+      image: rainNight,
     },
-    '96': {
-        day: {
-            description: 'Light Thunderstorms With Hail',
-            image: thunderstormDay,
-        },
-        night: {
-            description: 'Light Thunderstorms With Hail',
-            image: thunderstormNight,
-        },
+  },
+  '65': {
+    day: {
+      description: 'Heavy Rain',
+      image: rainDay,
     },
-    '99': {
-        day: {
-            description: 'Thunderstorm With Hail',
-            image: thunderstormDay,
-        },
-        night: {
-            description: 'Thunderstorm With Hail',
-            image: thunderstormNight,
-        },
+    night: {
+      description: 'Heavy Rain',
+      image: rainNight,
     },
+  },
+  '66': {
+    day: {
+      description: 'Light Freezing Rain',
+      image: rainDay,
+    },
+    night: {
+      description: 'Light Freezing Rain',
+      image: rainNight,
+    },
+  },
+  '67': {
+    day: {
+      description: 'Freezing Rain',
+      image: rainDay,
+    },
+    night: {
+      description: 'Freezing Rain',
+      image: rainNight,
+    },
+  },
+  '71': {
+    day: {
+      description: 'Light Snow',
+      image: snowDay,
+    },
+    night: {
+      description: 'Light Snow',
+      image: snowNight,
+    },
+  },
+  '73': {
+    day: {
+      description: 'Snow',
+      image: snowDay,
+    },
+    night: {
+      description: 'Snow',
+      image: snowNight,
+    },
+  },
+  '75': {
+    day: {
+      description: 'Heavy Snow',
+      image: snowDay,
+    },
+    night: {
+      description: 'Heavy Snow',
+      image: snowNight,
+    },
+  },
+  '77': {
+    day: {
+      description: 'Snow Grains',
+      image: snowDay,
+    },
+    night: {
+      description: 'Snow Grains',
+      image: snowNight,
+    },
+  },
+  '80': {
+    day: {
+      description: 'Light Showers',
+      image: drizzleDay,
+    },
+    night: {
+      description: 'Light Showers',
+      image: drizzleNight,
+    },
+  },
+  '81': {
+    day: {
+      description: 'Showers',
+      image: drizzleDay,
+    },
+    night: {
+      description: 'Showers',
+      image: drizzleNight,
+    },
+  },
+  '82': {
+    day: {
+      description: 'Heavy Showers',
+      image: drizzleDay,
+    },
+    night: {
+      description: 'Heavy Showers',
+      image: drizzleNight,
+    },
+  },
+  '85': {
+    day: {
+      description: 'Light Snow Showers',
+      image: snowDay,
+    },
+    night: {
+      description: 'Light Snow Showers',
+      image: snowNight,
+    },
+  },
+  '86': {
+    day: {
+      description: 'Snow Showers',
+      image: snowDay,
+    },
+    night: {
+      description: 'Snow Showers',
+      image: snowNight,
+    },
+  },
+  '95': {
+    day: {
+      description: 'Thunderstorm',
+      image: thunderstormDay,
+    },
+    night: {
+      description: 'Thunderstorm',
+      image: thunderstormNight,
+    },
+  },
+  '96': {
+    day: {
+      description: 'Light Thunderstorms With Hail',
+      image: thunderstormDay,
+    },
+    night: {
+      description: 'Light Thunderstorms With Hail',
+      image: thunderstormNight,
+    },
+  },
+  '99': {
+    day: {
+      description: 'Thunderstorm With Hail',
+      image: thunderstormDay,
+    },
+    night: {
+      description: 'Thunderstorm With Hail',
+      image: thunderstormNight,
+    },
+  },
 };
