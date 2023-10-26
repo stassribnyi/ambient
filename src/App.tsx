@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { GeocodingInfo } from './vite-env';
+import { useMemo } from 'react';
+import { Location } from './vite-env';
 
 import celsius from '@bybas/weather-icons/production/fill/all/celsius.svg';
 import fahrenheit from '@bybas/weather-icons/production/fill/all/fahrenheit.svg';
@@ -24,6 +24,23 @@ import { CurrentReport, DailyReport, HourlyReport, LocationSearchDialog } from '
 import './App.css';
 import { useWeather } from './hooks';
 import { format } from 'date-fns';
+import { useLocalStorage } from 'usehooks-ts';
+
+const DEFAULT_LOCATION = {
+  admin1: 'Kyiv City',
+  admin1_id: 703447,
+  country: 'Ukraine',
+  country_code: 'UA',
+  country_id: 690791,
+  elevation: 187,
+  feature_code: 'PPLC',
+  id: 703448,
+  latitude: 50.45466,
+  longitude: 30.5238,
+  name: 'Kyiv',
+  population: 2797553,
+  timezone: 'Europe/Kyiv',
+};
 
 const UnitsSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -71,24 +88,12 @@ const UnitsSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function App() {
-  const [unit, setUnit] = useState<'celsius' | 'fahrenheit'>('celsius');
-  const [city, setCity] = useState<GeocodingInfo>({
-    admin1: 'Kyiv City',
-    admin1_id: 703447,
-    country: 'Ukraine',
-    country_code: 'UA',
-    country_id: 690791,
-    elevation: 187,
-    feature_code: 'PPLC',
-    id: 703448,
-    latitude: 50.45466,
-    longitude: 30.5238,
-    name: 'Kyiv',
-    population: 2797553,
-    timezone: 'Europe/Kyiv',
-  });
+  const [unit, setUnit] = useLocalStorage<'celsius' | 'fahrenheit'>('unit', 'celsius');
 
-  const { forecast, loading, error } = useWeather(city, unit);
+  const [locations] = useLocalStorage<Array<Location>>('locations', []);
+  const current = useMemo(() => locations.find((item) => item.current) ?? DEFAULT_LOCATION, [locations]);
+
+  const { forecast, loading, error } = useWeather(current, unit);
 
   return (
     <>
@@ -108,10 +113,11 @@ function App() {
             <Grid xs={12}>
               <Stack>
                 <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
-                  <LocationSearchDialog handleSubmit={setCity} />
+                  <LocationSearchDialog />
                   <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
                   <UnitsSwitch
                     sx={{ ml: 'auto' }}
+                    checked={unit === 'celsius'}
                     onClick={() => setUnit(unit === 'celsius' ? 'fahrenheit' : 'celsius')}
                   />
                 </Stack>
@@ -126,7 +132,7 @@ function App() {
                   }}
                 >
                   <LocationOn sx={{ width: '1rem', height: '1rem' }} />
-                  {[city.name, city.admin1, city.country].filter(Boolean).join(', ')}
+                  {[current.name, current.admin1, current.country].filter(Boolean).join(', ')}
                 </Typography>
               </Stack>
             </Grid>

@@ -96,7 +96,7 @@ export interface Daily {
   precipitation_probability_max: number[];
 }
 
-export interface GeocodingInfo {
+export interface Location {
   id: number;
   name: string;
   latitude: number;
@@ -112,4 +112,5 @@ export interface GeocodingInfo {
   admin1: string;
   admin2_id?: number;
   admin2?: string;
+  current?: boolean;
 }

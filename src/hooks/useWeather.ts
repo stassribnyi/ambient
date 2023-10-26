@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { useState, useEffect } from 'react';
 
-import { GeocodingInfo, WeatherInfo } from '../vite-env';
+import { Location, WeatherInfo } from '../vite-env';
 
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -34,10 +34,10 @@ const FORECAST_OPTIONS = {
   past_days: 1,
   forecast_days: 10,
   temperature_unit: 'celsius',
-};
+} as const;
 
 export const useWeather = (
-  city: Pick<GeocodingInfo, 'latitude' | 'longitude' | 'name' | 'timezone'>,
+  city: Pick<Location, 'latitude' | 'longitude' | 'name' | 'timezone'>,
   unit: 'fahrenheit' | 'celsius',
 ) => {
   const [forecast, setForecast] = useState<null | WeatherInfo>(null);
@@ -46,6 +46,9 @@ export const useWeather = (
 
   useEffect(() => {
     setLoading(true);
+
+    const controller = new AbortController();
+    const signal = controller.signal;
 
     axios
       .get<WeatherInfo>(WEATHER_API_URL, {
@@ -56,10 +59,13 @@ export const useWeather = (
           temperature_unit: unit,
           windspeed_unit: unit === 'celsius' ? 'kmh' : 'mph',
         },
+        signal,
       })
       .then(({ data }) => setForecast(data))
-      .catch((error) => setError(error))
+      .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
       .finally(() => setLoading(false));
+
+    return () => controller.abort();
   }, [city, unit]);
 
   return { forecast, error, loading };

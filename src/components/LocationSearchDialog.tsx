@@ -1,4 +1,3 @@
-import { Add, BackspaceOutlined, ChevronLeft, Menu } from '@mui/icons-material';
 import {
   Slide,
   IconButton,
@@ -16,14 +15,19 @@ import {
   Stack,
   useTheme,
   useMediaQuery,
-  Box,
   Card,
   CardContent,
   ButtonBase,
+  CircularProgress,
 } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
-import { forwardRef, useState, useEffect, FC } from 'react';
-import { GeocodingInfo } from '../vite-env';
+import { Add, BackspaceOutlined, ChevronLeft, Menu } from '@mui/icons-material';
+
+import { forwardRef, useState, FC, useMemo } from 'react';
+import { useDebounce, useLocalStorage } from 'usehooks-ts';
+
+import { useLocationSearch } from '../hooks';
+import { Location } from '../vite-env';
 import { WMO } from '../wmo';
 
 const Transition = forwardRef(function Transition(
@@ -40,8 +44,8 @@ const Transition = forwardRef(function Transition(
 
 const LocationOption: FC<
   Readonly<{
-    option: GeocodingInfo;
-    onSelect: (option: GeocodingInfo) => void;
+    option: Location;
+    onSelect: (option: Location) => void;
   }>
 > = ({ option, onSelect }) => (
   <Card sx={{ mb: 2 }}>
@@ -64,55 +68,167 @@ const LocationOption: FC<
   </Card>
 );
 
-export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: GeocodingInfo) => void }) {
-  const [open, setOpen] = useState(false);
-  const [isNewSearch, setNewSearch] = useState(false);
-  const [options, setOptions] = useState<Array<GeocodingInfo>>([]);
-  const [favorite, setFavorite] = useState<null | GeocodingInfo>(null);
-  const [previousOptions, setPreviousOptions] = useState<Array<GeocodingInfo>>([]);
+function FindLocationDialog({
+  handleBackButton,
+  handleSubmit,
+}: {
+  handleBackButton: () => void;
+  handleSubmit: (location: Location) => void;
+}) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const [search, setSearch] = useState<string>('');
+  const debouncedSearch = useDebounce<string>(search, 500);
+
+  const { results, loading } = useLocationSearch(debouncedSearch);
+
+  const handleSelect = (option: Location) => {
+    setSearch('');
+    handleSubmit(option);
+    handleBackButton();
+  };
+
+  return (
+    <>
+      <AppBar sx={{ position: 'relative' }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handleBackButton} aria-label="close">
+            <ChevronLeft />
+          </IconButton>
+
+          <InputBase
+            autoFocus
+            value={search}
+            sx={{ width: '100%' }}
+            placeholder="What is your city?"
+            onChange={({ target }) => setSearch(target.value?.trim())}
+          />
+
+          <IconButton onClick={() => setSearch('')}>
+            <BackspaceOutlined />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <DialogContent sx={{ p: 1, minHeight: '444px', maxHeight: isMobile ? 'auto' : '560px', minWidth: '320px' }}>
+        {results.length && search.length ? (
+          <Card>
+            <CardContent>
+              <List disablePadding>
+                {results.map((location, idx) => (
+                  <>
+                    <ListItem disableGutters key={idx} onClick={() => handleSelect(location)}>
+                      <ListItemText primary={location.name} secondary={location.admin1} />
+                    </ListItem>
+                    {idx !== results.length - 1 && <Divider />}
+                  </>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+        ) : (
+          <Stack direction="row" justifyContent="center" alignItems="center" sx={{ height: '100%' }}>
+            {loading ? (
+              <CircularProgress color="secondary" />
+            ) : (
+              <DialogContentText>
+                {search.length === 0 ? 'Please enter your location.' : 'Nothing has been found.'}
+              </DialogContentText>
+            )}
+          </Stack>
+        )}
+      </DialogContent>
+    </>
+  );
+}
+
+function ManageLocationDialog({
+  handleBackButton,
+  handleAddLocation,
+  handleSubmit,
+}: {
+  handleBackButton: () => void;
+  handleAddLocation: () => void;
+  handleSubmit: (value: Location) => void;
+}) {
+  const [locations] = useLocalStorage<Array<Location>>('locations', []);
+  const favorite = useMemo(() => locations.find((item) => item.current), [locations]);
+  const otherLocations = useMemo(() => locations.filter((item) => item.id !== favorite?.id), [locations, favorite]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  useEffect(() => {
-    if (!search?.trim().length) {
-      return;
-    }
+  return (
+    <>
+      <AppBar sx={{ position: 'relative' }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handleBackButton} aria-label="close">
+            <ChevronLeft />
+          </IconButton>
 
-    const url = new URL(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${search}&count=10&language=en&format=json`,
-    );
-    fetch(url.toString())
-      .then((resp) => resp.json())
-      .then((res) => setOptions(((res.results || []) as Array<GeocodingInfo>).filter((x) => x.latitude && x.longitude)))
-      .catch(console.log);
-  }, [search]);
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+            <Typography>Manage your location</Typography>
+            <IconButton onClick={handleAddLocation}>
+              <Add />
+            </IconButton>
+          </Stack>
+        </Toolbar>
+      </AppBar>
+      <DialogContent sx={{ p: 1, minHeight: '444px', maxHeight: isMobile ? 'auto' : '560px', minWidth: '320px' }}>
+        {favorite && (
+          <>
+            <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5 }}>
+              Current location
+            </Typography>
+            <LocationOption option={favorite} onSelect={handleSubmit} />
+          </>
+        )}
+        {otherLocations.length ? (
+          <>
+            <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5 }}>
+              Other locations
+            </Typography>
+            {otherLocations.map((option, idx) => (
+              <LocationOption key={idx} option={option} onSelect={handleSubmit} />
+            ))}
+          </>
+        ) : null}
+      </DialogContent>
+    </>
+  );
+}
+
+export function LocationSearchDialog() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [, setLocations] = useLocalStorage<Array<Location>>('locations', []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setIsModalOpen(true);
   };
 
   const handleClose = () => {
-    if (isNewSearch) {
-      setNewSearch(false);
-
-      return;
-    }
-
-    setOpen(false);
-    setNewSearch(false);
+    setIsSearchVisible(false);
+    setIsModalOpen(false);
   };
 
-  const handleOptionSelect = (option: GeocodingInfo) => {
-    setSearch('');
-    setNewSearch(false);
-    setPreviousOptions((items) => [
-      ...items.filter((item) => item.id !== option.id),
-      ...(favorite && favorite?.id !== option.id ? [favorite] : []),
-    ]);
-    setFavorite(option);
-    handleSubmit(option);
+  const handleOptionSelect = (option: Location) => {
+    setLocations((items) => {
+      const existing = items.find((item) => item.id === option.id);
+      items.forEach((item) => (item.current = false));
+
+      if (existing) {
+        existing.current = true;
+
+        return [...items];
+      }
+
+      return [...items, { ...option, current: true }];
+    });
+
     handleClose();
   };
 
@@ -123,120 +239,24 @@ export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: G
       </IconButton>
       <Dialog
         sx={{
-          '& .MuiPaper-root': {
-            // backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06))',
-          },
           '& header': {
             boxShadow: 'none',
           },
         }}
         fullScreen={isMobile}
-        open={open}
+        open={isModalOpen}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <Box
-          sx={{
-            minWidth: '360px',
-            minHeight: '480px',
-            height: 'calc(100% - 56px)',
-            width: '100%',
-          }}
-        >
-          <AppBar sx={{ position: 'relative' }}>
-            <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                <ChevronLeft />
-              </IconButton>
-              {isNewSearch ? (
-                <>
-                  <InputBase
-                    autoFocus
-                    value={search}
-                    sx={{ width: '100%' }}
-                    placeholder="What is your city?"
-                    onChange={({ target }) => setSearch(target.value)}
-                  />
-
-                  <IconButton onClick={() => setSearch('')}>
-                    <BackspaceOutlined />
-                  </IconButton>
-                </>
-              ) : (
-                <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
-                  <Typography>Manage your location</Typography>
-                  <IconButton onClick={() => setNewSearch(true)}>
-                    <Add />
-                  </IconButton>
-                </Stack>
-              )}
-            </Toolbar>
-          </AppBar>
-          {/* TODO: split it up and create a better solution */}
-          {isNewSearch && (
-            <>
-              {options.length && search.trim().length ? (
-                <DialogContent sx={{ p: 1, pt: 4 }}>
-                  <Card>
-                    <CardContent>
-                      <List disablePadding>
-                        {options.map((option, idx) => (
-                          <>
-                            <ListItem
-                              disableGutters
-                              key={idx}
-                              onClick={() => {
-                                handleOptionSelect(option);
-                              }}
-                            >
-                              <ListItemText primary={option.name} secondary={option.admin1} />
-                            </ListItem>
-                            {idx !== options.length - 1 && <Divider />}
-                          </>
-                        ))}
-                      </List>
-                    </CardContent>
-                  </Card>
-                </DialogContent>
-              ) : (
-                <DialogContent
-                  sx={{
-                    display: 'grid',
-                    placeItems: 'center',
-                    height: '100%',
-                    width: '100%',
-                  }}
-                >
-                  <DialogContentText>
-                    {search.trim().length === 0 ? 'Please enter your location.' : 'Nothing has been found.'}
-                  </DialogContentText>
-                </DialogContent>
-              )}
-            </>
-          )}
-          {!isNewSearch && (
-            <DialogContent sx={{ p: 1 }}>
-              {favorite && (
-                <>
-                  <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5 }}>
-                    Current location
-                  </Typography>
-                  <LocationOption option={favorite} onSelect={handleOptionSelect} />
-                </>
-              )}
-              {previousOptions.length ? (
-                <>
-                  <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5 }}>
-                    Other locations
-                  </Typography>
-                  {previousOptions.map((option, idx) => (
-                    <LocationOption key={idx} option={option} onSelect={handleOptionSelect} />
-                  ))}
-                </>
-              ) : null}
-            </DialogContent>
-          )}
-        </Box>
+        {isSearchVisible ? (
+          <FindLocationDialog handleBackButton={() => setIsSearchVisible(false)} handleSubmit={handleOptionSelect} />
+        ) : (
+          <ManageLocationDialog
+            handleBackButton={handleClose}
+            handleSubmit={handleOptionSelect}
+            handleAddLocation={() => setIsSearchVisible(true)}
+          />
+        )}
       </Dialog>
     </>
   );
