@@ -1,4 +1,4 @@
-import { Add, ChevronLeft, Close, Menu, PlusOne } from '@mui/icons-material';
+import { Add, BackspaceOutlined, ChevronLeft, Close, Menu, PlusOne } from '@mui/icons-material';
 import {
   Slide,
   IconButton,
@@ -29,7 +29,11 @@ const Transition = forwardRef(function Transition(
   },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction='right' ref={ref} {...props} />;
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  return <Slide direction={isMobile ? 'right' : 'down'} ref={ref} {...props} />;
 });
 
 export function LocationSearchDialog({
@@ -131,6 +135,7 @@ export function LocationSearchDialog({
               {isNewSearch ? (
                 <>
                   <InputBase
+                    autoFocus
                     value={search}
                     sx={{ width: '100%' }}
                     placeholder='What is your city?'
@@ -138,7 +143,7 @@ export function LocationSearchDialog({
                   />
 
                   <IconButton onClick={() => setSearch('')}>
-                    <Close />
+                    <BackspaceOutlined />
                   </IconButton>
                 </>
               ) : (

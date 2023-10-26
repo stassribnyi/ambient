@@ -83,6 +83,7 @@ export interface DailyUnits {
   sunset: string;
   temperature_2m_max: string;
   temperature_2m_min: string;
+  precipitation_probability_max: string;
 }
 
 export interface Daily {
@@ -92,6 +93,7 @@ export interface Daily {
   sunset: string[];
   temperature_2m_max: number[];
   temperature_2m_min: number[];
+  precipitation_probability_max: number[];
 }
 
 

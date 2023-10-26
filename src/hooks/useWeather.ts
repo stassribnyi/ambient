@@ -34,9 +34,11 @@ const FORECAST_OPTIONS = {
         'sunset',
         'temperature_2m_max',
         'temperature_2m_min',
+        'precipitation_probability_max'
     ],
     timezone: 'auto',
-    past_days: 1
+    past_days: 1,
+    forecast_days: 10
 };
 
 export const useWeather = (city: Pick<GeocodingInfo, 'latitude' | 'longitude' | 'name' | 'timezone'>) => {

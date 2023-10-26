@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { GeocodingInfo } from './vite-env';
 
+import celsius from '@bybas/weather-icons/production/fill/all/celsius.svg';
+import fahrenheit from '@bybas/weather-icons/production/fill/all/fahrenheit.svg';
+
+
 import { LocationOn } from '@mui/icons-material';
 import {
   Alert,
@@ -12,7 +16,9 @@ import {
   LinearProgress,
   Snackbar,
   Stack,
+  Switch,
   Typography,
+  styled,
 } from '@mui/material';
 import {
   CurrentReport,
@@ -24,6 +30,51 @@ import {
 import './App.css';
 import { useWeather } from './hooks';
 import { format } from 'date-fns';
+
+const UnitsSwitch = styled(Switch)(({ theme }) => ({
+  padding: 8,
+  '& .MuiSwitch-switchBase': {
+    '&.Mui-checked': {
+      '&.Mui-checked + .MuiSwitch-track, &.Mui-disabled + .MuiSwitch-track': {
+        opacity: 1,
+        backgroundColor: theme.palette.grey[400],
+      },
+    },
+  },
+  '& .MuiSwitch-track': {
+    opacity: 1,
+    borderRadius: 22 / 2,
+    '&:before, &:after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: 16,
+      height: 16,
+    },
+    '&:before': {
+      backgroundColor: theme.palette.secondary.dark,
+      maskImage: `url(${celsius})`,
+      maskSize: '32px',
+      maskPosition: 'center',
+      left: 12,
+    },
+    '&:after': {
+      backgroundColor: theme.palette.secondary.dark,
+      maskImage: `url(${fahrenheit})`,
+      maskSize: '32px',
+      maskPosition: 'center',
+      right: 12,
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    backgroundColor: theme.palette.secondary.dark,
+    boxShadow: 'none',
+    width: 16,
+    height: 16,
+    margin: 2,
+  },
+}));
 
 function App() {
   const [city, setCity] = useState<GeocodingInfo>({
@@ -73,6 +124,7 @@ function App() {
                   <Typography variant='body1'>
                     {format(new Date(forecast.current.time), 'EEEE, MMM dd')}
                   </Typography>
+                  <UnitsSwitch sx={{ ml: 'auto' }} />
                 </Stack>
                 <Typography
                   color='secondary'
@@ -84,7 +136,7 @@ function App() {
                     gap: '0.25rem',
                   }}
                 >
-                  <LocationOn sx={{ width: '1rem', height: '1rem'}}/> {city.name}, {city.admin1}, {city.country}
+                  <LocationOn sx={{ width: '1rem', height: '1rem' }} /> {city.name}, {city.admin1}, {city.country}
                 </Typography>
               </Stack>
             </Grid>
@@ -107,10 +159,10 @@ function App() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Card>
+              <Card sx={{  height: '100%' }}>
                 <CardContent>
                   <Typography gutterBottom variant='h6'>
-                    7-Days Forecast
+                    10-Days Forecast
                   </Typography>
                   <DailyReport weatherInfo={forecast} />
                 </CardContent>
