@@ -31,7 +31,7 @@ const UnitsSwitch = styled(Switch)(({ theme }) => ({
     '&.Mui-checked': {
       '&.Mui-checked + .MuiSwitch-track, &.Mui-disabled + .MuiSwitch-track': {
         opacity: 1,
-        backgroundColor: theme.palette.grey[400],
+        backgroundColor: theme.palette.common.white,
       },
     },
   },
@@ -106,7 +106,7 @@ function App() {
           <Grid container spacing={2}>
             <Grid xs={12}>
               <Stack>
-                <Stack direction="row" alignItems="center">
+                <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
                   <LocationSearchDialog handleSubmit={setCity} />
                   <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
                   <UnitsSwitch sx={{ ml: 'auto' }} />
@@ -121,7 +121,8 @@ function App() {
                     gap: '0.25rem',
                   }}
                 >
-                  <LocationOn sx={{ width: '1rem', height: '1rem' }} /> {city.name}, {city.admin1}, {city.country}
+                  <LocationOn sx={{ width: '1rem', height: '1rem' }} />
+                  {[city.name, city.admin1, city.country].filter(Boolean).join(', ')}
                 </Typography>
               </Stack>
             </Grid>

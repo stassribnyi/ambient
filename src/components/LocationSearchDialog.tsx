@@ -14,14 +14,17 @@ import {
   DialogContentText,
   Typography,
   Stack,
-  ListSubheader,
   useTheme,
   useMediaQuery,
   Box,
+  Card,
+  CardContent,
+  ButtonBase,
 } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
-import { forwardRef, useState, useEffect } from 'react';
+import { forwardRef, useState, useEffect, FC } from 'react';
 import { GeocodingInfo } from '../vite-env';
+import { WMO } from '../wmo';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,6 +37,32 @@ const Transition = forwardRef(function Transition(
 
   return <Slide direction={isMobile ? 'right' : 'down'} ref={ref} {...props} />;
 });
+
+const LocationOption: FC<
+  Readonly<{
+    option: GeocodingInfo;
+    onSelect: (option: GeocodingInfo) => void;
+  }>
+> = ({ option, onSelect }) => (
+  <Card sx={{ mb: 2 }}>
+    <ButtonBase onClick={() => onSelect(option)} sx={{ width: '100%' }}>
+      <CardContent sx={{ width: '100%' }}>
+        <Stack direction="row" justifyContent="space-between">
+          <Stack alignItems="start">
+            <Typography variant="body1">{option.name}</Typography>
+            <Typography variant="caption" color="secondary">
+              {option.country}
+            </Typography>
+          </Stack>
+          <Stack direction="row" alignItems="center">
+            <img src={WMO[0].day.image} style={{ width: '36px' }} />
+            <Typography variant="h5">14°</Typography>
+          </Stack>
+        </Stack>
+      </CardContent>
+    </ButtonBase>
+  </Card>
+);
 
 export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: GeocodingInfo) => void }) {
   const [open, setOpen] = useState(false);
@@ -65,6 +94,12 @@ export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: G
   };
 
   const handleClose = () => {
+    if (isNewSearch) {
+      setNewSearch(false);
+
+      return;
+    }
+
     setOpen(false);
     setNewSearch(false);
   };
@@ -89,7 +124,7 @@ export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: G
       <Dialog
         sx={{
           '& .MuiPaper-root': {
-            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06))',
+            // backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06))',
           },
           '& header': {
             boxShadow: 'none',
@@ -141,20 +176,28 @@ export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: G
           {isNewSearch && (
             <>
               {options.length && search.trim().length ? (
-                <List>
-                  {options.map((option, idx) => (
-                    <>
-                      <ListItem
-                        onClick={() => {
-                          handleOptionSelect(option);
-                        }}
-                      >
-                        <ListItemText primary={option.name} secondary={option.admin1} />
-                      </ListItem>
-                      {idx !== options.length - 1 && <Divider />}
-                    </>
-                  ))}
-                </List>
+                <DialogContent sx={{ p: 1, pt: 4 }}>
+                  <Card>
+                    <CardContent>
+                      <List disablePadding>
+                        {options.map((option, idx) => (
+                          <>
+                            <ListItem
+                              disableGutters
+                              key={idx}
+                              onClick={() => {
+                                handleOptionSelect(option);
+                              }}
+                            >
+                              <ListItemText primary={option.name} secondary={option.admin1} />
+                            </ListItem>
+                            {idx !== options.length - 1 && <Divider />}
+                          </>
+                        ))}
+                      </List>
+                    </CardContent>
+                  </Card>
+                </DialogContent>
               ) : (
                 <DialogContent
                   sx={{
@@ -172,35 +215,26 @@ export function LocationSearchDialog({ handleSubmit }: { handleSubmit: (value: G
             </>
           )}
           {!isNewSearch && (
-            <>
+            <DialogContent sx={{ p: 1 }}>
               {favorite && (
-                <List subheader={<ListSubheader>Current location</ListSubheader>}>
-                  <ListItem
-                    onClick={() => {
-                      handleOptionSelect(favorite);
-                    }}
-                  >
-                    <ListItemText primary={favorite.name} secondary={favorite.admin1} />
-                  </ListItem>
-                </List>
+                <>
+                  <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5 }}>
+                    Current location
+                  </Typography>
+                  <LocationOption option={favorite} onSelect={handleOptionSelect} />
+                </>
               )}
               {previousOptions.length ? (
-                <List subheader={<ListSubheader>Other locations</ListSubheader>}>
+                <>
+                  <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5 }}>
+                    Other locations
+                  </Typography>
                   {previousOptions.map((option, idx) => (
-                    <>
-                      <ListItem
-                        onClick={() => {
-                          handleOptionSelect(option);
-                        }}
-                      >
-                        <ListItemText primary={option.name} secondary={option.admin1} />
-                      </ListItem>
-                      {idx !== previousOptions.length - 1 && <Divider />}
-                    </>
+                    <LocationOption key={idx} option={option} onSelect={handleOptionSelect} />
                   ))}
-                </List>
+                </>
               ) : null}
-            </>
+            </DialogContent>
           )}
         </Box>
       </Dialog>
