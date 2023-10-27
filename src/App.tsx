@@ -1,25 +1,22 @@
 import { useMemo } from 'react';
 import { Location } from './vite-env';
 
-import celsius from '@bybas/weather-icons/production/fill/all/celsius.svg';
-import fahrenheit from '@bybas/weather-icons/production/fill/all/fahrenheit.svg';
-
 import { LocationOn } from '@mui/icons-material';
 import {
   Alert,
+  Backdrop,
   Box,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   Unstable_Grid2 as Grid,
   LinearProgress,
   Snackbar,
   Stack,
-  Switch,
   Typography,
-  styled,
 } from '@mui/material';
-import { CurrentReport, DailyReport, HourlyReport, LocationSearchDialog } from './components';
+import { CurrentReport, DailyReport, HourlyReport, LocationSearchDialog, UnitSwitch } from './components';
 
 import './App.css';
 import { useWeather } from './hooks';
@@ -42,51 +39,6 @@ const DEFAULT_LOCATION = {
   timezone: 'Europe/Kyiv',
 };
 
-const UnitsSwitch = styled(Switch)(({ theme }) => ({
-  padding: 8,
-  '& .MuiSwitch-switchBase': {
-    '&.Mui-checked': {
-      '&.Mui-checked + .MuiSwitch-track, &.Mui-disabled + .MuiSwitch-track': {
-        opacity: 1,
-        backgroundColor: theme.palette.common.white,
-      },
-    },
-  },
-  '& .MuiSwitch-track': {
-    opacity: 1,
-    borderRadius: 22 / 2,
-    '&:before, &:after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      width: 16,
-      height: 16,
-    },
-    '&:before': {
-      backgroundColor: theme.palette.secondary.dark,
-      maskImage: `url(${celsius})`,
-      maskSize: '32px',
-      maskPosition: 'center',
-      left: 12,
-    },
-    '&:after': {
-      backgroundColor: theme.palette.secondary.dark,
-      maskImage: `url(${fahrenheit})`,
-      maskSize: '32px',
-      maskPosition: 'center',
-      right: 12,
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    backgroundColor: theme.palette.secondary.dark,
-    boxShadow: 'none',
-    width: 16,
-    height: 16,
-    margin: 2,
-  },
-}));
-
 function App() {
   const [unit, setUnit] = useLocalStorage<'celsius' | 'fahrenheit'>('unit', 'celsius');
 
@@ -98,9 +50,9 @@ function App() {
   return (
     <>
       {loading && (
-        <Box sx={{ width: '100%', top: '1rem', position: 'absolute' }}>
-          <LinearProgress color="secondary" />
-        </Box>
+        <Backdrop sx={{ color: 'secondary.dark', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       )}
       <Snackbar open={!!error} autoHideDuration={3000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="error" sx={{ width: '100%' }}>
@@ -115,7 +67,7 @@ function App() {
                 <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
                   <LocationSearchDialog />
                   <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
-                  <UnitsSwitch
+                  <UnitSwitch
                     sx={{ ml: 'auto' }}
                     checked={unit === 'celsius'}
                     onClick={() => setUnit(unit === 'celsius' ? 'fahrenheit' : 'celsius')}
