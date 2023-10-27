@@ -5,13 +5,11 @@ import { LocationOn } from '@mui/icons-material';
 import {
   Alert,
   Backdrop,
-  Box,
   Card,
   CardContent,
   CircularProgress,
   Container,
   Unstable_Grid2 as Grid,
-  LinearProgress,
   Snackbar,
   Stack,
   Typography,
@@ -64,7 +62,7 @@ function App() {
           <Grid container spacing={2}>
             <Grid xs={12}>
               <Stack>
-                <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
+                <Stack direction="row" alignItems="center" sx={{ width: '100%', height: '2.25rem' }}>
                   <LocationSearchDialog />
                   <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
                   <UnitSwitch
@@ -77,7 +75,6 @@ function App() {
                   color="secondary"
                   variant="caption"
                   sx={{
-                    pl: 1,
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.25rem',
