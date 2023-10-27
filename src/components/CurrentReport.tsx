@@ -1,12 +1,95 @@
 import { FC, PropsWithChildren } from 'react';
+import { format, isEqual } from 'date-fns';
+import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import { getWMOInfo } from '../getWMOInfo';
 import { WeatherInfo } from '../vite-env';
-import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
-import uvIdx from '@bybas/weather-icons/production/fill/all/uv-index-10.svg';
+
+import sunrise from '@bybas/weather-icons/production/fill/all/sunrise.svg';
+import sunset from '@bybas/weather-icons/production/fill/all/sunset.svg';
+
+// TODO: extract into separate file
+import uvIdxNA from '@bybas/weather-icons/production/fill/all/uv-index.svg';
+import uvIdx1 from '@bybas/weather-icons/production/fill/all/uv-index-1.svg';
+import uvIdx2 from '@bybas/weather-icons/production/fill/all/uv-index-2.svg';
+import uvIdx3 from '@bybas/weather-icons/production/fill/all/uv-index-3.svg';
+import uvIdx4 from '@bybas/weather-icons/production/fill/all/uv-index-4.svg';
+import uvIdx5 from '@bybas/weather-icons/production/fill/all/uv-index-5.svg';
+import uvIdx6 from '@bybas/weather-icons/production/fill/all/uv-index-6.svg';
+import uvIdx7 from '@bybas/weather-icons/production/fill/all/uv-index-7.svg';
+import uvIdx8 from '@bybas/weather-icons/production/fill/all/uv-index-8.svg';
+import uvIdx9 from '@bybas/weather-icons/production/fill/all/uv-index-9.svg';
+import uvIdx10 from '@bybas/weather-icons/production/fill/all/uv-index-10.svg';
+import uvIdx11 from '@bybas/weather-icons/production/fill/all/uv-index-11.svg';
+
+const UV_INDEX = new Map([
+  [1, uvIdx1],
+  [2, uvIdx2],
+  [3, uvIdx3],
+  [4, uvIdx4],
+  [5, uvIdx5],
+  [6, uvIdx6],
+  [7, uvIdx7],
+  [8, uvIdx8],
+  [9, uvIdx9],
+  [10, uvIdx10],
+  [11, uvIdx11],
+]);
+
+function getUVIndexImage(index: number) {
+  return UV_INDEX.get(index) || uvIdxNA;
+}
+
+function getUVIndexInfo(index: number) {
+  const approximateIdx = Math.round(index);
+  let description = 'N/A';
+
+  switch (true) {
+    case approximateIdx <= 2:
+      description = 'Low';
+      break;
+    case 3 <= approximateIdx && approximateIdx <= 5:
+      description = 'Moderate';
+      break;
+    case 6 <= approximateIdx && approximateIdx <= 7:
+      description = 'High';
+      break;
+    case 8 < approximateIdx && approximateIdx <= 9:
+      description = 'Very High';
+      break;
+    case 11 <= approximateIdx:
+      description = 'Extreme';
+      break;
+    default:
+      break;
+  }
+
+  return {
+    description,
+    imageUrl: getUVIndexImage(approximateIdx),
+  };
+}
+
+// TODO: well, this is the thing I haven't expected, need to show date and time according timezone
+// TODO: go through other time usages and fix
+function changeTimeZone(date: string | Date, timeZone: string) {
+  if (typeof date === 'string') {
+    return new Date(
+      new Date(date).toLocaleString('en-US', {
+        timeZone,
+      }),
+    );
+  }
+
+  return new Date(
+    date.toLocaleString('en-US', {
+      timeZone,
+    }),
+  );
+}
 
 const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string }>>> = ({
   imageUrl,
@@ -40,6 +123,18 @@ const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string
 
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const wmoInfo = getWMOInfo(weatherInfo);
+  const currentDateTimeZone = changeTimeZone(new Date(), weatherInfo.timezone);
+
+  const currentIdx = weatherInfo.hourly.time.findIndex((t) =>
+    isEqual(currentDateTimeZone.setMinutes(0, 0, 0), new Date(t)),
+  );
+  const dayIdx = weatherInfo.daily.time.findIndex((t) =>
+    isEqual(currentDateTimeZone.setHours(0, 0, 0, 0), new Date(t).setHours(0, 0, 0, 0)),
+  );
+
+  const uvIndex = weatherInfo.hourly.uv_index[currentIdx];
+  const sunriseTime = weatherInfo.daily.sunrise[dayIdx];
+  const sunsetTime = weatherInfo.daily.sunset[dayIdx];
 
   const current = {
     temperature: {
@@ -58,8 +153,12 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
       value: Math.round(weatherInfo.current.relativehumidity_2m),
       units: weatherInfo.current_units.relativehumidity_2m,
     },
+    sun: {
+      value: weatherInfo.current.is_day ? sunsetTime : sunriseTime,
+    },
     imageUrl: wmoInfo?.image,
     description: wmoInfo?.description,
+    uvIndex: getUVIndexInfo(uvIndex),
   };
 
   return (
@@ -100,14 +199,16 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
             </InfoBlock>
           </Grid>
           <Grid xs={6} md={3}>
-            <InfoBlock title="UV Index" imageUrl={uvIdx}>
-              High
+            <InfoBlock title="UV Index" imageUrl={current.uvIndex.imageUrl}>
+              {current.uvIndex.description}
             </InfoBlock>
           </Grid>
           <Grid xs={6} md={3}>
-            <InfoBlock title="Wind" imageUrl={windSock}>
-              {current.windspeed.value}
-              {current.windspeed.units}
+            <InfoBlock
+              title={weatherInfo.current.is_day ? 'Sunset' : 'Sunrise'}
+              imageUrl={weatherInfo.current.is_day ? sunrise : sunset}
+            >
+              {format(new Date(current.sun.value), 'HH:mm')}
             </InfoBlock>
           </Grid>
         </Grid>

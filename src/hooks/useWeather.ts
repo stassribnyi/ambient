@@ -18,7 +18,7 @@ const FORECAST_OPTIONS = {
     'surface_pressure',
     'windspeed_10m',
   ],
-  hourly: ['temperature_2m', 'weathercode', 'relativehumidity_2m', 'precipitation_probability'],
+  hourly: ['temperature_2m', 'weathercode', 'relativehumidity_2m', 'precipitation_probability', 'uv_index'],
   daily: [
     'weathercode',
     'sunrise',

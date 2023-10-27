@@ -71,6 +71,7 @@ export interface Hourly {
   relativehumidity_2m: number[];
   apparent_temperature: number[];
   precipitation_probability: number[];
+  uv_index: number[];
   precipitation: number[];
   rain: number[];
   weathercode: Array<keyof typeof WMO>;

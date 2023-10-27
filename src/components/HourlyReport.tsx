@@ -58,7 +58,12 @@ export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weath
                         {temperature.value}
                         {temperature.units}
                       </strong>
-                      <Box component="img" draggable={false} src={imageUrl} sx={{ width: '48px', minWidth: '48px' }} />
+                      <Box
+                        component="img"
+                        draggable={false}
+                        src={imageUrl}
+                        sx={{ width: '48px', minWidth: '48px', mb: 1, mt: -1 }}
+                      />
                       <Box sx={{ margin: 0, fontSize: '0.85rem', mb: 1 }}>{format(time, 'HH:mm')}</Box>
                       <Precipitation showLabel level={precipitation.value} size={13.6} />
                     </div>
