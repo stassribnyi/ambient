@@ -1,12 +1,42 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
 import { getWMOInfo } from '../getWMOInfo';
 import { WeatherInfo } from '../vite-env';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
 import uvIdx from '@bybas/weather-icons/production/fill/all/uv-index-10.svg';
+
+const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string }>>> = ({
+  imageUrl,
+  children,
+  title,
+}) => {
+  return (
+    <Box
+      sx={{
+        fontSize: '1rem',
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        background: '#11191f',
+        padding: 1.5,
+        borderRadius: '1rem',
+        color: '#fff',
+        boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
+      }}
+    >
+      <Box component="img" src={imageUrl} alt={title} sx={{ width: '48px', mb: 1 }} />
+      <Typography variant="body1">{title}</Typography>
+      <Typography variant="caption" color="secondary">
+        {children}
+      </Typography>
+    </Box>
+  );
+};
 
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const wmoInfo = getWMOInfo(weatherInfo);
@@ -56,48 +86,31 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
             </Typography>
           </Stack>
         </Box>
-        <Stack direction="row" justifyContent="space-between">
-          <div>
-            <p
-              style={{
-                fontSize: '1rem',
-                margin: 0,
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              <img src={humidity} style={{ width: '42px' }} /> {current.relativeHumidity.value}
+        <Grid container spacing={2}>
+          <Grid xs={6} md={3}>
+            <InfoBlock title="Humidity" imageUrl={humidity}>
+              {current.relativeHumidity.value}
               {current.relativeHumidity.units}
-            </p>
-          </div>
-
-          <div>
-            <p
-              style={{
-                fontSize: '1rem',
-                margin: 0,
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              <img alt="windspeed" src={windSock} style={{ width: '42px' }} /> {current.windspeed.value}
+            </InfoBlock>
+          </Grid>
+          <Grid xs={6} md={3}>
+            <InfoBlock title="Wind" imageUrl={windSock}>
+              {current.windspeed.value}
               {current.windspeed.units}
-            </p>
-          </div>
-
-          <div>
-            <p
-              style={{
-                fontSize: '1rem',
-                margin: 0,
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              <img alt="uv index 10" src={uvIdx} style={{ width: '42px' }} />
-            </p>
-          </div>
-        </Stack>
+            </InfoBlock>
+          </Grid>
+          <Grid xs={6} md={3}>
+            <InfoBlock title="UV Index" imageUrl={uvIdx}>
+              High
+            </InfoBlock>
+          </Grid>
+          <Grid xs={6} md={3}>
+            <InfoBlock title="Wind" imageUrl={windSock}>
+              {current.windspeed.value}
+              {current.windspeed.units}
+            </InfoBlock>
+          </Grid>
+        </Grid>
       </Stack>
     </>
   );

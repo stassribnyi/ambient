@@ -1,9 +1,12 @@
 import { FC } from 'react';
-import { Table, TableBody, TableRow, TableCell, TableContainer } from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, TableContainer, Box } from '@mui/material';
 import { format, subHours, compareAsc, addHours } from 'date-fns';
 
 import { WeatherInfo } from '../vite-env';
 import { getWMOInfoHourly } from '../getWMOInfo';
+import { Precipitation } from './Precipitation';
+import Combining from './Chart';
+import { useElementSize } from 'usehooks-ts';
 
 function getHourlyInfo(weatherInfo: WeatherInfo) {
   return weatherInfo.hourly.time
@@ -24,33 +27,51 @@ function getHourlyInfo(weatherInfo: WeatherInfo) {
         value: Math.floor(weatherInfo.hourly.temperature_2m[idx]),
         units: '°',
       },
+      precipitation: {
+        value: weatherInfo.hourly.precipitation_probability[idx],
+        unit: weatherInfo.hourly_units.precipitation_probability,
+      },
     }));
 }
-export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => (
-  <TableContainer sx={{ pb: '1rem' }}>
-    <Table size="small">
-      <TableBody>
-        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-          {getHourlyInfo(weatherInfo).map(({ time, imageUrl, temperature }, idx) => (
-            <TableCell key={idx} sx={{ p: 0 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
-                <p style={{ margin: 0 }}>{format(time, 'HH')}</p>
-                <img draggable={false} src={imageUrl} style={{ width: '48px', minWidth: '48px' }} />
-                <strong style={{ fontSize: '1rem', margin: 0 }}>
-                  {temperature.value}
-                  {temperature.units}
-                </strong>
-              </div>
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableBody>
-    </Table>
-  </TableContainer>
-);
+export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
+  const hourlyInfo = getHourlyInfo(weatherInfo);
+  const [itemRef, { width }] = useElementSize();
+
+  return (
+    <>
+      <TableContainer sx={{ pb: '1rem' }}>
+        <Box sx={{ minWidth: 'fit-content' }}>
+          <Table size="small">
+            <TableBody>
+              <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                {hourlyInfo.map(({ time, imageUrl, precipitation, temperature }, idx) => (
+                  <TableCell key={idx} sx={{ p: 0 }}>
+                    <div
+                      ref={idx === 0 ? itemRef : null}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <strong style={{ fontSize: '1rem', margin: 0 }}>
+                        {temperature.value}
+                        {temperature.units}
+                      </strong>
+                      <Box component="img" draggable={false} src={imageUrl} sx={{ width: '48px', minWidth: '48px' }} />
+                      <Box sx={{ margin: 0, fontSize: '0.85rem', mb: 1 }}>{format(time, 'HH:mm')}</Box>
+                      <Precipitation showLabel level={precipitation.value} size={13.6} />
+                    </div>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableBody>
+          </Table>
+          <Box sx={{ width: '100%', p: 2, pl: `${width / 2}px`, pr: `${width / 2}px` }}>
+            <Combining values={hourlyInfo.map((i) => i.temperature.value)} />
+          </Box>
+        </Box>
+      </TableContainer>
+    </>
+  );
+};

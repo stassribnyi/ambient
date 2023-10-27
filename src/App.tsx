@@ -138,9 +138,7 @@ function App() {
             </Grid>
             <Grid xs={12} md={6}>
               <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
-                <Box sx={{ p: 1 }}>
-                  <CurrentReport weatherInfo={forecast} />
-                </Box>
+                <CurrentReport weatherInfo={forecast} />
                 <Card>
                   <CardContent>
                     <Typography gutterBottom variant="h6">
