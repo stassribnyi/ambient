@@ -33,7 +33,7 @@ export const useLocationsWeather = (cities: Array<Location>, unit: 'fahrenheit' 
         },
         signal,
       })
-      .then(({ data }) => setForecast(data))
+      .then(({ data }) => setForecast(Array.isArray(data) ? data : [data]))
       .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
       .finally(() => setLoading(false));
 
