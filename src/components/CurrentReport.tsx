@@ -5,7 +5,7 @@ import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 import { getWMOInfo } from '../getWMOInfo';
 import { WeatherInfo } from '../vite-env';
 
-import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
+// import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
 
 import sunrise from '@bybas/weather-icons/production/fill/all/sunrise.svg';
