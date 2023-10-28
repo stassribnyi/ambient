@@ -6,35 +6,14 @@ import { Location, WeatherInfo } from '../vite-env';
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
 const FORECAST_OPTIONS = {
-  current: [
-    'temperature_2m',
-    'relativehumidity_2m',
-    'apparent_temperature',
-    'is_day',
-    'precipitation_probability',
-    'weathercode',
-    'cloudcover',
-    'pressure_msl',
-    'surface_pressure',
-    'windspeed_10m',
-  ],
-  hourly: ['temperature_2m', 'weathercode', 'relativehumidity_2m', 'precipitation_probability', 'uv_index'],
-  daily: [
-    'weathercode',
-    'sunrise',
-    'sunset',
-    'temperature_2m_max',
-    'temperature_2m_min',
-    'precipitation_probability_max',
-  ],
+  current: ['temperature_2m', 'is_day', 'weathercode'],
   timezone: 'auto',
-  past_days: 1,
-  forecast_days: 10,
+  forecast_days: 1,
   temperature_unit: 'celsius',
 } as const;
 
-export const useWeather = (city: Location, unit: 'fahrenheit' | 'celsius') => {
-  const [forecast, setForecast] = useState<null | WeatherInfo>(null);
+export const useLocationsWeather = (cities: Array<Location>, unit: 'fahrenheit' | 'celsius') => {
+  const [forecast, setForecast] = useState<null | Array<WeatherInfo>>(null);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -45,13 +24,12 @@ export const useWeather = (city: Location, unit: 'fahrenheit' | 'celsius') => {
     const signal = controller.signal;
 
     axios
-      .get<WeatherInfo>(WEATHER_API_URL, {
+      .get<Array<WeatherInfo>>(WEATHER_API_URL, {
         params: {
           ...FORECAST_OPTIONS,
-          latitude: city.latitude,
-          longitude: city.longitude,
+          latitude: cities.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
+          longitude: cities.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
           temperature_unit: unit,
-          windspeed_unit: unit === 'celsius' ? 'kmh' : 'mph',
         },
         signal,
       })
@@ -60,7 +38,7 @@ export const useWeather = (city: Location, unit: 'fahrenheit' | 'celsius') => {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
-  }, [city, unit]);
+  }, [cities, unit]);
 
   return { forecast, error, loading };
 };

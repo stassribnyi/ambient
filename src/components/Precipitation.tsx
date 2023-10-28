@@ -57,7 +57,11 @@ export const Precipitation: FC<
           />
         </Box>
       </Box>
-      {showLabel ? <Typography sx={{ fontSize: size }}>{level}%</Typography> : null}
+      {showLabel ? (
+        <Typography color="secondary.light" sx={{ fontSize: size }}>
+          {level}%
+        </Typography>
+      ) : null}
     </Stack>
   );
 };

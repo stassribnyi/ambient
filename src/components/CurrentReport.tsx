@@ -24,6 +24,7 @@ import uvIdx8 from '@bybas/weather-icons/production/fill/all/uv-index-8.svg';
 import uvIdx9 from '@bybas/weather-icons/production/fill/all/uv-index-9.svg';
 import uvIdx10 from '@bybas/weather-icons/production/fill/all/uv-index-10.svg';
 import uvIdx11 from '@bybas/weather-icons/production/fill/all/uv-index-11.svg';
+import { changeTimeZone } from '../changeTimezone';
 
 const UV_INDEX = new Map([
   [1, uvIdx1],
@@ -71,24 +72,6 @@ function getUVIndexInfo(index: number) {
     description,
     imageUrl: getUVIndexImage(approximateIdx),
   };
-}
-
-// TODO: well, this is the thing I haven't expected, need to show date and time according timezone
-// TODO: go through other time usages and fix
-function changeTimeZone(date: string | Date, timeZone: string) {
-  if (typeof date === 'string') {
-    return new Date(
-      new Date(date).toLocaleString('en-US', {
-        timeZone,
-      }),
-    );
-  }
-
-  return new Date(
-    date.toLocaleString('en-US', {
-      timeZone,
-    }),
-  );
 }
 
 const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string }>>> = ({
@@ -163,12 +146,13 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
 
   return (
     <>
-      <Stack gap={2}>
+      <Stack gap={2} flex={1}>
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 2,
+            height: '100%',
             justifyContent: 'space-between',
           }}
         >

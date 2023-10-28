@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Location } from './vite-env';
 
 import { LocationOn } from '@mui/icons-material';
@@ -20,6 +20,7 @@ import './App.css';
 import { useWeather } from './hooks';
 import { format } from 'date-fns';
 import { useLocalStorage } from 'usehooks-ts';
+import { useLocationsWeather } from './hooks/useLocationsWeather';
 
 const DEFAULT_LOCATION = {
   admin1: 'Kyiv City',
@@ -40,10 +41,29 @@ const DEFAULT_LOCATION = {
 function App() {
   const [unit, setUnit] = useLocalStorage<'celsius' | 'fahrenheit'>('unit', 'celsius');
 
-  const [locations] = useLocalStorage<Array<Location>>('locations', []);
+  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', []);
   const current = useMemo(() => locations.find((item) => item.current) ?? DEFAULT_LOCATION, [locations]);
 
   const { forecast, loading, error } = useWeather(current, unit);
+  // TODO: combine, rename or simplify. have no idea at this point
+  const { forecast: locationsForecast } = useLocationsWeather(locations, unit);
+
+  useEffect(() => {
+    if (!locationsForecast?.length) {
+      return;
+    }
+
+    // TODO: reference update also works as there is excessive amount of UI updates
+    const updated = locations.map((location, idx) => ({
+      ...location,
+      temperature: locationsForecast[idx]?.current.temperature_2m,
+      weathercode: locationsForecast[idx]?.current.weathercode,
+    }));
+
+    if (JSON.stringify(updated) !== JSON.stringify(locations)) {
+      setLocations(updated);
+    }
+  }, [locationsForecast]);
 
   return (
     <>

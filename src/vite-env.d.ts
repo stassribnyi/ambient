@@ -114,4 +114,6 @@ export interface Location {
   admin2_id?: number;
   admin2?: string;
   current?: boolean;
+  weathercode?: keyof typeof WMO;
+  temperature?: number;
 }

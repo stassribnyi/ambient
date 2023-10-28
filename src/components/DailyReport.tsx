@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Table, TableBody, TableRow, TableCell, Stack } from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, Stack, Box, useTheme, useMediaQuery } from '@mui/material';
 import { isToday, format } from 'date-fns';
 
 import { WeatherInfo } from '../vite-env';
@@ -28,68 +28,42 @@ function getDailyInfo(weatherInfo: WeatherInfo) {
     }));
 }
 
-export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => (
-  <Table aria-label="10 Days forecast" size="small">
-    <TableBody>
-      {getDailyInfo(weatherInfo).map(({ time, description, imageUrl, temperature, precipitationProbability }, idx) => (
-        <TableRow key={idx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-          <TableCell sx={{ p: 0 }}>{isToday(time) ? 'Today' : format(time, 'eeee')}</TableCell>
-          <TableCell align="center" sx={{ p: 0, width: '4rem' }}>
-            {/* // TODO: move to precipitation component */}
-            <figure
-              style={{
-                margin: 0,
-                fontSize: 'inherit',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.25rem',
-              }}
+export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  return (
+    <Table aria-label="10 Days forecast" size="small">
+      <TableBody>
+        {getDailyInfo(weatherInfo).map(
+          ({ time, description, imageUrl, temperature, precipitationProbability }, idx) => (
+            <TableRow
+              key={idx}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { ...(isMobile ? { p: 0 } : null) } }}
             >
-              <Precipitation level={precipitationProbability.value} size={18} />
-              <figcaption
-                style={{
-                  color: 'inherit',
-                }}
-              >
-                {precipitationProbability.value}
-                {precipitationProbability.units}
-              </figcaption>
-            </figure>
-          </TableCell>
-          <TableCell align="center" sx={{ p: 0 }}>
-            <figure
-              style={{
-                margin: 0,
-                fontSize: 'inherit',
-                display: 'flex',
-                gap: '0.5rem',
-                alignItems: 'center',
-              }}
-            >
-              <img src={imageUrl} style={{ minWidth: '32px', width: '32px' }} alt={description} />
-              {/* <figcaption
-                  style={{
-                    color: 'inherit',
-                  }}
-                >
-                  {description}
-                </figcaption> */}
-            </figure>
-          </TableCell>
-          <TableCell align="center" sx={{ p: 0, width: '4rem' }}>
-            <Stack direction="row" gap={1} justifyContent="space-between">
-              <span>
-                {temperature.max}
-                {temperature.units}
-              </span>
-              <span>
-                {temperature.min}
-                {temperature.units}
-              </span>
-            </Stack>
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+              <TableCell>{isToday(time) ? 'Today' : format(time, 'eeee')}</TableCell>
+              <TableCell align="center" sx={{ width: '4rem' }}>
+                <Precipitation showLabel level={precipitationProbability.value} size={12} />
+              </TableCell>
+              <TableCell align="center">
+                <Box component="img" src={imageUrl} sx={{ minWidth: '32px', width: '32px' }} alt={description} />
+              </TableCell>
+              <TableCell align="center" sx={{ width: '4rem', fontSize: '1rem' }}>
+                <Stack direction="row" gap={1} justifyContent="space-between">
+                  <strong>
+                    {temperature.max}
+                    {temperature.units}
+                  </strong>
+                  <strong>
+                    {temperature.min}
+                    {temperature.units}
+                  </strong>
+                </Stack>
+              </TableCell>
+            </TableRow>
+          ),
+        )}
+      </TableBody>
+    </Table>
+  );
+};

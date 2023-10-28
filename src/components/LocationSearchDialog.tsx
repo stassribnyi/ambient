@@ -23,7 +23,7 @@ import {
 import type { TransitionProps } from '@mui/material/transitions';
 import { Add, ChevronLeft, Close, Menu } from '@mui/icons-material';
 
-import { forwardRef, useState, FC, useMemo } from 'react';
+import { forwardRef, useState, FC, useMemo, Fragment } from 'react';
 import { useDebounce, useLocalStorage } from 'usehooks-ts';
 
 import { useLocationSearch } from '../hooks';
@@ -47,32 +47,36 @@ const LocationOption: FC<
     option: Location;
     onSelect: (option: Location) => void;
   }>
-> = ({ option, onSelect }) => (
-  <Card sx={{ mb: 2, borderRadius: '28px' }}>
-    <ButtonBase onClick={() => onSelect(option)} sx={{ width: '100%' }}>
-      <CardContent sx={{ width: '100%', p: '1.5rem 1rem' }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="row" alignItems="center" gap={1}>
-            <img src={WMO[0].day.image} style={{ width: '48px' }} />
-            <Stack alignItems="start">
-              <Typography sx={{ fontSize: '1.125rem' }}>{option.name}</Typography>
-              <Typography variant="caption" color="secondary">
-                {[option.admin1, option.country].filter(Boolean).join(', ')}
-              </Typography>
+> = ({ option, onSelect }) => {
+  const optionWMO = option.weathercode !== undefined ? WMO[option.weathercode] : null;
+
+  return (
+    <Card sx={{ mb: 2, borderRadius: '28px' }}>
+      <ButtonBase onClick={() => onSelect(option)} sx={{ width: '100%' }}>
+        <CardContent sx={{ width: '100%', p: '1.5rem 1rem' }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row" alignItems="center" gap={1}>
+              {optionWMO && <img src={optionWMO.day.image} style={{ width: '48px' }} />}
+              <Stack alignItems="start">
+                <Typography sx={{ fontSize: '1.125rem' }}>{option.name}</Typography>
+                <Typography variant="caption" color="secondary">
+                  {[option.admin1, option.country].filter(Boolean).join(', ')}
+                </Typography>
+              </Stack>
             </Stack>
+            <Typography
+              color="secondary.light"
+              sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
+              variant="h5"
+            >
+              {option.temperature ? `${option.temperature}°` : 'N/A'}
+            </Typography>
           </Stack>
-          <Typography
-            color="secondary.light"
-            sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
-            variant="h5"
-          >
-            14°
-          </Typography>
-        </Stack>
-      </CardContent>
-    </ButtonBase>
-  </Card>
-);
+        </CardContent>
+      </ButtonBase>
+    </Card>
+  );
+};
 
 function FindLocationDialog({
   handleBackButton,
@@ -87,7 +91,7 @@ function FindLocationDialog({
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce<string>(search, 500);
 
-  const { results, loading } = useLocationSearch(debouncedSearch);
+  const { results, loading } = useLocationSearch(debouncedSearch?.trim());
 
   const handleSelect = (option: Location) => {
     setSearch('');
@@ -123,7 +127,7 @@ function FindLocationDialog({
               },
             }}
             placeholder="What is your city?"
-            onChange={({ target }) => setSearch(target.value?.trim())}
+            onChange={({ target }) => setSearch(target.value)}
           />
 
           <IconButton sx={{ fontSize: '1.5rem' }} edge="end" color="inherit" onClick={() => setSearch('')}>
@@ -142,8 +146,8 @@ function FindLocationDialog({
             <CardContent>
               <List disablePadding>
                 {results.map((location, idx) => (
-                  <>
-                    <ListItem disableGutters key={idx} onClick={() => handleSelect(location)}>
+                  <Fragment key={idx}>
+                    <ListItem disableGutters onClick={() => handleSelect(location)}>
                       <ListItemText
                         primary={location.name}
                         primaryTypographyProps={{
@@ -156,7 +160,7 @@ function FindLocationDialog({
                       />
                     </ListItem>
                     {idx !== results.length - 1 && <Divider />}
-                  </>
+                  </Fragment>
                 ))}
               </List>
             </CardContent>
@@ -215,7 +219,15 @@ function ManageLocationDialog({
           </Stack>
         </Toolbar>
       </AppBar>
-      <DialogContent sx={{ p: 0.5, minHeight: '444px', maxHeight: isMobile ? 'auto' : '560px', minWidth: '320px' }}>
+      <DialogContent
+        sx={{
+          p: 0.5,
+          minHeight: '444px',
+          maxHeight: isMobile ? 'auto' : '560px',
+          minWidth: '320px',
+          borderRadius: '16px',
+        }}
+      >
         {favorite && (
           <>
             <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
