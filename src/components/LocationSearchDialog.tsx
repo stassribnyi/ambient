@@ -69,7 +69,7 @@ const LocationOption: FC<
               sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
               variant="h5"
             >
-              {option.temperature ? `${option.temperature}°` : 'N/A'}
+              {option.temperature ? `${Math.floor(option.temperature)}°` : 'N/A'}
             </Typography>
           </Stack>
         </CardContent>

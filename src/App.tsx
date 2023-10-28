@@ -21,8 +21,11 @@ import { useWeather } from './hooks';
 import { format } from 'date-fns';
 import { useLocalStorage } from 'usehooks-ts';
 import { useLocationsWeather } from './hooks/useLocationsWeather';
+// import { useGeolocated } from 'react-geolocated';
+// import axios from 'axios';
 
-const DEFAULT_LOCATION = {
+const DEFAULT_LOCATION: Location = {
+  current: true,
   admin1: 'Kyiv City',
   admin1_id: 703447,
   country: 'Ukraine',
@@ -41,12 +44,65 @@ const DEFAULT_LOCATION = {
 function App() {
   const [unit, setUnit] = useLocalStorage<'celsius' | 'fahrenheit'>('unit', 'celsius');
 
-  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', []);
+  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', [DEFAULT_LOCATION]);
   const current = useMemo(() => locations.find((item) => item.current) ?? DEFAULT_LOCATION, [locations]);
 
   const { forecast, loading, error } = useWeather(current, unit);
   // TODO: combine, rename or simplify. have no idea at this point
   const { forecast: locationsForecast } = useLocationsWeather(locations, unit);
+
+  // // TODO: needs some work
+  // const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+  //   positionOptions: {
+  //     enableHighAccuracy: false,
+  //   },
+  //   userDecisionTimeout: 5000,
+  // });
+
+  // useEffect(() => {
+  //   if (!locations.length) {
+  //     return;
+  //   }
+
+  //   if (!isGeolocationAvailable || !isGeolocationEnabled) {
+  //     setLocations([DEFAULT_LOCATION]);
+
+  //     return;
+  //   }
+
+  //   axios
+  //     .get<BigDataLocation>(
+  //       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords?.latitude}&longitude=${coords?.longitude}&localityLanguage=en`,
+  //     )
+  //     .then(({ data }) =>
+  //       setLocations([
+  //         {
+  //           current: true,
+  //           admin1: data.principalSubdivision,
+  //           admin1_id: data.localityInfo.administrative.find((a) => a.adminLevel === 4)?.geonameId || 0,
+  //           country: data.countryName,
+  //           country_code: data.countryCode,
+  //           country_id: data.localityInfo.administrative.find((a) => a.adminLevel === 2)?.geonameId || 0,
+  //           elevation: coords?.altitude || 0,
+  //           feature_code: 'PPLC',
+  //           id: data.localityInfo.administrative.find((a) => a.adminLevel === 2)?.geonameId || 0,
+  //           latitude: data.latitude,
+  //           longitude: data.longitude,
+  //           name: data.city,
+  //           timezone: data.localityInfo.informative.find((i) => i.description === 'time zone')?.name || 'auto',
+  //         },
+  //       ]),
+  //     )
+  //     .catch(console.log);
+  // }, [
+  //   coords?.altitude,
+  //   coords?.latitude,
+  //   coords?.longitude,
+  //   isGeolocationAvailable,
+  //   isGeolocationEnabled,
+  //   locations.length,
+  //   setLocations,
+  // ]);
 
   useEffect(() => {
     if (!locationsForecast?.length) {
@@ -63,7 +119,7 @@ function App() {
     if (JSON.stringify(updated) !== JSON.stringify(locations)) {
       setLocations(updated);
     }
-  }, [locationsForecast]);
+  }, [locations, locationsForecast, setLocations]);
 
   return (
     <>
