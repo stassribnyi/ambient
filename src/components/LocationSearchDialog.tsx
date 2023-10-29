@@ -19,14 +19,24 @@ import {
   CardContent,
   ButtonBase,
   CircularProgress,
+  Checkbox,
 } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
-import { Add, ChevronLeft, Close, Menu } from '@mui/icons-material';
+import {
+  Add,
+  CheckCircle,
+  ChevronLeft,
+  Close,
+  Delete,
+  Menu,
+  MoreVert,
+  RadioButtonUnchecked,
+} from '@mui/icons-material';
 
 import { forwardRef, useState, FC, useMemo, Fragment } from 'react';
 import { useDebounce, useLocalStorage } from 'usehooks-ts';
 
-import { useLocationSearch } from '../hooks';
+import { useLocationSearch, useLongpress } from '../hooks';
 import { Location } from '../vite-env';
 import { WMO } from '../wmo';
 
@@ -44,19 +54,35 @@ const Transition = forwardRef(function Transition(
 
 const LocationOption: FC<
   Readonly<{
+    isEdit?: boolean;
+    selected?: boolean;
     option: Location;
     onSelect: (option: Location) => void;
+    onLongpress: (option: Location) => void;
   }>
-> = ({ option, onSelect }) => {
+> = ({ isEdit, selected, option, onSelect, onLongpress }) => {
   const optionWMO = option.weathercode !== undefined ? WMO[option.weathercode] : null;
+  const handleLongpress = useLongpress();
 
   return (
     <Card sx={{ mb: 2, borderRadius: '28px' }}>
-      <ButtonBase onClick={() => onSelect(option)} sx={{ width: '100%' }}>
+      <ButtonBase
+        onClick={() => onSelect(option)}
+        sx={{ width: '100%' }}
+        {...handleLongpress(() => onLongpress(option))}
+      >
         <CardContent sx={{ width: '100%', p: '1.5rem 1rem' }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Stack direction="row" alignItems="center" gap={1}>
-              {optionWMO && <img src={optionWMO.day.image} style={{ width: '48px' }} />}
+              {isEdit && (
+                <Checkbox
+                  checked={selected}
+                  color="secondary"
+                  icon={<RadioButtonUnchecked />}
+                  checkedIcon={<CheckCircle />}
+                />
+              )}
+              {!isEdit && optionWMO && <img src={optionWMO.day.image} style={{ width: '48px' }} />}
               <Stack alignItems="start">
                 <Typography sx={{ fontSize: '1.125rem' }}>{option.name}</Typography>
                 <Typography variant="caption" color="secondary">
@@ -64,13 +90,15 @@ const LocationOption: FC<
                 </Typography>
               </Stack>
             </Stack>
-            <Typography
-              color="secondary.light"
-              sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
-              variant="h5"
-            >
-              {option.temperature ? `${Math.floor(option.temperature)}°` : 'N/A'}
-            </Typography>
+            {!isEdit && (
+              <Typography
+                color="secondary.light"
+                sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
+                variant="h5"
+              >
+                {option.temperature ? `${Math.floor(option.temperature)}°` : 'N/A'}
+              </Typography>
+            )}
           </Stack>
         </CardContent>
       </ButtonBase>
@@ -190,34 +218,75 @@ function ManageLocationDialog({
   handleAddLocation: () => void;
   handleSubmit: (value: Location) => void;
 }) {
-  const [locations] = useLocalStorage<Array<Location>>('locations', []);
+  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', []);
   const favorite = useMemo(() => locations.find((item) => item.current), [locations]);
   const otherLocations = useMemo(() => locations.filter((item) => item.id !== favorite?.id), [locations, favorite]);
+  const [selected, setSelected] = useState<Array<Location>>([]);
+  const [isEdit, setIsEdit] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const handleSelect = (option: Location) => {
+    if (!isEdit) {
+      handleSubmit(option);
+      return;
+    }
+    console.log('isSelected');
+
+    setSelected((prev) => {
+      const isSelected = prev.some((x) => x.id === option.id);
+
+      return isSelected ? prev.filter((x) => x.id !== option.id) : [...prev, option];
+    });
+  };
+
   return (
     <>
       <AppBar sx={{ position: 'relative' }}>
-        <Toolbar>
-          <IconButton
-            sx={{ fontSize: '2rem' }}
-            edge="start"
-            color="inherit"
-            onClick={handleBackButton}
-            aria-label="close"
-          >
-            <ChevronLeft fontSize="inherit" />
-          </IconButton>
-
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
-            <Typography sx={{ fontSize: '1.125rem' }}>Manage your location</Typography>
-            <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={handleAddLocation}>
-              <Add fontSize="inherit" />
+        {!isEdit ? (
+          <Toolbar>
+            <IconButton
+              sx={{ fontSize: '2rem' }}
+              edge="start"
+              color="inherit"
+              onClick={handleBackButton}
+              aria-label="close"
+            >
+              <ChevronLeft fontSize="inherit" />
             </IconButton>
-          </Stack>
-        </Toolbar>
+
+            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+              <Typography sx={{ fontSize: '1.125rem' }}>Manage your location</Typography>
+              <Stack direction="row" alignItems="center">
+                <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={handleAddLocation}>
+                  <Add fontSize="inherit" />
+                </IconButton>
+                <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={() => setIsEdit(true)}>
+                  <MoreVert fontSize="inherit" />
+                </IconButton>
+              </Stack>
+            </Stack>
+          </Toolbar>
+        ) : (
+          <Toolbar>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+              <Stack direction="row" alignItems="center" sx={{ pl: '4px' }}>
+                <Checkbox
+                  checked={selected.length === locations.length}
+                  color="secondary"
+                  icon={<RadioButtonUnchecked />}
+                  checkedIcon={<CheckCircle />}
+                  onClick={() => setSelected(selected.length === locations.length ? [] : locations)}
+                />
+                <Typography>Select all</Typography>
+              </Stack>
+              <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={() => setIsEdit(false)}>
+                <Close fontSize="inherit" />
+              </IconButton>
+            </Stack>
+          </Toolbar>
+        )}
       </AppBar>
       <DialogContent
         sx={{
@@ -228,12 +297,20 @@ function ManageLocationDialog({
           borderRadius: '16px',
         }}
       >
+        {/* <Stack justifyContent="space-between" sx={{ height: '100%' }}>
+          <Stack sx={{ height: 'calc(100% - 56px)', overflowX: 'hidden' }}> */}
         {favorite && (
           <>
             <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
               Current location
             </Typography>
-            <LocationOption option={favorite} onSelect={handleSubmit} />
+            <LocationOption
+              selected={selected.some((x) => x.id === favorite.id)}
+              isEdit={isEdit}
+              option={favorite}
+              onSelect={handleSelect}
+              onLongpress={() => setIsEdit(true)}
+            />
           </>
         )}
         {otherLocations.length ? (
@@ -242,10 +319,39 @@ function ManageLocationDialog({
               Other locations
             </Typography>
             {otherLocations.map((option, idx) => (
-              <LocationOption key={idx} option={option} onSelect={handleSubmit} />
+              <LocationOption
+                selected={selected.some((x) => x.id === option.id)}
+                isEdit={isEdit}
+                key={idx}
+                option={option}
+                onSelect={handleSelect}
+                onLongpress={() => setIsEdit(true)}
+              />
             ))}
           </>
         ) : null}
+        {/* </Stack> */}
+        {isEdit && (
+          <Stack>
+            <IconButton
+              aria-label="delete"
+              onClick={() => {
+                const filtered = locations.filter((x) => !selected.includes(x));
+
+                if (!filtered.some((x) => x.current) && filtered[0]) {
+                  filtered[0].current = true;
+                }
+
+                setLocations(filtered);
+                setSelected([]);
+                setIsEdit(false);
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </Stack>
+        )}
+        {/* </Stack> */}
       </DialogContent>
     </>
   );
@@ -300,8 +406,7 @@ export function LocationSearchDialog() {
             color: 'secondary.light',
             backgroundImage: 'none',
             boxShadow: 'none',
-            pt: 1,
-            pb: 1,
+            p: '0.5rem 0',
 
             '& .MuiToolbar-root': {
               height: '2.25rem',
