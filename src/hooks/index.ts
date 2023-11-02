@@ -1,3 +1,4 @@
 export { useLocationSearch } from './useLocationSearch';
-export { useWeather } from './useWeather';
 export { useUserSettings } from './useUserSettings';
+export { useForecast } from './useForecast';
+export { useLocations } from './useLocations';

@@ -23,10 +23,10 @@ import {
 import type { TransitionProps } from '@mui/material/transitions';
 import { Add, ChevronLeft, Close, Menu } from '@mui/icons-material';
 
-import { forwardRef, useState, FC, useMemo, Fragment } from 'react';
-import { useDebounce, useLocalStorage } from 'usehooks-ts';
+import { forwardRef, useState, FC, Fragment } from 'react';
+import { useDebounce } from 'usehooks-ts';
 
-import { useLocationSearch, useUserSettings } from '../hooks';
+import { useLocationSearch, useLocations, useUserSettings } from '../hooks';
 import { Location } from '../vite-env';
 import { WMO } from '../wmo';
 
@@ -190,16 +190,9 @@ function ManageLocationDialog({
   handleAddLocation: () => void;
   handleSubmit: (value: Location) => void;
 }) {
-  const [{ currentLocationId }] = useUserSettings();
-  const [locations] = useLocalStorage<Array<Location>>('locations', []);
-  const favorite = useMemo(
-    () => locations.find((item) => item.id === currentLocationId),
-    [currentLocationId, locations],
-  );
-  const otherLocations = useMemo(
-    () => locations.filter((item) => item.id !== currentLocationId),
-    [currentLocationId, locations],
-  );
+  const { locations, current: favorite } = useLocations();
+
+  const otherLocations = locations.filter((l) => l.id !== favorite.id);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -261,7 +254,7 @@ function ManageLocationDialog({
 export function LocationSearchDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', []);
+  const { locations, setLocations } = useLocations();
   const [, setSettings] = useUserSettings();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
