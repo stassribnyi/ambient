@@ -17,7 +17,7 @@ import {
 import { CurrentReport, DailyReport, HourlyReport, LocationSearchDialog, UnitSwitch } from './components';
 
 import './App.css';
-import { useWeather } from './hooks';
+import { useUserSettings, useWeather } from './hooks';
 import { format } from 'date-fns';
 import { useLocalStorage } from 'usehooks-ts';
 import { useLocationsWeather } from './hooks/useLocationsWeather';
@@ -25,7 +25,6 @@ import { useLocationsWeather } from './hooks/useLocationsWeather';
 // import axios from 'axios';
 
 const DEFAULT_LOCATION: Location = {
-  current: true,
   admin1: 'Kyiv City',
   admin1_id: 703447,
   country: 'Ukraine',
@@ -42,14 +41,17 @@ const DEFAULT_LOCATION: Location = {
 };
 
 function App() {
-  const [unit, setUnit] = useLocalStorage<'celsius' | 'fahrenheit'>('unit', 'celsius');
+  const [settings, setSettings] = useUserSettings();
 
   const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', [DEFAULT_LOCATION]);
-  const current = useMemo(() => locations.find((item) => item.current) ?? DEFAULT_LOCATION, [locations]);
+  const current = useMemo(
+    () => locations.find((item) => item.id === settings.currentLocationId) ?? DEFAULT_LOCATION,
+    [locations, settings.currentLocationId],
+  );
 
-  const { forecast, loading, error } = useWeather(current, unit);
+  const { forecast, loading, error } = useWeather(current);
   // TODO: combine, rename or simplify. have no idea at this point
-  const { forecast: locationsForecast } = useLocationsWeather(locations, unit);
+  const { forecast: locationsForecast } = useLocationsWeather(locations);
 
   // // TODO: needs some work
   // const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
@@ -121,6 +123,12 @@ function App() {
     }
   }, [locations, locationsForecast, setLocations]);
 
+  const handleMeasurementSystemChange = () =>
+    setSettings((prev) => ({
+      ...prev,
+      units: prev.units === 'metric' ? 'imperial' : 'metric',
+    }));
+
   return (
     <>
       {loading && (
@@ -143,8 +151,8 @@ function App() {
                   <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
                   <UnitSwitch
                     sx={{ ml: 'auto' }}
-                    checked={unit === 'celsius'}
-                    onClick={() => setUnit(unit === 'celsius' ? 'fahrenheit' : 'celsius')}
+                    checked={settings.units === 'metric'}
+                    onClick={handleMeasurementSystemChange}
                   />
                 </Stack>
                 <Typography

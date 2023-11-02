@@ -113,7 +113,6 @@ export interface Location {
   admin1: string;
   admin2_id?: number;
   admin2?: string;
-  current?: boolean;
   weathercode?: keyof typeof WMO;
   temperature?: number;
 }
@@ -161,3 +160,5 @@ export interface Informative {
   wikidataId?: string;
   geonameId?: number;
 }
+
+type MeasurementSystem = 'metric' | 'imperial';

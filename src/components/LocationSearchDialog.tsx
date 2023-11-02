@@ -26,7 +26,7 @@ import { Add, ChevronLeft, Close, Menu } from '@mui/icons-material';
 import { forwardRef, useState, FC, useMemo, Fragment } from 'react';
 import { useDebounce, useLocalStorage } from 'usehooks-ts';
 
-import { useLocationSearch } from '../hooks';
+import { useLocationSearch, useUserSettings } from '../hooks';
 import { Location } from '../vite-env';
 import { WMO } from '../wmo';
 
@@ -190,9 +190,16 @@ function ManageLocationDialog({
   handleAddLocation: () => void;
   handleSubmit: (value: Location) => void;
 }) {
+  const [{ currentLocationId }] = useUserSettings();
   const [locations] = useLocalStorage<Array<Location>>('locations', []);
-  const favorite = useMemo(() => locations.find((item) => item.current), [locations]);
-  const otherLocations = useMemo(() => locations.filter((item) => item.id !== favorite?.id), [locations, favorite]);
+  const favorite = useMemo(
+    () => locations.find((item) => item.id === currentLocationId),
+    [currentLocationId, locations],
+  );
+  const otherLocations = useMemo(
+    () => locations.filter((item) => item.id !== currentLocationId),
+    [currentLocationId, locations],
+  );
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -254,7 +261,8 @@ function ManageLocationDialog({
 export function LocationSearchDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [, setLocations] = useLocalStorage<Array<Location>>('locations', []);
+  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', []);
+  const [, setSettings] = useUserSettings();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -269,19 +277,11 @@ export function LocationSearchDialog() {
   };
 
   const handleOptionSelect = (option: Location) => {
-    setLocations((items) => {
-      const existing = items.find((item) => item.id === option.id);
-      items.forEach((item) => (item.current = false));
+    if (!locations.some((item) => item.id === option.id)) {
+      setLocations((items) => [...items, option]);
+    }
 
-      if (existing) {
-        existing.current = true;
-
-        return [...items];
-      }
-
-      return [...items, { ...option, current: true }];
-    });
-
+    setSettings((prev) => ({ ...prev, currentLocationId: option.id }));
     handleClose();
   };
 

@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { useState, useEffect } from 'react';
 
 import { Location, WeatherInfo } from '../vite-env';
+import { useUserSettings } from './useUserSettings';
 
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -33,10 +34,11 @@ const FORECAST_OPTIONS = {
   temperature_unit: 'celsius',
 } as const;
 
-export const useWeather = (city: Location, unit: 'fahrenheit' | 'celsius') => {
+export const useWeather = (city: Location) => {
   const [forecast, setForecast] = useState<null | WeatherInfo>(null);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [{ units }] = useUserSettings();
 
   useEffect(() => {
     setLoading(true);
@@ -50,8 +52,8 @@ export const useWeather = (city: Location, unit: 'fahrenheit' | 'celsius') => {
           ...FORECAST_OPTIONS,
           latitude: city.latitude,
           longitude: city.longitude,
-          temperature_unit: unit,
-          windspeed_unit: unit === 'celsius' ? 'kmh' : 'mph',
+          temperature_unit: units === 'metric' ? 'celsius' : 'fahrenheit',
+          windspeed_unit: units === 'metric' ? 'kmh' : 'mph',
         },
         signal,
       })
@@ -60,7 +62,7 @@ export const useWeather = (city: Location, unit: 'fahrenheit' | 'celsius') => {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
-  }, [city, unit]);
+  }, [city, units]);
 
   return { forecast, error, loading };
 };

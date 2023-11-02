@@ -3,7 +3,7 @@ import { format, isEqual } from 'date-fns';
 import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import { getWMOInfo } from '../getWMOInfo';
-import { WeatherInfo } from '../vite-env';
+import { MeasurementSystem, WeatherInfo } from '../vite-env';
 
 // import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
@@ -40,7 +40,7 @@ import windBeaufort11 from '@bybas/weather-icons/production/fill/all/wind-beaufo
 import windBeaufort12 from '@bybas/weather-icons/production/fill/all/wind-beaufort-12.svg';
 
 import { changeTimeZone } from '../changeTimezone';
-import { useLocalStorage } from 'usehooks-ts';
+import { useUserSettings } from '../hooks';
 
 const UV_INDEX = new Map([
   [1, uvIdx1],
@@ -176,8 +176,8 @@ function getWindBeaufortInfo(windspeed: number) {
   };
 }
 
-function changeWindSpeedUnits(windspeed: number, unit: 'celsius' | 'fahrenheit') {
-  if (unit === 'fahrenheit') {
+function changeWindSpeedUnits(windspeed: number, unit: MeasurementSystem) {
+  if (unit === 'imperial') {
     return windspeed * 1.60934;
   }
 
@@ -217,7 +217,7 @@ const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const wmoInfo = getWMOInfo(weatherInfo);
   const currentDateTimeZone = changeTimeZone(new Date(), weatherInfo.timezone);
-  const [unit] = useLocalStorage<'celsius' | 'fahrenheit'>('unit', 'celsius');
+  const [{ units }] = useUserSettings();
 
   const currentIdx = weatherInfo.hourly.time.findIndex((t) =>
     isEqual(currentDateTimeZone.setMinutes(0, 0, 0), new Date(t)),
@@ -255,7 +255,7 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
     uvIndex: getUVIndexInfo(uvIndex),
   };
 
-  const windspeedInfo = getWindBeaufortInfo(changeWindSpeedUnits(current.windspeed.value, unit));
+  const windspeedInfo = getWindBeaufortInfo(changeWindSpeedUnits(current.windspeed.value, units));
 
   return (
     <>
