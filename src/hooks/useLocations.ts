@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 import { Location } from '../vite-env';
-import { useUserSettings } from '.';
+import { useUserSettings } from './useUserSettings';
 
 const DEFAULT_LOCATION: Location = {
   admin1: 'Kyiv City',
@@ -20,9 +20,24 @@ const DEFAULT_LOCATION: Location = {
   timezone: 'Europe/Kyiv',
 };
 
+function deepCompare<T>(a: T, b: T): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
 export const useLocations = () => {
-  const [locations, setLocations] = useLocalStorage<Array<Location>>('locations', [DEFAULT_LOCATION]);
+  const valueRef = useRef<Array<Location>>([]);
+  const [value, setValue] = useLocalStorage<Array<Location>>('locations', [DEFAULT_LOCATION]);
   const [{ currentLocationId }] = useUserSettings();
+
+  // this is temp workaround to prevent locations value to be changed each time localStorage gets modified
+  // TODO: wrap or reimplement useLocalStorage logic, so if value hasn't changed reference stays the same
+  const locations = useMemo(() => {
+    if (!deepCompare(value, valueRef.current)) {
+      valueRef.current = value;
+    }
+
+    return valueRef.current;
+  }, [value]);
 
   const current = useMemo(
     () => locations.find((item) => item.id === currentLocationId) ?? DEFAULT_LOCATION,
@@ -32,6 +47,6 @@ export const useLocations = () => {
   return {
     current,
     locations,
-    setLocations,
+    setLocations: setValue,
   };
 };

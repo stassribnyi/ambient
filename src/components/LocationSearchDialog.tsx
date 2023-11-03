@@ -36,7 +36,7 @@ import {
 import { forwardRef, useState, FC, Fragment } from 'react';
 import { useDebounce } from 'usehooks-ts';
 
-import { useLocationSearch, useLocations, useUserSettings, useLongpress } from '../hooks';
+import { useLocationSearch, useLocations, useUserSettings, useLongpress, useUnitsConverter } from '../hooks';
 import { Location } from '../vite-env';
 import { WMO } from '../wmo';
 
@@ -63,6 +63,7 @@ const LocationOption: FC<
 > = ({ isEdit, selected, option, onSelect, onLongpress }) => {
   const optionWMO = option.weathercode !== undefined ? WMO[option.weathercode] : null;
   const handleLongpress = useLongpress();
+  const { convert } = useUnitsConverter();
 
   return (
     <Card sx={{ mb: 2, borderRadius: '28px' }}>
@@ -96,7 +97,7 @@ const LocationOption: FC<
                 sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
                 variant="h5"
               >
-                {option.temperature ? `${Math.floor(option.temperature)}°` : 'N/A'}
+                {option.temperature ? `${Math.floor(convert('temperature', option.temperature))}°` : 'N/A'}
               </Typography>
             )}
           </Stack>
