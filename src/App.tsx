@@ -10,8 +10,10 @@ import {
   Snackbar,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import { CurrentReport, DailyReport, HourlyReport, LocationSearchDialog, UnitSwitch } from './components';
+import { Chart, CurrentReport, DailyReport, HourlyReport, LocationSearchDialog, UnitSwitch } from './components';
 
 import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
@@ -77,6 +79,9 @@ function App() {
   const [settings, setSettings] = useUserSettings();
   const { currentForecast: forecast, error, loading } = useForecast();
   const { current } = useLocations();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleMeasurementSystemChange = () =>
     setSettings((prev) => ({
@@ -147,6 +152,18 @@ function App() {
                 </CardContent>
               </Card>
             </Grid>
+            {!isMobile ? (
+              <Grid xs={12}>
+                <Card>
+                  <CardContent>
+                    <Typography gutterBottom variant="h6">
+                      Atmospheric Conditions
+                    </Typography>
+                    <Chart info={forecast} />
+                  </CardContent>
+                </Card>
+              </Grid>
+            ) : null}
           </Grid>
         )}
       </Container>

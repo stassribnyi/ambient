@@ -62,7 +62,8 @@ export interface HourlyUnits {
   precipitation_probability: string;
   precipitation: string;
   weathercode: string;
-  rain: string;
+  relative_humidity_2m: string;
+  cloud_cover: string;
 }
 
 export interface Hourly {
@@ -73,7 +74,8 @@ export interface Hourly {
   precipitation_probability: number[];
   uv_index: number[];
   precipitation: number[];
-  rain: number[];
+  relative_humidity_2m: number[];
+  cloud_cover: number[];
   weathercode: Array<keyof typeof WMO>;
 }
 

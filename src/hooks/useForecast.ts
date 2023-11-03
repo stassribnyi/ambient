@@ -26,7 +26,15 @@ const CURRENT_FORECAST_OPTIONS = {
     'surface_pressure',
     'windspeed_10m',
   ],
-  hourly: ['temperature_2m', 'weathercode', 'relativehumidity_2m', 'precipitation_probability', 'uv_index'],
+  hourly: [
+    'temperature_2m',
+    'weathercode',
+    'relativehumidity_2m',
+    'precipitation_probability',
+    'uv_index',
+    'relative_humidity_2m',
+    'cloud_cover',
+  ],
   daily: [
     'weathercode',
     'sunrise',
