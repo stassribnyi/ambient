@@ -8,40 +8,37 @@ import { Precipitation } from './Precipitation';
 // import Combining from './Chart';
 // import { useElementSize } from 'usehooks-ts';
 import { changeTimeZone } from '../changeTimezone';
+import { useUnitsConverter } from '../hooks';
 
-function getHourlyInfo(weatherInfo: WeatherInfo) {
-  return weatherInfo.hourly.time
-    .map((t, idx) => ({
-      idx,
-      time: changeTimeZone(t, weatherInfo.timezone),
-    }))
-    .filter((slot) => {
-      // TODO: revisit and fix consistency
-      const current = changeTimeZone(new Date(), weatherInfo.timezone);
-
-      // -1 hour, so if time is less than hour in the past, we still show forecast
-      const from = subHours(current.setMinutes(0, 0, 0), 1);
-      // 24(+1) hour, so if time is less than hour in the future, we still show forecast
-      const to = addHours(current, 25);
-
-      return compareAsc(from, slot.time) - compareAsc(slot.time, to) === 0;
-    })
-    .map(({ time, idx }) => ({
-      time,
-      imageUrl: getWMOInfoHourly(weatherInfo, idx)?.image,
-      temperature: {
-        value: Math.floor(weatherInfo.hourly.temperature_2m[idx]),
-        units: '°',
-      },
-      precipitation: {
-        value: weatherInfo.hourly.precipitation_probability[idx],
-        unit: weatherInfo.hourly_units.precipitation_probability,
-      },
-    }));
-}
 export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
-  const hourlyInfo = getHourlyInfo(weatherInfo);
+  const { convert } = useUnitsConverter();
+
   // const [itemRef, { width }] = useElementSize();
+
+  function getHourlyInfo(weatherInfo: WeatherInfo) {
+    return weatherInfo.hourly.time
+      .map((t, idx) => ({
+        idx,
+        time: changeTimeZone(t, weatherInfo.timezone),
+      }))
+      .filter((slot) => {
+        // TODO: revisit and fix consistency
+        const current = changeTimeZone(new Date(), weatherInfo.timezone);
+
+        // -1 hour, so if time is less than hour in the past, we still show forecast
+        const from = subHours(current.setMinutes(0, 0, 0), 1);
+        // 24(+1) hour, so if time is less than hour in the future, we still show forecast
+        const to = addHours(current, 25);
+
+        return compareAsc(from, slot.time) - compareAsc(slot.time, to) === 0;
+      })
+      .map(({ time, idx }) => ({
+        time,
+        imageUrl: getWMOInfoHourly(weatherInfo, idx)?.image,
+        temperature: Math.floor(convert('temperature', weatherInfo.hourly.temperature_2m[idx])),
+        precipitation: weatherInfo.hourly.precipitation_probability[idx],
+      }));
+  }
 
   return (
     <>
@@ -50,7 +47,7 @@ export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weath
           <Table size="small">
             <TableBody>
               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                {hourlyInfo.map(({ time, imageUrl, precipitation, temperature }, idx) => (
+                {getHourlyInfo(weatherInfo).map(({ time, imageUrl, precipitation, temperature }, idx) => (
                   <TableCell key={idx} sx={{ p: 0.5 }}>
                     <div
                       // ref={idx === 0 ? itemRef : null}
@@ -60,13 +57,10 @@ export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weath
                         alignItems: 'center',
                       }}
                     >
-                      <strong style={{ fontSize: '1rem', margin: 0 }}>
-                        {temperature.value}
-                        {temperature.units}
-                      </strong>
+                      <strong style={{ fontSize: '1rem', margin: 0 }}>{temperature}°</strong>
                       <Box component="img" draggable={false} src={imageUrl} sx={{ width: '40px', minWidth: '40px' }} />
                       <Box sx={{ margin: 0, fontSize: '0.75rem', mb: 1 }}>{format(time, 'HH:mm')}</Box>
-                      <Precipitation showLabel level={precipitation.value} size={12} />
+                      <Precipitation showLabel level={precipitation} size={12} />
                     </div>
                   </TableCell>
                 ))}

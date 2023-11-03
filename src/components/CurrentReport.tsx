@@ -3,7 +3,7 @@ import { format, isEqual } from 'date-fns';
 import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import { getWMOInfo } from '../getWMOInfo';
-import { MeasurementSystem, WeatherInfo } from '../vite-env';
+import { WeatherInfo } from '../vite-env';
 
 // import windSock from '@bybas/weather-icons/production/fill/all/windsock.svg';
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
@@ -40,7 +40,7 @@ import windBeaufort11 from '@bybas/weather-icons/production/fill/all/wind-beaufo
 import windBeaufort12 from '@bybas/weather-icons/production/fill/all/wind-beaufort-12.svg';
 
 import { changeTimeZone } from '../changeTimezone';
-import { useUserSettings } from '../hooks';
+import { useUnitsConverter } from '../hooks';
 
 const UV_INDEX = new Map([
   [1, uvIdx1],
@@ -176,14 +176,6 @@ function getWindBeaufortInfo(windspeed: number) {
   };
 }
 
-function changeWindSpeedUnits(windspeed: number, unit: MeasurementSystem) {
-  if (unit === 'imperial') {
-    return windspeed * 1.60934;
-  }
-
-  return windspeed;
-}
-
 const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string }>>> = ({
   imageUrl,
   children,
@@ -217,7 +209,7 @@ const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string
 export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const wmoInfo = getWMOInfo(weatherInfo);
   const currentDateTimeZone = changeTimeZone(new Date(), weatherInfo.timezone);
-  const [{ units }] = useUserSettings();
+  const { convert, units } = useUnitsConverter();
 
   const currentIdx = weatherInfo.hourly.time.findIndex((t) =>
     isEqual(currentDateTimeZone.setMinutes(0, 0, 0), new Date(t)),
@@ -226,36 +218,20 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
     isEqual(currentDateTimeZone.setHours(0, 0, 0, 0), new Date(t).setHours(0, 0, 0, 0)),
   );
 
-  const uvIndex = weatherInfo.hourly.uv_index[currentIdx];
-  const sunriseTime = weatherInfo.daily.sunrise[dayIdx];
-  const sunsetTime = weatherInfo.daily.sunset[dayIdx];
-
   const current = {
-    temperature: {
-      value: Math.floor(weatherInfo.current.temperature_2m),
-      units: '°',
-    },
-    apparentTemperature: {
-      value: Math.floor(weatherInfo.current.apparent_temperature),
-      units: '°',
-    },
-    windspeed: {
-      value: Math.round(weatherInfo.current.windspeed_10m),
-      units: weatherInfo.current_units.windspeed_10m,
-    },
-    relativeHumidity: {
-      value: Math.round(weatherInfo.current.relativehumidity_2m),
-      units: weatherInfo.current_units.relativehumidity_2m,
-    },
-    sun: {
-      value: weatherInfo.current.is_day ? sunsetTime : sunriseTime,
-    },
+    isDay: weatherInfo.current.is_day,
+    temperature: Math.floor(convert('temperature', weatherInfo.current.temperature_2m)),
+    apparentTemperature: Math.floor(convert('temperature', weatherInfo.current.apparent_temperature)),
+    windspeed: Math.round(convert('windspeed', weatherInfo.current.windspeed_10m)),
+    relativeHumidity: Math.round(weatherInfo.current.relativehumidity_2m),
+    sunset: weatherInfo.daily.sunset[dayIdx],
+    sunrise: weatherInfo.daily.sunrise[dayIdx],
     imageUrl: wmoInfo?.image,
     description: wmoInfo?.description,
-    uvIndex: getUVIndexInfo(uvIndex),
+    uvIndex: getUVIndexInfo(weatherInfo.hourly.uv_index[currentIdx]),
   };
 
-  const windspeedInfo = getWindBeaufortInfo(changeWindSpeedUnits(current.windspeed.value, units));
+  const windspeedInfo = getWindBeaufortInfo(weatherInfo.current.windspeed_10m);
 
   return (
     <>
@@ -271,27 +247,22 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
         >
           <img alt={current.description} src={current.imageUrl} style={{ width: '184px', height: '184px' }} />
           <Stack alignItems="center">
-            <Typography variant="h2">
-              {current.temperature.value}
-              {current.temperature.units}
-            </Typography>
+            <Typography variant="h2">{current.temperature}°</Typography>
             <Typography variant="h6">{current.description}</Typography>
             <Typography color="secondary" variant="caption">
-              Feels like {current.apparentTemperature.value}
-              {current.apparentTemperature.units}
+              Feels like {current.apparentTemperature}°
             </Typography>
           </Stack>
         </Box>
         <Grid container spacing={2}>
           <Grid xs={6} md={3}>
             <InfoBlock title="Humidity" imageUrl={humidity}>
-              {current.relativeHumidity.value}
-              {current.relativeHumidity.units}
+              {current.relativeHumidity}%
             </InfoBlock>
           </Grid>
           <Grid xs={6} md={3}>
             <InfoBlock title={windspeedInfo.description} imageUrl={windspeedInfo.imageUrl}>
-              {current.windspeed.value} {current.windspeed.units}
+              {current.windspeed} {units.windspeed}
             </InfoBlock>
           </Grid>
           <Grid xs={6} md={3}>
@@ -300,11 +271,8 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
             </InfoBlock>
           </Grid>
           <Grid xs={6} md={3}>
-            <InfoBlock
-              title={weatherInfo.current.is_day ? 'Sunset' : 'Sunrise'}
-              imageUrl={weatherInfo.current.is_day ? sunrise : sunset}
-            >
-              {format(new Date(current.sun.value), 'HH:mm')}
+            <InfoBlock title={current.isDay ? 'Sunset' : 'Sunrise'} imageUrl={current.isDay ? sunrise : sunset}>
+              {format(new Date(current.isDay ? current.sunset : current.sunrise), 'HH:mm')}
             </InfoBlock>
           </Grid>
         </Grid>

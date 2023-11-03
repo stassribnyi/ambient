@@ -2,8 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { useState, useEffect } from 'react';
 
 import { WeatherInfo } from '../vite-env';
-import { useUserSettings } from './useUserSettings';
-import { useLocations } from '.';
+import { useLocations } from './useLocations';
 
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -48,10 +47,7 @@ export const useForecast = () => {
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [{ units }] = useUserSettings();
   const { current, locations, setLocations } = useLocations();
-
-  const temperature_unit = units === 'metric' ? 'celsius' : 'fahrenheit';
 
   useEffect(() => {
     setLoading(true);
@@ -63,14 +59,12 @@ export const useForecast = () => {
       ...CURRENT_FORECAST_OPTIONS,
       latitude: current.latitude,
       longitude: current.longitude,
-      temperature_unit,
     };
 
     const othersParams = {
       ...FORECAST_OPTIONS,
       latitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
       longitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
-      temperature_unit,
     };
 
     Promise.all([
@@ -100,7 +94,7 @@ export const useForecast = () => {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
-  }, [current.latitude, current.longitude, locations, setLocations, temperature_unit]);
+  }, [current.latitude, current.longitude, locations, setLocations]);
 
   return { currentForecast, forecast, error, loading };
 };

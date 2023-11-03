@@ -3,12 +3,6 @@ import { useLocalStorage } from 'usehooks-ts';
 
 import { MeasurementSystem } from '../vite-env';
 
-// const UNIT_MAPPING = {
-//   mph : { unit : 'km/h', ratio : 1.609 },
-//   lbs : { unit : 'kg', ratio : 0.45 },
-//   pounds : { unit : 'kg', ratio : 0.45 }
-// } as const;
-
 type UserSettings = Readonly<{
   units: MeasurementSystem;
   currentLocationId: number;
