@@ -1,23 +1,17 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 import { Location } from '../vite-env';
 import { useUserSettings } from './useUserSettings';
+import { useGetCurrentLocation } from '.';
 
 const DEFAULT_LOCATION: Location = {
-  admin1: 'Kyiv City',
-  admin1_id: 703447,
-  country: 'Ukraine',
-  country_code: 'UA',
-  country_id: 690791,
-  elevation: 187,
-  feature_code: 'PPLC',
   id: 703448,
+  name: 'Kyiv',
+  country: 'Ukraine',
+  admin1: 'Kyiv City',
   latitude: 50.45466,
   longitude: 30.5238,
-  name: 'Kyiv',
-  population: 2797553,
-  timezone: 'Europe/Kyiv',
 };
 
 function deepCompare<T>(a: T, b: T): boolean {
@@ -25,13 +19,12 @@ function deepCompare<T>(a: T, b: T): boolean {
 }
 
 // TODO:
-// * pull to refresh
 // * refresh button
-// * get location by geoposition
 export const useLocations = () => {
+  const { isReady, locate, location } = useGetCurrentLocation();
   const valueRef = useRef<Array<Location>>([]);
-  const [value, setValue] = useLocalStorage<Array<Location>>('locations', [DEFAULT_LOCATION]);
-  const [{ currentLocationId }] = useUserSettings();
+  const [value, setValue] = useLocalStorage<Array<Location>>('locations', []);
+  const [{ currentLocationId }, setUserSettings] = useUserSettings();
 
   // this is temp workaround to prevent locations value to be changed each time localStorage gets modified
   // TODO: wrap or reimplement useLocalStorage logic, so if value hasn't changed reference stays the same
@@ -47,6 +40,23 @@ export const useLocations = () => {
     () => locations.find((item) => item.id === currentLocationId) ?? DEFAULT_LOCATION,
     [locations, currentLocationId],
   );
+
+  useEffect(() => {
+    if (!isReady || locations.length > 0) {
+      return;
+    }
+
+    locate();
+  }, [isReady, locate, locations]);
+
+  useEffect(() => {
+    if (!location || locations.length > 0) {
+      return;
+    }
+
+    setValue([location]);
+    setUserSettings((settings) => ({ ...settings, currentLocationId: location.id }));
+  }, [location, locations, setValue, setUserSettings]);
 
   return {
     current,

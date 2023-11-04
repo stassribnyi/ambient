@@ -100,67 +100,14 @@ export interface Daily {
 }
 
 export interface Location {
-  id: number;
+  id: number | string;
   name: string;
-  latitude: number;
-  longitude: number;
-  elevation: number;
-  feature_code: string;
-  country_code: string;
-  admin1_id: number;
-  timezone: string;
-  population?: number;
-  country_id: number;
   country: string;
   admin1: string;
-  admin2_id?: number;
-  admin2?: string;
+  latitude: number;
+  longitude: number;
   weathercode?: keyof typeof WMO;
   temperature?: number;
-}
-
-export interface BigDataLocation {
-  latitude: number;
-  lookupSource: string;
-  longitude: number;
-  localityLanguageRequested: string;
-  continent: string;
-  continentCode: string;
-  countryName: string;
-  countryCode: string;
-  principalSubdivision: string;
-  principalSubdivisionCode: string;
-  city: string;
-  locality: string;
-  postcode: string;
-  plusCode: string;
-  localityInfo: LocalityInfo;
-}
-
-export interface LocalityInfo {
-  administrative: Administrative[];
-  informative: Informative[];
-}
-
-export interface Administrative {
-  name: string;
-  description: string;
-  isoName?: string;
-  order: number;
-  adminLevel: number;
-  isoCode?: string;
-  wikidataId: string;
-  geonameId: number;
-}
-
-export interface Informative {
-  name: string;
-  description: string;
-  isoName?: string;
-  order: number;
-  isoCode?: string;
-  wikidataId?: string;
-  geonameId?: number;
 }
 
 type MeasurementSystem = 'metric' | 'imperial';

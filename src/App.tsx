@@ -20,62 +20,6 @@ import { useForecast, useLocations, useUserSettings } from './hooks';
 import { format } from 'date-fns';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 
-// import { useGeolocated } from 'react-geolocated';
-// import axios from 'axios';
-
-// // TODO: needs some work
-// const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
-//   positionOptions: {
-//     enableHighAccuracy: false,
-//   },
-//   userDecisionTimeout: 5000,
-// });
-
-// useEffect(() => {
-//   if (!locations.length) {
-//     return;
-//   }
-
-//   if (!isGeolocationAvailable || !isGeolocationEnabled) {
-//     setLocations([DEFAULT_LOCATION]);
-
-//     return;
-//   }
-
-//   axios
-//     .get<BigDataLocation>(
-//       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords?.latitude}&longitude=${coords?.longitude}&localityLanguage=en`,
-//     )
-//     .then(({ data }) =>
-//       setLocations([
-//         {
-//           current: true,
-//           admin1: data.principalSubdivision,
-//           admin1_id: data.localityInfo.administrative.find((a) => a.adminLevel === 4)?.geonameId || 0,
-//           country: data.countryName,
-//           country_code: data.countryCode,
-//           country_id: data.localityInfo.administrative.find((a) => a.adminLevel === 2)?.geonameId || 0,
-//           elevation: coords?.altitude || 0,
-//           feature_code: 'PPLC',
-//           id: data.localityInfo.administrative.find((a) => a.adminLevel === 2)?.geonameId || 0,
-//           latitude: data.latitude,
-//           longitude: data.longitude,
-//           name: data.city,
-//           timezone: data.localityInfo.informative.find((i) => i.description === 'time zone')?.name || 'auto',
-//         },
-//       ]),
-//     )
-//     .catch(console.log);
-// }, [
-//   coords?.altitude,
-//   coords?.latitude,
-//   coords?.longitude,
-//   isGeolocationAvailable,
-//   isGeolocationEnabled,
-//   locations.length,
-//   setLocations,
-// ]);
-
 function App() {
   const [settings, setSettings] = useUserSettings();
   const { currentForecast: forecast, error, loading, refresh } = useForecast();
