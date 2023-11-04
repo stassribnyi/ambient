@@ -13,7 +13,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { Chart, CurrentReport, DailyReport, HourlyReport, LocationSearchDialog, UnitSwitch } from './components';
+import { Chart, CurrentReport, DailyReport, HourlyReport, MenuDialog, UnitSwitch } from './components';
 
 import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
@@ -71,7 +71,7 @@ function App() {
               <Grid xs={12}>
                 <Stack>
                   <Stack direction="row" alignItems="center" sx={{ width: '100%', height: '2.25rem' }}>
-                    <LocationSearchDialog />
+                    <MenuDialog />
                     <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
                     <UnitSwitch
                       sx={{ ml: 'auto' }}
