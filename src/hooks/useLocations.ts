@@ -24,6 +24,10 @@ function deepCompare<T>(a: T, b: T): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+// TODO:
+// * pull to refresh
+// * refresh button
+// * get location by geoposition
 export const useLocations = () => {
   const valueRef = useRef<Array<Location>>([]);
   const [value, setValue] = useLocalStorage<Array<Location>>('locations', [DEFAULT_LOCATION]);

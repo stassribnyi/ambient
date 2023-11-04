@@ -20,6 +20,9 @@ import {
   ButtonBase,
   CircularProgress,
   Checkbox,
+  Menu,
+  MenuItem,
+  Button,
 } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
 import {
@@ -27,8 +30,9 @@ import {
   CheckCircle,
   ChevronLeft,
   Close,
-  Delete,
-  Menu,
+  CheckOutlined as Mark,
+  DeleteOutline as Delete,
+  Menu as MenuIcon,
   MoreVert,
   RadioButtonUnchecked,
 } from '@mui/icons-material';
@@ -36,7 +40,7 @@ import {
 import { forwardRef, useState, FC, Fragment } from 'react';
 import { useDebounce } from 'usehooks-ts';
 
-import { useLocationSearch, useLocations, useUserSettings, useLongpress, useUnitsConverter } from '../hooks';
+import { useLocationSearch, useLocations, useUserSettings, useLongPress, useUnitsConverter } from '../hooks';
 import { Location } from '../vite-env';
 import { WMO } from '../wmo';
 
@@ -58,11 +62,11 @@ const LocationOption: FC<
     selected?: boolean;
     option: Location;
     onSelect: (option: Location) => void;
-    onLongpress: (option: Location) => void;
+    onLongPress: (option: Location) => void;
   }>
-> = ({ isEdit, selected, option, onSelect, onLongpress }) => {
+> = ({ isEdit, selected, option, onSelect, onLongPress }) => {
   const optionWMO = option.weathercode !== undefined ? WMO[option.weathercode] : null;
-  const handleLongpress = useLongpress();
+  const handleLongPress = useLongPress();
   const { convert } = useUnitsConverter();
 
   return (
@@ -70,13 +74,17 @@ const LocationOption: FC<
       <ButtonBase
         onClick={() => onSelect(option)}
         sx={{ width: '100%' }}
-        {...handleLongpress(() => onLongpress(option))}
+        {...handleLongPress(() => onLongPress(option))}
       >
         <CardContent sx={{ width: '100%', p: '1.5rem 1rem' }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Stack direction="row" alignItems="center" gap={1}>
               {isEdit && (
                 <Checkbox
+                  sx={{
+                    width: '48px',
+                    height: '48px',
+                  }}
                   checked={selected}
                   color="secondary"
                   icon={<RadioButtonUnchecked />}
@@ -164,7 +172,7 @@ function FindLocationDialog({
           </IconButton>
         </Toolbar>
       </AppBar>
-      <DialogContent sx={{ p: 0.5, minHeight: '444px', maxHeight: isMobile ? 'auto' : '560px', minWidth: '320px' }}>
+      <DialogContent sx={{ p: 0.5, minHeight: '444px', maxHeight: isMobile ? 'auto' : '560px', minWidth: '360px' }}>
         {results.length && search.length ? (
           <Card
             sx={{
@@ -241,6 +249,15 @@ function ManageLocationDialog({
     });
   };
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <>
       <AppBar sx={{ position: 'relative' }}>
@@ -262,9 +279,38 @@ function ManageLocationDialog({
                 <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={handleAddLocation}>
                   <Add fontSize="inherit" />
                 </IconButton>
-                <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={() => setIsEdit(true)}>
+                <IconButton
+                  id="demo-positioned-button"
+                  aria-controls={open ? 'demo-positioned-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  sx={{ fontSize: '1.85rem' }}
+                  edge="end"
+                  color="inherit"
+                  onClick={handleClick}
+                >
                   <MoreVert fontSize="inherit" />
                 </IconButton>
+                <Menu
+                  id="demo-positioned-menu"
+                  aria-labelledby="demo-positioned-button"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  sx={{ '& .MuiList-root': { padding: 0 } }}
+                >
+                  <MenuItem sx={{ minHeight: 'auto' }} onClick={() => setIsEdit(true)}>
+                    Edit
+                  </MenuItem>
+                </Menu>
               </Stack>
             </Stack>
           </Toolbar>
@@ -293,12 +339,10 @@ function ManageLocationDialog({
           p: 0.5,
           minHeight: '444px',
           maxHeight: isMobile ? 'auto' : '560px',
-          minWidth: '320px',
+          minWidth: '360px',
           borderRadius: '16px',
         }}
       >
-        {/* <Stack justifyContent="space-between" sx={{ height: '100%' }}>
-          <Stack sx={{ height: 'calc(100% - 56px)', overflowX: 'hidden' }}> */}
         {favorite && (
           <>
             <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
@@ -309,7 +353,7 @@ function ManageLocationDialog({
               isEdit={isEdit}
               option={favorite}
               onSelect={handleSelect}
-              onLongpress={() => setIsEdit(true)}
+              onLongPress={() => setIsEdit(true)}
             />
           </>
         )}
@@ -325,29 +369,43 @@ function ManageLocationDialog({
                 key={idx}
                 option={option}
                 onSelect={handleSelect}
-                onLongpress={() => setIsEdit(true)}
+                onLongPress={() => setIsEdit(true)}
               />
             ))}
           </>
         ) : null}
-        {/* </Stack> */}
-        {isEdit && (
-          <Stack>
-            <IconButton
-              aria-label="delete"
+      </DialogContent>
+      <Slide mountOnEnter unmountOnExit in={isEdit && selected.length > 0} direction="up">
+        <Stack direction="row" justifyContent="space-around" alignItems="center" sx={{ p: 0.5 }}>
+          {selected.length === 1 && selected[0].id !== favorite.id && (
+            <Button
+              sx={{ flexDirection: 'column', fontSize: '0.7rem', width: '50%', gap: 0.5, color: 'secondary.light' }}
+              aria-label="set favorite"
               onClick={() => {
-                const filtered = locations.filter((x) => !selected.includes(x));
-                setLocations(filtered);
+                handleSubmit(selected[0]);
                 setSelected([]);
                 setIsEdit(false);
               }}
             >
-              <Delete />
-            </IconButton>
-          </Stack>
-        )}
-        {/* </Stack> */}
-      </DialogContent>
+              <Mark />
+              Set Favorite
+            </Button>
+          )}
+          <Button
+            sx={{ flexDirection: 'column', fontSize: '0.7rem', width: '50%', gap: 0.5, color: 'secondary.light' }}
+            aria-label="delete"
+            onClick={() => {
+              const filtered = locations.filter((x) => !selected.includes(x));
+              setLocations(filtered);
+              setSelected([]);
+              setIsEdit(false);
+            }}
+          >
+            <Delete />
+            Delete
+          </Button>
+        </Stack>
+      </Slide>
     </>
   );
 }
@@ -382,7 +440,7 @@ export function LocationSearchDialog() {
   return (
     <>
       <IconButton edge="start" sx={{ fontSize: '2rem' }} onClick={handleClickOpen}>
-        <Menu fontSize="inherit" />
+        <MenuIcon fontSize="inherit" />
       </IconButton>
       <Dialog
         sx={{

@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
@@ -54,14 +54,19 @@ export const useForecast = () => {
   const [forecast, setForecast] = useState<null | Array<WeatherInfo>>([]);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const controllerRef = useRef<AbortController>();
 
   const { current, locations, setLocations } = useLocations();
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     setLoading(true);
 
-    const controller = new AbortController();
-    const signal = controller.signal;
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    controllerRef.current = new AbortController();
+    const signal = controllerRef.current.signal;
 
     const currentParams = {
       ...CURRENT_FORECAST_OPTIONS,
@@ -75,7 +80,7 @@ export const useForecast = () => {
       longitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
     };
 
-    Promise.all([
+    await Promise.all([
       axios.get<WeatherInfo>(WEATHER_API_URL, { params: currentParams, signal }),
       // TODO: change type
       axios.get<Array<WeatherInfo>>(WEATHER_API_URL, { params: othersParams, signal }),
@@ -100,9 +105,11 @@ export const useForecast = () => {
       })
       .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
       .finally(() => setLoading(false));
-
-    return () => controller.abort();
   }, [current.latitude, current.longitude, locations, setLocations]);
 
-  return { currentForecast, forecast, error, loading };
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return { currentForecast, forecast, error, loading, refresh };
 };

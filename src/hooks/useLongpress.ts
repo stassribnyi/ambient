@@ -1,4 +1,4 @@
-export function useLongpress() {
+export function useLongPress() {
   return function (callback: () => void) {
     let timeout: number;
     let preventClick = false;

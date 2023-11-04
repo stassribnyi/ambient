@@ -55,6 +55,7 @@ export const Chart: FC<
         {
           ...DEFAULT_SERIES_OPTIONS,
           data: precipitation_probability,
+          color: '#ab47bc',
           label: 'Precipitation probability',
         },
       ]}

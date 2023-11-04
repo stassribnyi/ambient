@@ -1,4 +1,4 @@
-import { LocationOn } from '@mui/icons-material';
+import { ArrowDownward, LocationOn } from '@mui/icons-material';
 import {
   Alert,
   Backdrop,
@@ -18,6 +18,7 @@ import { Chart, CurrentReport, DailyReport, HourlyReport, LocationSearchDialog, 
 import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
 import { format } from 'date-fns';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 // import { useGeolocated } from 'react-geolocated';
 // import axios from 'axios';
@@ -77,7 +78,7 @@ import { format } from 'date-fns';
 
 function App() {
   const [settings, setSettings] = useUserSettings();
-  const { currentForecast: forecast, error, loading } = useForecast();
+  const { currentForecast: forecast, error, loading, refresh } = useForecast();
   const { current } = useLocations();
 
   const theme = useTheme();
@@ -101,72 +102,92 @@ function App() {
           {error?.message}
         </Alert>
       </Snackbar>
-      <Container maxWidth="xl" sx={{ pt: 2, pb: 2 }}>
-        {forecast && (
-          <Grid container spacing={2}>
-            <Grid xs={12}>
-              <Stack>
-                <Stack direction="row" alignItems="center" sx={{ width: '100%', height: '2.25rem' }}>
-                  <LocationSearchDialog />
-                  <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
-                  <UnitSwitch
-                    sx={{ ml: 'auto' }}
-                    checked={settings.units === 'metric'}
-                    onClick={handleMeasurementSystemChange}
-                  />
-                </Stack>
-                <Typography
-                  color="secondary"
-                  variant="caption"
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.25rem',
-                  }}
-                >
-                  <LocationOn sx={{ width: '1rem', height: '1rem' }} />
-                  {[current.name, current.admin1, current.country].filter(Boolean).join(', ')}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid xs={12} md={6}>
-              <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
-                <CurrentReport weatherInfo={forecast} />
-                <Card>
-                  <CardContent>
-                    <Typography gutterBottom variant="h6">
-                      Today
-                    </Typography>
-                    <HourlyReport weatherInfo={forecast} />
-                  </CardContent>
-                </Card>
-              </Stack>
-            </Grid>
-            <Grid xs={12} md={6}>
-              <Card sx={{ height: '100%' }}>
-                <CardContent>
-                  <Typography gutterBottom variant="h6">
-                    10-Days Forecast
-                  </Typography>
-                  <DailyReport weatherInfo={forecast} />
-                </CardContent>
-              </Card>
-            </Grid>
-            {!isMobile ? (
+      <PullToRefresh
+        resistance={3}
+        pullDownThreshold={56}
+        isPullable={!loading}
+        onRefresh={refresh}
+        pullingContent={
+          <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
+            <ArrowDownward />
+            <Typography>Pull down to check the sky</Typography>
+            <ArrowDownward />
+          </Stack>
+        }
+        refreshingContent={
+          <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
+            <CircularProgress color="inherit" size={24} />
+            <Typography>Checking the sky for you…</Typography>
+          </Stack>
+        }
+      >
+        <Container maxWidth="xl" sx={{ pt: 2, pb: 2 }}>
+          {forecast && (
+            <Grid container spacing={2}>
               <Grid xs={12}>
-                <Card>
+                <Stack>
+                  <Stack direction="row" alignItems="center" sx={{ width: '100%', height: '2.25rem' }}>
+                    <LocationSearchDialog />
+                    <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
+                    <UnitSwitch
+                      sx={{ ml: 'auto' }}
+                      checked={settings.units === 'metric'}
+                      onClick={handleMeasurementSystemChange}
+                    />
+                  </Stack>
+                  <Typography
+                    color="secondary"
+                    variant="caption"
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                    }}
+                  >
+                    <LocationOn sx={{ width: '1rem', height: '1rem' }} />
+                    {[current.name, current.admin1, current.country].filter(Boolean).join(', ')}
+                  </Typography>
+                </Stack>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
+                  <CurrentReport weatherInfo={forecast} />
+                  <Card>
+                    <CardContent>
+                      <Typography gutterBottom variant="h6">
+                        Today
+                      </Typography>
+                      <HourlyReport weatherInfo={forecast} />
+                    </CardContent>
+                  </Card>
+                </Stack>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <Card sx={{ height: '100%' }}>
                   <CardContent>
                     <Typography gutterBottom variant="h6">
-                      Atmospheric Conditions
+                      10-Days Forecast
                     </Typography>
-                    <Chart info={forecast} />
+                    <DailyReport weatherInfo={forecast} />
                   </CardContent>
                 </Card>
               </Grid>
-            ) : null}
-          </Grid>
-        )}
-      </Container>
+              {!isMobile ? (
+                <Grid xs={12}>
+                  <Card>
+                    <CardContent>
+                      <Typography gutterBottom variant="h6">
+                        Atmospheric Conditions
+                      </Typography>
+                      <Chart info={forecast} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ) : null}
+            </Grid>
+          )}
+        </Container>
+      </PullToRefresh>
     </>
   );
 }
