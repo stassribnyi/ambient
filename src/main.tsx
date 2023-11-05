@@ -15,13 +15,16 @@ const globalStyles: GlobalStylesProps['styles'] = {
   body: {
     margin: 0,
     padding: 0,
+    height: '100dvh',
   },
 
   '#root': {
     display: 'flex',
     flexDirection: 'column',
-    // height: '100dvh',
-    backgroundColor: '#11191f',
+    height: '100%',
+    overflow: 'auto',
+    backgroundColor: 'rgba(17, 25, 31, 0.8)',
+    backdropFilter: 'blur(100px)',
   },
 };
 

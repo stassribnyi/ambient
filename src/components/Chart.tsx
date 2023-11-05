@@ -26,7 +26,7 @@ export const Chart: FC<
     <LineChart
       colors={chartPalette}
       height={300}
-      margin={{ top: 64, bottom: 20 }}
+      margin={{ top: 56, bottom: 32 }}
       yAxis={[
         {
           data: [0, 25, 50, 75, 100],

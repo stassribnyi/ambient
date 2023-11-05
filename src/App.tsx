@@ -2,8 +2,6 @@ import { ArrowDownward, LocationOn } from '@mui/icons-material';
 import {
   Alert,
   Backdrop,
-  Card,
-  CardContent,
   CircularProgress,
   Container,
   Unstable_Grid2 as Grid,
@@ -13,7 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { Chart, CurrentReport, DailyReport, HourlyReport, MenuDialog, UnitSwitch } from './components';
+import { Chart, CurrentReport, DailyReport, HourlyReport, InfoBlock, MenuDialog, UnitSwitch } from './components';
 
 import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
@@ -96,36 +94,21 @@ function App() {
               <Grid xs={12} md={6}>
                 <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
                   <CurrentReport weatherInfo={forecast} />
-                  <Card>
-                    <CardContent>
-                      <Typography gutterBottom variant="h6">
-                        Today
-                      </Typography>
-                      <HourlyReport weatherInfo={forecast} />
-                    </CardContent>
-                  </Card>
+                  <InfoBlock title="Today">
+                    <HourlyReport weatherInfo={forecast} />
+                  </InfoBlock>
                 </Stack>
               </Grid>
               <Grid xs={12} md={6}>
-                <Card sx={{ height: '100%' }}>
-                  <CardContent>
-                    <Typography gutterBottom variant="h6">
-                      10-Days Forecast
-                    </Typography>
-                    <DailyReport weatherInfo={forecast} />
-                  </CardContent>
-                </Card>
+                <InfoBlock title="10-Days Forecast">
+                  <DailyReport weatherInfo={forecast} />
+                </InfoBlock>
               </Grid>
               {!isMobile ? (
                 <Grid xs={12}>
-                  <Card>
-                    <CardContent>
-                      <Typography gutterBottom variant="h6">
-                        Atmospheric Conditions
-                      </Typography>
-                      <Chart info={forecast} />
-                    </CardContent>
-                  </Card>
+                  <InfoBlock title="Atmospheric Conditions">
+                    <Chart info={forecast} />
+                  </InfoBlock>
                 </Grid>
               ) : null}
             </Grid>

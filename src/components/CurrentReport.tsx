@@ -41,6 +41,7 @@ import windBeaufort12 from '@bybas/weather-icons/production/fill/all/wind-beaufo
 
 import { changeTimeZone } from '../changeTimezone';
 import { useUnitsConverter } from '../hooks';
+import { InfoBlock } from './InfoBlock';
 
 const UV_INDEX = new Map([
   [1, uvIdx1],
@@ -176,33 +177,21 @@ function getWindBeaufortInfo(windspeed: number) {
   };
 }
 
-const InfoBlock: FC<PropsWithChildren<Readonly<{ imageUrl: string; title: string }>>> = ({
-  imageUrl,
+const CurrentInfo: FC<PropsWithChildren<Readonly<{ iconUrl: string; title: string }>>> = ({
+  iconUrl,
   children,
   title,
 }) => {
   return (
-    <Box
-      sx={{
-        fontSize: '1rem',
-        margin: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        background: '#11191f',
-        padding: 1.5,
-        borderRadius: '1rem',
-        color: '#fff',
-        boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
-        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
-      }}
-    >
-      <Box component="img" src={imageUrl} alt={title} sx={{ width: '48px', mb: 1 }} />
-      <Typography variant="body1">{title}</Typography>
-      <Typography variant="caption" color="secondary">
-        {children}
-      </Typography>
-    </Box>
+    <InfoBlock>
+      <Box sx={{ display: 'grid', placeContent: 'center', placeItems: 'center' }}>
+        <Box component="img" src={iconUrl} alt={title} sx={{ width: '48px', mb: 1 }} />
+        <Typography variant="body1">{title}</Typography>
+        <Typography variant="caption" color="secondary">
+          {children}
+        </Typography>
+      </Box>
+    </InfoBlock>
   );
 };
 
@@ -234,49 +223,47 @@ export const CurrentReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weat
   const windspeedInfo = getWindBeaufortInfo(weatherInfo.current.windspeed_10m);
 
   return (
-    <>
-      <Stack gap={2} flex={1}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            height: '100%',
-            justifyContent: 'space-between',
-          }}
-        >
-          <img alt={current.description} src={current.imageUrl} style={{ width: '184px', height: '184px' }} />
-          <Stack alignItems="center">
-            <Typography variant="h2">{current.temperature}°</Typography>
-            <Typography variant="h6">{current.description}</Typography>
-            <Typography color="secondary" variant="caption">
-              Feels like {current.apparentTemperature}°
-            </Typography>
-          </Stack>
-        </Box>
-        <Grid container spacing={2}>
-          <Grid xs={6} md={3}>
-            <InfoBlock title="Humidity" imageUrl={humidity}>
-              {current.relativeHumidity}%
-            </InfoBlock>
-          </Grid>
-          <Grid xs={6} md={3}>
-            <InfoBlock title={windspeedInfo.description} imageUrl={windspeedInfo.imageUrl}>
-              {current.windspeed} {units.windspeed}
-            </InfoBlock>
-          </Grid>
-          <Grid xs={6} md={3}>
-            <InfoBlock title="UV Index" imageUrl={current.uvIndex.imageUrl}>
-              {current.uvIndex.description}
-            </InfoBlock>
-          </Grid>
-          <Grid xs={6} md={3}>
-            <InfoBlock title={current.isDay ? 'Sunset' : 'Sunrise'} imageUrl={current.isDay ? sunrise : sunset}>
-              {format(new Date(current.isDay ? current.sunset : current.sunrise), 'HH:mm')}
-            </InfoBlock>
-          </Grid>
+    <Stack gap={2} flex={1}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <img alt={current.description} src={current.imageUrl} style={{ width: '184px', height: '184px' }} />
+        <Stack alignItems="center">
+          <Typography variant="h2">{current.temperature}°</Typography>
+          <Typography variant="h6">{current.description}</Typography>
+          <Typography color="secondary" variant="caption">
+            Feels like {current.apparentTemperature}°
+          </Typography>
+        </Stack>
+      </Box>
+      <Grid container spacing={2}>
+        <Grid xs={6} md={3}>
+          <CurrentInfo title="Humidity" iconUrl={humidity}>
+            {current.relativeHumidity}%
+          </CurrentInfo>
         </Grid>
-      </Stack>
-    </>
+        <Grid xs={6} md={3}>
+          <CurrentInfo title={windspeedInfo.description} iconUrl={windspeedInfo.imageUrl}>
+            {current.windspeed} {units.windspeed}
+          </CurrentInfo>
+        </Grid>
+        <Grid xs={6} md={3}>
+          <CurrentInfo title="UV Index" iconUrl={current.uvIndex.imageUrl}>
+            {current.uvIndex.description}
+          </CurrentInfo>
+        </Grid>
+        <Grid xs={6} md={3}>
+          <CurrentInfo title={current.isDay ? 'Sunset' : 'Sunrise'} iconUrl={current.isDay ? sunrise : sunset}>
+            {format(new Date(current.isDay ? current.sunset : current.sunrise), 'HH:mm')}
+          </CurrentInfo>
+        </Grid>
+      </Grid>
+    </Stack>
   );
 };
