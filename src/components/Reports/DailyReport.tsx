@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { Table, TableBody, TableRow, TableCell, Stack, Box, useTheme, useMediaQuery } from '@mui/material';
 import { isToday, format } from 'date-fns';
 
-import { WeatherInfo } from '../vite-env';
-import { getWMOInfoDaily } from '../getWMOInfo';
-import { Precipitation } from './Precipitation';
-import { useUnitsConverter } from '../hooks';
+import { WeatherInfo } from '../../vite-env';
+import { getWMOInfoDaily } from '../../getWMOInfo';
+import { Precipitation } from '../Precipitation';
+import { useUnitsConverter } from '../../hooks';
 
 export const DailyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const theme = useTheme();

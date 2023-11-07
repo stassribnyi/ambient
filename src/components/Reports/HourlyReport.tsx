@@ -2,13 +2,13 @@ import { FC } from 'react';
 import { Table, TableBody, TableRow, TableCell, TableContainer, Box } from '@mui/material';
 import { format, compareAsc, addHours, subHours } from 'date-fns';
 
-import { WeatherInfo } from '../vite-env';
-import { getWMOInfoHourly } from '../getWMOInfo';
-import { Precipitation } from './Precipitation';
+import { WeatherInfo } from '../../vite-env';
+import { getWMOInfoHourly } from '../../getWMOInfo';
+import { Precipitation } from '../Precipitation';
 // import Combining from './Chart';
 // import { useElementSize } from 'usehooks-ts';
-import { changeTimeZone } from '../changeTimezone';
-import { useUnitsConverter } from '../hooks';
+import { changeTimeZone } from '../../changeTimezone';
+import { useUnitsConverter } from '../../hooks';
 
 export const HourlyReport: FC<Readonly<{ weatherInfo: WeatherInfo }>> = ({ weatherInfo }) => {
   const { convert } = useUnitsConverter();

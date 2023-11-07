@@ -11,12 +11,24 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { Chart, CurrentReport, DailyReport, HourlyReport, InfoBlock, MenuDialog, UnitSwitch } from './components';
+import { Chart, InfoBlock, MenuDialog, UnitSwitch } from './components';
+import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 
 import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
 import { format } from 'date-fns';
 import PullToRefresh from 'react-simple-pull-to-refresh';
+import { useEffect } from 'react';
+import { getWMOInfo } from './getWMOInfo';
+import { getCurrentReportInfo } from './getCurrentReportInfo';
+
+function setRelIcon(iconUrl: string) {
+  const link = document.querySelector('link[rel="icon"]');
+
+  if (link) {
+    link.setAttribute('href', iconUrl);
+  }
+}
 
 function App() {
   const [settings, setSettings] = useUserSettings();
@@ -25,6 +37,19 @@ function App() {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  useEffect(() => {
+    if (!forecast) {
+      return;
+    }
+
+    const info = getWMOInfo(forecast);
+    document.title = `${current.name}, ${current.country} - ${forecast.current.temperature_2m}°, ${info?.description} | Ambient`;
+
+    if (info?.image) {
+      setRelIcon(info?.image);
+    }
+  }, [current.country, current.name, current.temperature, forecast]);
 
   const handleMeasurementSystemChange = () =>
     setSettings((prev) => ({
@@ -93,7 +118,7 @@ function App() {
               </Grid>
               <Grid xs={12} md={6}>
                 <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
-                  <CurrentReport weatherInfo={forecast} />
+                  <CurrentReport value={getCurrentReportInfo(forecast)} />
                   <InfoBlock title="Today">
                     <HourlyReport weatherInfo={forecast} />
                   </InfoBlock>

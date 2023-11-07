@@ -16,6 +16,10 @@ const globalStyles: GlobalStylesProps['styles'] = {
     margin: 0,
     padding: 0,
     height: '100dvh',
+    backgroundImage:
+      'url(https://img.freepik.com/free-vector/gradient-fluid-abstract-background_23-2148908978.jpg?w=2000&t=st=1699311107~exp=1699311707~hmac=590ea4ee61b389aded0846ba114db2441415341db770739b310223499010a871)',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
   },
 
   '#root': {
