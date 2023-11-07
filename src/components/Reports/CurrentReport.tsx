@@ -31,7 +31,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentReportType }>> = ({
   value: {
     apparentTemperature,
     description,
-    imageUrl,
+    iconUrl,
     isDay,
     relativeHumidity,
     sunriseTime,
@@ -53,7 +53,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentReportType }>> = ({
         }}
       >
         {/* TODO: use css to make items same size */}
-        <Box component="img" alt={description} src={imageUrl} sx={{ width: '184px', height: '184px' }} />
+        <Box component="img" alt={description} src={iconUrl} sx={{ width: '184px', height: '184px' }} />
         <Stack alignItems="center" justifyContent="center">
           <Typography variant="h2">
             <Temperature value={temperature} />
@@ -83,11 +83,11 @@ export const CurrentReport: FC<Readonly<{ value: CurrentReportType }>> = ({
         <Grid xs={6} md={3}>
           {isDay ? (
             <Tile title="Sunset" iconUrl={sunsetSvg}>
-              <Time value={sunsetTime} />
+              <Time value={sunsetTime} format="HH:mm" />
             </Tile>
           ) : (
             <Tile title="Sunrise" iconUrl={sunriseSvg}>
-              <Time value={sunriseTime} />
+              <Time value={sunriseTime} format="HH:mm" />
             </Tile>
           )}
         </Grid>

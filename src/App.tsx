@@ -19,8 +19,12 @@ import { useForecast, useLocations, useUserSettings } from './hooks';
 import { format } from 'date-fns';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { useEffect } from 'react';
+
 import { getWMOInfo } from './getWMOInfo';
+
 import { getCurrentReportInfo } from './getCurrentReportInfo';
+import { getDailyReport } from './getDailyReportInfo';
+import { getHourlyReportInfo } from './getHourlyReportInfo';
 
 function setRelIcon(iconUrl: string) {
   const link = document.querySelector('link[rel="icon"]');
@@ -46,8 +50,8 @@ function App() {
     const info = getWMOInfo(forecast);
     document.title = `${current.name}, ${current.country} - ${forecast.current.temperature_2m}°, ${info?.description} | Ambient`;
 
-    if (info?.image) {
-      setRelIcon(info?.image);
+    if (info?.iconUrl) {
+      setRelIcon(info?.iconUrl);
     }
   }, [current.country, current.name, current.temperature, forecast]);
 
@@ -120,13 +124,13 @@ function App() {
                 <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
                   <CurrentReport value={getCurrentReportInfo(forecast)} />
                   <InfoBlock title="Today">
-                    <HourlyReport weatherInfo={forecast} />
+                    <HourlyReport value={getHourlyReportInfo(forecast)} />
                   </InfoBlock>
                 </Stack>
               </Grid>
               <Grid xs={12} md={6}>
                 <InfoBlock title="10-Days Forecast">
-                  <DailyReport weatherInfo={forecast} />
+                  <DailyReport value={getDailyReport(forecast)} />
                 </InfoBlock>
               </Grid>
               {!isMobile ? (

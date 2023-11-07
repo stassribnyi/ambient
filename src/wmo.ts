@@ -26,281 +26,281 @@ export const WMO = {
   '0': {
     day: {
       description: 'Sunny',
-      image: sunny,
+      iconUrl: sunny,
     },
     night: {
       description: 'Clear',
-      image: clear,
+      iconUrl: clear,
     },
   },
   '1': {
     day: {
       description: 'Mainly Sunny',
-      image: sunny,
+      iconUrl: sunny,
     },
     night: {
       description: 'Mainly Clear',
-      image: clear,
+      iconUrl: clear,
     },
   },
   '2': {
     day: {
       description: 'Partly Cloudy',
-      image: partlySunny,
+      iconUrl: partlySunny,
     },
     night: {
       description: 'Partly Cloudy',
-      image: partlyClear,
+      iconUrl: partlyClear,
     },
   },
   '3': {
     day: {
       description: 'Cloudy',
-      image: cloudyDay,
+      iconUrl: cloudyDay,
     },
     night: {
       description: 'Cloudy',
-      image: cloudyNight,
+      iconUrl: cloudyNight,
     },
   },
   '45': {
     day: {
       description: 'Foggy',
-      image: foggyDay,
+      iconUrl: foggyDay,
     },
     night: {
       description: 'Foggy',
-      image: foggyNight,
+      iconUrl: foggyNight,
     },
   },
   '48': {
     day: {
       description: 'Rime Fog',
-      image: foggyDay,
+      iconUrl: foggyDay,
     },
     night: {
       description: 'Rime Fog',
-      image: foggyNight,
+      iconUrl: foggyNight,
     },
   },
   '51': {
     day: {
       description: 'Light Drizzle',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Light Drizzle',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '53': {
     day: {
       description: 'Drizzle',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Drizzle',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '55': {
     day: {
       description: 'Heavy Drizzle',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Heavy Drizzle',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '56': {
     day: {
       description: 'Light Freezing Drizzle',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Light Freezing Drizzle',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '57': {
     day: {
       description: 'Freezing Drizzle',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Freezing Drizzle',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '61': {
     day: {
       description: 'Light Rain',
-      image: rainDay,
+      iconUrl: rainDay,
     },
     night: {
       description: 'Light Rain',
-      image: rainNight,
+      iconUrl: rainNight,
     },
   },
   '63': {
     day: {
       description: 'Rain',
-      image: rainDay,
+      iconUrl: rainDay,
     },
     night: {
       description: 'Rain',
-      image: rainNight,
+      iconUrl: rainNight,
     },
   },
   '65': {
     day: {
       description: 'Heavy Rain',
-      image: rainDay,
+      iconUrl: rainDay,
     },
     night: {
       description: 'Heavy Rain',
-      image: rainNight,
+      iconUrl: rainNight,
     },
   },
   '66': {
     day: {
       description: 'Light Freezing Rain',
-      image: rainDay,
+      iconUrl: rainDay,
     },
     night: {
       description: 'Light Freezing Rain',
-      image: rainNight,
+      iconUrl: rainNight,
     },
   },
   '67': {
     day: {
       description: 'Freezing Rain',
-      image: rainDay,
+      iconUrl: rainDay,
     },
     night: {
       description: 'Freezing Rain',
-      image: rainNight,
+      iconUrl: rainNight,
     },
   },
   '71': {
     day: {
       description: 'Light Snow',
-      image: snowDay,
+      iconUrl: snowDay,
     },
     night: {
       description: 'Light Snow',
-      image: snowNight,
+      iconUrl: snowNight,
     },
   },
   '73': {
     day: {
       description: 'Snow',
-      image: snowDay,
+      iconUrl: snowDay,
     },
     night: {
       description: 'Snow',
-      image: snowNight,
+      iconUrl: snowNight,
     },
   },
   '75': {
     day: {
       description: 'Heavy Snow',
-      image: snowDay,
+      iconUrl: snowDay,
     },
     night: {
       description: 'Heavy Snow',
-      image: snowNight,
+      iconUrl: snowNight,
     },
   },
   '77': {
     day: {
       description: 'Snow Grains',
-      image: snowDay,
+      iconUrl: snowDay,
     },
     night: {
       description: 'Snow Grains',
-      image: snowNight,
+      iconUrl: snowNight,
     },
   },
   '80': {
     day: {
       description: 'Light Showers',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Light Showers',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '81': {
     day: {
       description: 'Showers',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Showers',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '82': {
     day: {
       description: 'Heavy Showers',
-      image: drizzleDay,
+      iconUrl: drizzleDay,
     },
     night: {
       description: 'Heavy Showers',
-      image: drizzleNight,
+      iconUrl: drizzleNight,
     },
   },
   '85': {
     day: {
       description: 'Light Snow Showers',
-      image: snowDay,
+      iconUrl: snowDay,
     },
     night: {
       description: 'Light Snow Showers',
-      image: snowNight,
+      iconUrl: snowNight,
     },
   },
   '86': {
     day: {
       description: 'Snow Showers',
-      image: snowDay,
+      iconUrl: snowDay,
     },
     night: {
       description: 'Snow Showers',
-      image: snowNight,
+      iconUrl: snowNight,
     },
   },
   '95': {
     day: {
       description: 'Thunderstorm',
-      image: thunderstormDay,
+      iconUrl: thunderstormDay,
     },
     night: {
       description: 'Thunderstorm',
-      image: thunderstormNight,
+      iconUrl: thunderstormNight,
     },
   },
   '96': {
     day: {
       description: 'Light Thunderstorms With Hail',
-      image: thunderstormDay,
+      iconUrl: thunderstormDay,
     },
     night: {
       description: 'Light Thunderstorms With Hail',
-      image: thunderstormNight,
+      iconUrl: thunderstormNight,
     },
   },
   '99': {
     day: {
       description: 'Thunderstorm With Hail',
-      image: thunderstormDay,
+      iconUrl: thunderstormDay,
     },
     night: {
       description: 'Thunderstorm With Hail',
-      image: thunderstormNight,
+      iconUrl: thunderstormNight,
     },
   },
 };
