@@ -39,7 +39,7 @@ export const LocationItem: FC<
                 />
               )}
               {!isEdit && weatherInfo && (
-                <img alt={weatherInfo.description} src={weatherInfo.image} style={{ width: '48px' }} />
+                <img alt={weatherInfo.description} src={weatherInfo.iconUrl} style={{ width: '48px' }} />
               )}
               <Stack alignItems="start">
                 <Typography sx={{ fontSize: '1.125rem' }}>{value.name}</Typography>
