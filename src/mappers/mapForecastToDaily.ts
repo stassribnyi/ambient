@@ -2,14 +2,16 @@ import { changeTimeZone } from '../utils/changeTimezone';
 import { WeatherInfo } from '../vite-env';
 import { WMO } from '../utils/wmo';
 
+type Range = Readonly<{
+  min: number;
+  max: number;
+}>;
+
 export type DailyForecast = Readonly<{
   time: Date;
   sunrise: Date;
   sunset: Date;
-  temperature: {
-    min: number;
-    max: number;
-  };
+  temperature: Range;
   precipitationProbability: number;
   description?: string;
   iconUrl?: string;

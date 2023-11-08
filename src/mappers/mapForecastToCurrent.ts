@@ -1,4 +1,4 @@
-import { isEqual } from 'date-fns';
+import { isSameDay, isSameHour } from 'date-fns';
 
 import { changeTimeZone, uvIndexToScale, windspeedToBeaufortScale, WMO } from '../utils';
 
@@ -6,6 +6,12 @@ import { WeatherInfo } from '../vite-env';
 
 import type { DailyForecast } from './mapForecastToDaily';
 import type { HourlyForecast } from './mapForecastToHourly';
+
+type Scale = Readonly<{
+  value: number;
+  iconUrl: string;
+  description: string;
+}>;
 
 export type CurrentForecast = Readonly<{
   isDay: number;
@@ -17,46 +23,32 @@ export type CurrentForecast = Readonly<{
   sunriseTime: Date;
   iconUrl?: string;
   description?: string;
-  uvIndex: {
-    value: number;
-    iconUrl: string;
-    description: string;
-  };
-  windspeed: {
-    value: number;
-    iconUrl: string;
-    description: string;
-  };
+  uvIndex: Scale;
+  windspeed: Scale;
 }>;
 
 export function mapForecastToCurrent(
-  weatherInfo: WeatherInfo,
+  { timezone, current: currentForecast }: WeatherInfo,
   dailyForecast: Array<DailyForecast>,
   hourlyForecast: Array<HourlyForecast>,
 ): CurrentForecast {
-  const currentDateTimeZone = changeTimeZone(new Date(), weatherInfo.timezone);
+  const currentDateTimeZone = changeTimeZone(new Date(), timezone);
 
-  const currentHour = hourlyForecast.find((hour) =>
-    // TODO: isSameHour?
-    isEqual(currentDateTimeZone.setMinutes(0, 0, 0), hour.time),
-  );
-  const currentDay = dailyForecast.find((day) =>
-    // TODO: isSameDay?
-    isEqual(currentDateTimeZone.setHours(0, 0, 0, 0), day.time.setHours(0, 0, 0, 0)),
-  );
+  const currentHour = hourlyForecast.find((hour) => isSameHour(currentDateTimeZone, hour.time));
+  const currentDay = dailyForecast.find((day) => isSameDay(currentDateTimeZone, day.time));
 
-  const details = WMO[weatherInfo.current.weathercode];
+  const details = WMO[currentForecast.weathercode];
 
   return {
-    ...(weatherInfo.current.is_day ? details?.day : details?.night),
+    ...(currentForecast.is_day ? details?.day : details?.night),
     time: currentDateTimeZone,
-    isDay: weatherInfo.current.is_day,
-    temperature: weatherInfo.current.temperature_2m,
-    apparentTemperature: weatherInfo.current.apparent_temperature,
-    relativeHumidity: weatherInfo.current.relativehumidity_2m,
+    isDay: currentForecast.is_day,
+    temperature: currentForecast.temperature_2m,
+    apparentTemperature: currentForecast.apparent_temperature,
+    relativeHumidity: currentForecast.relativehumidity_2m,
     sunsetTime: currentDay?.sunset ?? new Date(), // TODO: find out better way to fallback
     sunriseTime: currentDay?.sunrise ?? new Date(),
     uvIndex: uvIndexToScale(currentHour?.uvIndex ?? 0),
-    windspeed: windspeedToBeaufortScale(weatherInfo.current.windspeed_10m),
+    windspeed: windspeedToBeaufortScale(currentForecast.windspeed_10m),
   };
 }

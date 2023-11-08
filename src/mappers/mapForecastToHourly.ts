@@ -1,4 +1,4 @@
-import { subHours, addHours, compareAsc, isAfter, isBefore, isSameDay } from 'date-fns';
+import { subHours, addHours, isSameDay, isWithinInterval } from 'date-fns';
 
 import { changeTimeZone, WMO } from '../utils';
 import { WeatherInfo } from '../vite-env';
@@ -27,18 +27,18 @@ export function mapForecastToHourly(
       const current = changeTimeZone(new Date(), mainForecast.timezone);
 
       // -1 hour, so if time is less than hour in the past, we still show forecast
-      const from = subHours(current.setMinutes(0, 0, 0), 1);
       // 24(+1) hour, so if time is less than hour in the future, we still show forecast
-      const to = addHours(current, 25);
-
-      return compareAsc(from, slot.time) - compareAsc(slot.time, to) === 0;
+      return isWithinInterval(slot.time, {
+        start: subHours(current.setMinutes(0, 0, 0), 1),
+        end: addHours(current, 25),
+      });
     })
     .map(({ time, idx }) => {
       const details = WMO[mainForecast.hourly.weathercode[idx]];
 
       const currentDay = dailyForecast.find((day) => isSameDay(time, day.time));
 
-      const isDay = currentDay ? isAfter(time, currentDay.sunrise) && isBefore(time, currentDay.sunset) : true;
+      const isDay = currentDay ? isWithinInterval(time, { start: currentDay.sunrise, end: currentDay.sunset }) : true;
 
       return {
         time,
