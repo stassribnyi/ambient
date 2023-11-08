@@ -11,7 +11,7 @@ import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
-import type { CurrentReportType } from '../../getCurrentReportInfo';
+import type { CurrentReportType } from '../../mappers/mapForecastToCurrent';
 
 const Tile: FC<PropsWithChildren<Readonly<{ iconUrl: string; title: string }>>> = ({ iconUrl, children, title }) => {
   return (

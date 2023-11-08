@@ -1,14 +1,15 @@
 import { isEqual } from 'date-fns';
 
 import { getWindBeaufortInfo } from './getWindBeaufortInfo';
-import { changeTimeZone } from './changeTimezone';
+import { changeTimeZone } from '../changeTimezone';
 import { getUVIndexInfo } from './getUVIndexInfo';
 import { getWMOInfo } from './getWMOInfo';
 
-import { WeatherInfo } from './vite-env';
+import { WeatherInfo } from '../vite-env';
 
 export type CurrentReportType = Readonly<{
   isDay: number;
+  time: Date;
   temperature: number;
   apparentTemperature: number;
   relativeHumidity: number;
@@ -40,6 +41,7 @@ export function getCurrentReportInfo(weatherInfo: WeatherInfo): CurrentReportTyp
 
   return {
     ...getWMOInfo(weatherInfo),
+    time: currentDateTimeZone,
     isDay: weatherInfo.current.is_day,
     temperature: weatherInfo.current.temperature_2m,
     apparentTemperature: weatherInfo.current.apparent_temperature,

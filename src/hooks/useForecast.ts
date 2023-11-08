@@ -3,6 +3,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
+import { type CurrentReportType, getCurrentReportInfo } from '../mappers/mapForecastToCurrent';
+import { type HourlyReportType, getHourlyReportInfo } from '../mappers/mapForecastToHourly';
+import { type DailyReportType, getDailyReport } from '../mappers/mapForecastToDaily';
 
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -50,7 +53,17 @@ const CURRENT_FORECAST_OPTIONS = {
 } as const;
 
 export const useForecast = () => {
-  const [currentForecast, setCurrentForecast] = useState<null | WeatherInfo>(null);
+  const [currentForecast, setCurrentForecast] = useState<null | Readonly<{
+    current: CurrentReportType;
+    daily: Array<DailyReportType>;
+    hourly: Array<HourlyReportType>;
+    series: Readonly<{
+      time: Array<Date>;
+      cloud_cover: Array<number>;
+      relative_humidity_2m: Array<number>;
+      precipitation_probability: Array<number>;
+    }>;
+  }>>(null);
   const [forecast, setForecast] = useState<null | Array<WeatherInfo>>([]);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -86,7 +99,17 @@ export const useForecast = () => {
       axios.get<Array<WeatherInfo>>(WEATHER_API_URL, { params: othersParams, signal }),
     ])
       .then(([main, others]) => {
-        setCurrentForecast(main.data);
+        setCurrentForecast({
+          current: getCurrentReportInfo(main.data),
+          daily: getDailyReport(main.data),
+          hourly: getHourlyReportInfo(main.data),
+          series: {
+            time: main.data.hourly.time.map((x) => new Date(x)),
+            cloud_cover: main.data.hourly.cloud_cover,
+            relative_humidity_2m: main.data.hourly.relativehumidity_2m,
+            precipitation_probability: main.data.hourly.precipitation_probability,
+          },
+        });
 
         const othersForecast = Array.isArray(others.data) ? others.data : [others.data];
 

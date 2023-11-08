@@ -1,7 +1,7 @@
 import { isAfter, isBefore, isSameDay } from 'date-fns';
-import { WeatherInfo } from './vite-env';
+import { WeatherInfo } from '../vite-env';
 
-import { WMO } from './wmo';
+import { WMO } from '../wmo';
 
 export function getWMOInfo(weatherInfo: WeatherInfo) {
   if (weatherInfo.current_units.weathercode !== 'wmo code') {

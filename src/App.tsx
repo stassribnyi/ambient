@@ -16,15 +16,10 @@ import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 
 import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
-import { format } from 'date-fns';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { useEffect } from 'react';
 
-import { getWMOInfo } from './getWMOInfo';
-
-import { getCurrentReportInfo } from './getCurrentReportInfo';
-import { getDailyReport } from './getDailyReportInfo';
-import { getHourlyReportInfo } from './getHourlyReportInfo';
+import { Time } from './components/Time';
 
 function setRelIcon(iconUrl: string) {
   const link = document.querySelector('link[rel="icon"]');
@@ -47,11 +42,10 @@ function App() {
       return;
     }
 
-    const info = getWMOInfo(forecast);
-    document.title = `${current.name}, ${current.country} - ${forecast.current.temperature_2m}°, ${info?.description} | Ambient`;
+    document.title = `${current.name}, ${current.country} - ${forecast.current.temperature}°, ${forecast.current.description} | Ambient`;
 
-    if (info?.iconUrl) {
-      setRelIcon(info?.iconUrl);
+    if (forecast.current.iconUrl) {
+      setRelIcon(forecast.current.iconUrl);
     }
   }, [current.country, current.name, current.temperature, forecast]);
 
@@ -99,7 +93,9 @@ function App() {
                 <Stack>
                   <Stack direction="row" alignItems="center" sx={{ width: '100%', height: '2.25rem' }}>
                     <MenuDialog />
-                    <Typography variant="body1">{format(new Date(forecast.current.time), 'EEEE, MMM dd')}</Typography>
+                    <Typography variant="body1">
+                      <Time value={forecast.current.time} format="EEEE, MMM dd" />
+                    </Typography>
                     <UnitSwitch
                       sx={{ ml: 'auto' }}
                       checked={settings.units === 'metric'}
@@ -122,21 +118,21 @@ function App() {
               </Grid>
               <Grid xs={12} md={6}>
                 <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
-                  <CurrentReport value={getCurrentReportInfo(forecast)} />
+                  <CurrentReport value={forecast.current} />
                   <InfoBlock title="Today">
-                    <HourlyReport value={getHourlyReportInfo(forecast)} />
+                    <HourlyReport value={forecast.hourly} />
                   </InfoBlock>
                 </Stack>
               </Grid>
               <Grid xs={12} md={6}>
                 <InfoBlock title="10-Days Forecast">
-                  <DailyReport value={getDailyReport(forecast)} />
+                  <DailyReport value={forecast.daily} />
                 </InfoBlock>
               </Grid>
               {!isMobile ? (
                 <Grid xs={12}>
                   <InfoBlock title="Atmospheric Conditions">
-                    <Chart info={forecast} />
+                    <Chart series={forecast.series} />
                   </InfoBlock>
                 </Grid>
               ) : null}

@@ -1,5 +1,5 @@
 import { getWMOInfoDaily } from './getWMOInfo';
-import { WeatherInfo } from './vite-env';
+import { WeatherInfo } from '../vite-env';
 
 export type DailyReportType = Readonly<{
   time: Date;

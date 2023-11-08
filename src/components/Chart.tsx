@@ -2,9 +2,8 @@ import { FC } from 'react';
 import { format } from 'date-fns';
 import { LineSeriesType, LineChart, mangoFusionPaletteLight as chartPalette } from '@mui/x-charts';
 
-import { WeatherInfo } from '../vite-env';
-
 const formatPercentage = (scale: number) => `${scale}%`;
+const formatDate = (date: Date) => format(date, 'MMM dd');
 
 const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
   area: true,
@@ -15,15 +14,17 @@ const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
 
 export const Chart: FC<
   Readonly<{
-    info: WeatherInfo;
+    series: Readonly<{
+      time: Array<Date>;
+      cloud_cover: Array<number>;
+      relative_humidity_2m: Array<number>;
+      precipitation_probability: Array<number>;
+    }>;
   }>
-> = ({
-  info: {
-    hourly: { time, cloud_cover, relative_humidity_2m, precipitation_probability },
-  },
-}) => {
+> = ({ series: { time, cloud_cover, relative_humidity_2m, precipitation_probability } }) => {
   return (
     <LineChart
+      sx={{ width: '100%' }}
       colors={chartPalette}
       height={300}
       margin={{ top: 56, bottom: 32 }}
@@ -35,9 +36,9 @@ export const Chart: FC<
       ]}
       xAxis={[
         {
-          data: time.map((x) => new Date(x)),
+          data: time,
           scaleType: 'time',
-          valueFormatter: (date) => format(date, 'MMM dd'),
+          valueFormatter: formatDate,
         },
       ]}
       series={[

@@ -6,7 +6,7 @@ import { Precipitation } from '../Precipitation';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
-import type { DailyReportType } from '../../getDailyReportInfo';
+import type { DailyReportType } from '../../mappers/mapForecastToDaily';
 
 export const DailyReport: FC<Readonly<{ value: Array<DailyReportType> }>> = ({ value }) => {
   const theme = useTheme();

@@ -1,8 +1,8 @@
 import { subHours, addHours, compareAsc } from 'date-fns';
 
-import { changeTimeZone } from './changeTimezone';
+import { changeTimeZone } from '../changeTimezone';
 import { getWMOInfoHourly } from './getWMOInfo';
-import { WeatherInfo } from './vite-env';
+import { WeatherInfo } from '../vite-env';
 
 export type HourlyReportType = Readonly<{
   time: Date;
