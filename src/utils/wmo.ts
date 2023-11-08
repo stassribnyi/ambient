@@ -22,6 +22,7 @@ import snowNight from '@bybas/weather-icons/production/fill/openweathermap/13n.s
 import thunderstormDay from '@bybas/weather-icons/production/fill/openweathermap/11d.svg';
 import thunderstormNight from '@bybas/weather-icons/production/fill/openweathermap/11n.svg';
 
+// TODO: convert into function and add fallback
 export const WMO = {
   '0': {
     day: {

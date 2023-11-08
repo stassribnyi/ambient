@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { format } from 'date-fns';
 import { LineSeriesType, LineChart, mangoFusionPaletteLight as chartPalette } from '@mui/x-charts';
 
+import { SeriesForecast } from '../mappers';
+
 const formatPercentage = (scale: number) => `${scale}%`;
 const formatDate = (date: Date) => format(date, 'MMM dd');
 
@@ -14,12 +16,7 @@ const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
 
 export const Chart: FC<
   Readonly<{
-    series: Readonly<{
-      time: Array<Date>;
-      cloud_cover: Array<number>;
-      relative_humidity_2m: Array<number>;
-      precipitation_probability: Array<number>;
-    }>;
+    series: SeriesForecast;
   }>
 > = ({ series: { time, cloud_cover, relative_humidity_2m, precipitation_probability } }) => {
   return (

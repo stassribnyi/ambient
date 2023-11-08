@@ -1,25 +1,30 @@
-import { subHours, addHours, compareAsc } from 'date-fns';
+import { subHours, addHours, compareAsc, isAfter, isBefore, isSameDay } from 'date-fns';
 
-import { changeTimeZone } from '../changeTimezone';
-import { getWMOInfoHourly } from './getWMOInfo';
+import { changeTimeZone, WMO } from '../utils';
 import { WeatherInfo } from '../vite-env';
+
+import type { DailyForecast } from './mapForecastToDaily';
 
 export type HourlyForecast = Readonly<{
   time: Date;
   iconUrl?: string;
   temperature: number;
   precipitation: number;
+  uvIndex: number;
 }>;
 
-export function mapForecastToHourly(weatherInfo: WeatherInfo): Array<HourlyForecast> {
-  return weatherInfo.hourly.time
+export function mapForecastToHourly(
+  mainForecast: WeatherInfo,
+  dailyForecast: Array<DailyForecast>,
+): Array<HourlyForecast> {
+  return mainForecast.hourly.time
     .map((t, idx) => ({
       idx,
-      time: changeTimeZone(t, weatherInfo.timezone),
+      time: changeTimeZone(t, mainForecast.timezone),
     }))
     .filter((slot) => {
       // TODO: revisit and fix consistency
-      const current = changeTimeZone(new Date(), weatherInfo.timezone);
+      const current = changeTimeZone(new Date(), mainForecast.timezone);
 
       // -1 hour, so if time is less than hour in the past, we still show forecast
       const from = subHours(current.setMinutes(0, 0, 0), 1);
@@ -28,10 +33,19 @@ export function mapForecastToHourly(weatherInfo: WeatherInfo): Array<HourlyForec
 
       return compareAsc(from, slot.time) - compareAsc(slot.time, to) === 0;
     })
-    .map(({ time, idx }) => ({
-      time,
-      iconUrl: getWMOInfoHourly(weatherInfo, idx)?.iconUrl,
-      temperature: weatherInfo.hourly.temperature_2m[idx],
-      precipitation: weatherInfo.hourly.precipitation_probability[idx],
-    }));
+    .map(({ time, idx }) => {
+      const details = WMO[mainForecast.hourly.weathercode[idx]];
+
+      const currentDay = dailyForecast.find((day) => isSameDay(time, day.time));
+
+      const isDay = currentDay ? isAfter(time, currentDay.sunrise) && isBefore(time, currentDay.sunset) : true;
+
+      return {
+        time,
+        iconUrl: (isDay ? details?.day : details?.night)?.iconUrl,
+        temperature: mainForecast.hourly.temperature_2m[idx],
+        precipitation: mainForecast.hourly.precipitation_probability[idx],
+        uvIndex: mainForecast.hourly.uv_index[idx],
+      };
+    });
 }

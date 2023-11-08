@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import { WMO } from './wmo';
+import { WMO } from './utils/wmo';
 
 export interface WeatherInfo {
   latitude: number;

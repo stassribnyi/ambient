@@ -3,9 +3,10 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
-import { type CurrentForecast, mapForecastToCurrent } from '../mappers/mapForecastToCurrent';
-import { type HourlyForecast, mapForecastToHourly } from '../mappers/mapForecastToHourly';
-import { type DailyForecast, mapForecastToDaily } from '../mappers/mapForecastToDaily';
+
+import { mapForecastToCurrent, mapForecastToHourly, mapForecastToDaily, mapForecastToSeries } from '../mappers';
+
+import type { CurrentForecast, HourlyForecast, DailyForecast, SeriesForecast } from '../mappers';
 
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -57,12 +58,7 @@ export const useForecast = () => {
     current: CurrentForecast;
     daily: Array<DailyForecast>;
     hourly: Array<HourlyForecast>;
-    series: Readonly<{
-      time: Array<Date>;
-      cloud_cover: Array<number>;
-      relative_humidity_2m: Array<number>;
-      precipitation_probability: Array<number>;
-    }>;
+    series: SeriesForecast;
   }>>(null);
   const [forecast, setForecast] = useState<null | Array<WeatherInfo>>([]);
   const [error, setError] = useState<null | AxiosError>(null);
@@ -99,16 +95,17 @@ export const useForecast = () => {
       axios.get<Array<WeatherInfo>>(WEATHER_API_URL, { params: othersParams, signal }),
     ])
       .then(([main, others]) => {
+        // TODO: do I really need to reuse it?
+        const series = mapForecastToSeries(main.data);
+        const daily = mapForecastToDaily(main.data);
+        const hourly = mapForecastToHourly(main.data, daily);
+        const current = mapForecastToCurrent(main.data, daily, hourly);
+
         setCurrentForecast({
-          current: mapForecastToCurrent(main.data),
-          daily: mapForecastToDaily(main.data),
-          hourly: mapForecastToHourly(main.data),
-          series: {
-            time: main.data.hourly.time.map((x) => new Date(x)),
-            cloud_cover: main.data.hourly.cloud_cover,
-            relative_humidity_2m: main.data.hourly.relativehumidity_2m,
-            precipitation_probability: main.data.hourly.precipitation_probability,
-          },
+          current,
+          daily,
+          hourly,
+          series,
         });
 
         const othersForecast = Array.isArray(others.data) ? others.data : [others.data];

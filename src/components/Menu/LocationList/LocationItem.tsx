@@ -4,7 +4,7 @@ import { Card, ButtonBase, CardContent, Stack, Checkbox, Typography } from '@mui
 
 import { useLongPress, useUnitsConverter } from '../../../hooks';
 import { Location } from '../../../vite-env';
-import { WMO } from '../../../wmo';
+import { WMO } from '../../../utils/wmo';
 
 export const LocationItem: FC<
   Readonly<{
