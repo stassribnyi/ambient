@@ -1,13 +1,13 @@
 import { isEqual } from 'date-fns';
 
-import { getWindBeaufortInfo } from './getWindBeaufortInfo';
+import { windspeedToBeaufortScale } from './windspeedToBeaufortScale';
 import { changeTimeZone } from '../changeTimezone';
-import { getUVIndexInfo } from './getUVIndexInfo';
+import { uvIndexToScale } from './uvIndexToScale';
 import { getWMOInfo } from './getWMOInfo';
 
 import { WeatherInfo } from '../vite-env';
 
-export type CurrentReportType = Readonly<{
+export type CurrentForecast = Readonly<{
   isDay: number;
   time: Date;
   temperature: number;
@@ -29,7 +29,7 @@ export type CurrentReportType = Readonly<{
   };
 }>;
 
-export function getCurrentReportInfo(weatherInfo: WeatherInfo): CurrentReportType {
+export function mapForecastToCurrent(weatherInfo: WeatherInfo): CurrentForecast {
   const currentDateTimeZone = changeTimeZone(new Date(), weatherInfo.timezone);
 
   const currentIdx = weatherInfo.hourly.time.findIndex((t) =>
@@ -48,7 +48,7 @@ export function getCurrentReportInfo(weatherInfo: WeatherInfo): CurrentReportTyp
     relativeHumidity: weatherInfo.current.relativehumidity_2m,
     sunsetTime: new Date(weatherInfo.daily.sunset[dayIdx]),
     sunriseTime: new Date(weatherInfo.daily.sunrise[dayIdx]),
-    uvIndex: getUVIndexInfo(weatherInfo.hourly.uv_index[currentIdx]),
-    windspeed: getWindBeaufortInfo(weatherInfo.current.windspeed_10m),
+    uvIndex: uvIndexToScale(weatherInfo.hourly.uv_index[currentIdx]),
+    windspeed: windspeedToBeaufortScale(weatherInfo.current.windspeed_10m),
   };
 }

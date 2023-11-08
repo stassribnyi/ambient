@@ -3,9 +3,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
-import { type CurrentReportType, getCurrentReportInfo } from '../mappers/mapForecastToCurrent';
-import { type HourlyReportType, getHourlyReportInfo } from '../mappers/mapForecastToHourly';
-import { type DailyReportType, getDailyReport } from '../mappers/mapForecastToDaily';
+import { type CurrentForecast, mapForecastToCurrent } from '../mappers/mapForecastToCurrent';
+import { type HourlyForecast, mapForecastToHourly } from '../mappers/mapForecastToHourly';
+import { type DailyForecast, mapForecastToDaily } from '../mappers/mapForecastToDaily';
 
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -54,9 +54,9 @@ const CURRENT_FORECAST_OPTIONS = {
 
 export const useForecast = () => {
   const [currentForecast, setCurrentForecast] = useState<null | Readonly<{
-    current: CurrentReportType;
-    daily: Array<DailyReportType>;
-    hourly: Array<HourlyReportType>;
+    current: CurrentForecast;
+    daily: Array<DailyForecast>;
+    hourly: Array<HourlyForecast>;
     series: Readonly<{
       time: Array<Date>;
       cloud_cover: Array<number>;
@@ -100,9 +100,9 @@ export const useForecast = () => {
     ])
       .then(([main, others]) => {
         setCurrentForecast({
-          current: getCurrentReportInfo(main.data),
-          daily: getDailyReport(main.data),
-          hourly: getHourlyReportInfo(main.data),
+          current: mapForecastToCurrent(main.data),
+          daily: mapForecastToDaily(main.data),
+          hourly: mapForecastToHourly(main.data),
           series: {
             time: main.data.hourly.time.map((x) => new Date(x)),
             cloud_cover: main.data.hourly.cloud_cover,

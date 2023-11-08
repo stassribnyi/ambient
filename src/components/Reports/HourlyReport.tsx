@@ -5,9 +5,9 @@ import { Precipitation } from '../Precipitation';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
-import type { HourlyReportType } from '../../mappers/mapForecastToHourly';
+import type { HourlyForecast } from '../../mappers/mapForecastToHourly';
 
-export const HourlyReport: FC<Readonly<{ value: Array<HourlyReportType> }>> = ({ value }) => {
+export const HourlyReport: FC<Readonly<{ value: Array<HourlyForecast> }>> = ({ value }) => {
   return (
     <>
       <TableContainer sx={{ pb: '1rem' }}>

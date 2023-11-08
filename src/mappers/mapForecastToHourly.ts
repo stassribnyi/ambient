@@ -4,14 +4,14 @@ import { changeTimeZone } from '../changeTimezone';
 import { getWMOInfoHourly } from './getWMOInfo';
 import { WeatherInfo } from '../vite-env';
 
-export type HourlyReportType = Readonly<{
+export type HourlyForecast = Readonly<{
   time: Date;
   iconUrl?: string;
   temperature: number;
   precipitation: number;
 }>;
 
-export function getHourlyReportInfo(weatherInfo: WeatherInfo): Array<HourlyReportType> {
+export function mapForecastToHourly(weatherInfo: WeatherInfo): Array<HourlyForecast> {
   return weatherInfo.hourly.time
     .map((t, idx) => ({
       idx,

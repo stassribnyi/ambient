@@ -13,6 +13,7 @@ import windBeaufort11 from '@bybas/weather-icons/production/fill/all/wind-beaufo
 import windBeaufort12 from '@bybas/weather-icons/production/fill/all/wind-beaufort-12.svg';
 
 const WIND_BEAUFORT = new Map([
+  [0, windBeaufort0],
   [1, windBeaufort1],
   [2, windBeaufort2],
   [3, windBeaufort3],
@@ -27,7 +28,8 @@ const WIND_BEAUFORT = new Map([
   [12, windBeaufort12],
 ]);
 
-export function getWindBeaufortInfo(windspeed: number) {
+// TODO: are there any better ways of processing windspeed?
+export function windspeedToBeaufortScale(windspeed: number) {
   let description = 'N/A';
   let windIndex = 0;
 
@@ -40,47 +42,47 @@ export function getWindBeaufortInfo(windspeed: number) {
       description = 'Light air';
       windIndex = 1;
       break;
-    case 6 <= windspeed && windspeed <= 11:
+    case 5 < windspeed && windspeed <= 11:
       description = 'Light Breeze';
       windIndex = 2;
       break;
-    case 12 <= windspeed && windspeed <= 19:
+    case 11 < windspeed && windspeed <= 19:
       description = 'Gentle Breeze';
       windIndex = 3;
       break;
-    case 20 <= windspeed && windspeed <= 28:
+    case 19 < windspeed && windspeed <= 28:
       description = 'Moderate Breeze';
       windIndex = 4;
       break;
-    case 29 <= windspeed && windspeed <= 38:
+    case 28 < windspeed && windspeed <= 38:
       description = 'Fresh Breeze';
       windIndex = 5;
       break;
-    case 39 <= windspeed && windspeed <= 49:
+    case 38 < windspeed && windspeed <= 49:
       description = 'Strong Breeze';
       windIndex = 6;
       break;
-    case 50 <= windspeed && windspeed <= 61:
+    case 49 < windspeed && windspeed <= 61:
       description = 'Near Gale';
       windIndex = 7;
       break;
-    case 62 <= windspeed && windspeed <= 74:
+    case 61 < windspeed && windspeed <= 74:
       description = 'Gale';
       windIndex = 8;
       break;
-    case 75 <= windspeed && windspeed <= 88:
+    case 74 < windspeed && windspeed <= 88:
       description = 'Severe Gale';
       windIndex = 9;
       break;
-    case 89 <= windspeed && windspeed <= 102:
+    case 88 < windspeed && windspeed <= 102:
       description = 'Storm';
       windIndex = 10;
       break;
-    case 103 <= windspeed && windspeed <= 117:
+    case 102 < windspeed && windspeed <= 117:
       description = 'Violent Storm';
       windIndex = 11;
       break;
-    case 118 <= windspeed:
+    case 117 < windspeed:
       description = 'Hurricane';
       windIndex = 12;
       break;

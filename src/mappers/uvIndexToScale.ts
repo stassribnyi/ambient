@@ -25,7 +25,7 @@ const UV_INDEX = new Map([
   [11, uvIdx11],
 ]);
 
-export function getUVIndexInfo(index: number) {
+export function uvIndexToScale(index: number) {
   const approximateIdx = Math.round(index);
   let description = 'N/A';
 

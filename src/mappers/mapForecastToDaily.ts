@@ -1,7 +1,7 @@
 import { getWMOInfoDaily } from './getWMOInfo';
 import { WeatherInfo } from '../vite-env';
 
-export type DailyReportType = Readonly<{
+export type DailyForecast = Readonly<{
   time: Date;
   temperature: {
     min: number;
@@ -12,7 +12,7 @@ export type DailyReportType = Readonly<{
   iconUrl?: string;
 }>;
 
-export function getDailyReport(weatherInfo: WeatherInfo): Array<DailyReportType> {
+export function mapForecastToDaily(weatherInfo: WeatherInfo): Array<DailyForecast> {
   return weatherInfo.daily.time
     .map((t, idx) => ({
       idx,

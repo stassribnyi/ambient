@@ -6,9 +6,9 @@ import { Precipitation } from '../Precipitation';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
-import type { DailyReportType } from '../../mappers/mapForecastToDaily';
+import type { DailyForecast } from '../../mappers/mapForecastToDaily';
 
-export const DailyReport: FC<Readonly<{ value: Array<DailyReportType> }>> = ({ value }) => {
+export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ value }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
