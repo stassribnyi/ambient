@@ -2,16 +2,10 @@ import { isSameDay, isSameHour } from 'date-fns';
 
 import { changeTimeZone, uvIndexToScale, windspeedToBeaufortScale } from '../utils';
 
-import { WeatherInfo, WMOCode } from '../vite-env';
+import { BeaufortScale, UVIndexScale, WeatherInfo, WMOCode } from '../vite-env';
 
 import type { DailyForecast } from './mapForecastToDaily';
 import type { HourlyForecast } from './mapForecastToHourly';
-
-type Scale = Readonly<{
-  value: number;
-  iconUrl: string;
-  description: string;
-}>;
 
 export type CurrentForecast = Readonly<{
   isDay: number;
@@ -22,9 +16,10 @@ export type CurrentForecast = Readonly<{
   sunsetTime: Date;
   sunriseTime: Date;
   description?: string;
-  uvIndex: Scale;
-  windspeed: Scale;
+  uvIndex: UVIndexScale;
+  windspeed: number;
   weathercode: WMOCode;
+  beaufortScale: BeaufortScale;
 }>;
 
 export function mapForecastToCurrent(
@@ -43,10 +38,11 @@ export function mapForecastToCurrent(
     temperature: currentForecast.temperature_2m,
     apparentTemperature: currentForecast.apparent_temperature,
     relativeHumidity: currentForecast.relativehumidity_2m,
+    windspeed: currentForecast.windspeed_10m,
+    weathercode: currentForecast.weathercode,
     sunsetTime: currentDay?.sunset ?? new Date(), // TODO: find out better way to fallback
     sunriseTime: currentDay?.sunrise ?? new Date(),
     uvIndex: uvIndexToScale(currentHour?.uvIndex ?? 0),
-    windspeed: windspeedToBeaufortScale(currentForecast.windspeed_10m),
-    weathercode: currentForecast.weathercode,
+    beaufortScale: windspeedToBeaufortScale(currentForecast.windspeed_10m),
   };
 }
