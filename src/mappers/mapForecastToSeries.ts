@@ -9,11 +9,11 @@ export type SeriesForecast = Readonly<{
   precipitation_probability: Array<number>;
 }>;
 
-export function mapForecastToSeries(weatherInfo: WeatherInfo): SeriesForecast {
+export function mapForecastToSeries({ hourly, timezone }: WeatherInfo): SeriesForecast {
   return {
-    cloud_cover: weatherInfo.hourly.cloud_cover,
-    relative_humidity_2m: weatherInfo.hourly.relativehumidity_2m,
-    precipitation_probability: weatherInfo.hourly.precipitation_probability,
-    time: weatherInfo.hourly.time.map((t) => changeTimeZone(new Date(t), weatherInfo.timezone)),
+    cloud_cover: hourly.cloud_cover,
+    relative_humidity_2m: hourly.relativehumidity_2m,
+    precipitation_probability: hourly.precipitation_probability,
+    time: hourly.time.map((t) => changeTimeZone(new Date(t), timezone)),
   };
 }

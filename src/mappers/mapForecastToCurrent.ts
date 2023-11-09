@@ -21,10 +21,10 @@ export type CurrentForecast = Readonly<{
   relativeHumidity: number;
   sunsetTime: Date;
   sunriseTime: Date;
-  iconUrl?: string;
   description?: string;
   uvIndex: Scale;
   windspeed: Scale;
+  weathercode: WeatherInfo['current']['weathercode'];
 }>;
 
 export function mapForecastToCurrent(
@@ -50,5 +50,6 @@ export function mapForecastToCurrent(
     sunriseTime: currentDay?.sunrise ?? new Date(),
     uvIndex: uvIndexToScale(currentHour?.uvIndex ?? 0),
     windspeed: windspeedToBeaufortScale(currentForecast.windspeed_10m),
+    weathercode: currentForecast.weathercode,
   };
 }

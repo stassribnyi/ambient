@@ -4,7 +4,7 @@ import { Card, ButtonBase, CardContent, Stack, Checkbox, Typography } from '@mui
 
 import { useLongPress, useUnitsConverter } from '../../../hooks';
 import { Location } from '../../../vite-env';
-import { WMO } from '../../../utils/wmo';
+import { WMOIcon } from '../../WMOIcon';
 
 export const LocationItem: FC<
   Readonly<{
@@ -17,8 +17,6 @@ export const LocationItem: FC<
 > = ({ isEdit, selected, value, onSelect, onLongPress }) => {
   const handleLongPress = useLongPress();
   const { convert } = useUnitsConverter();
-
-  const weatherInfo = value.weathercode !== undefined ? WMO[value.weathercode]?.day : null;
 
   return (
     <Card sx={{ mb: 2, borderRadius: '28px' }}>
@@ -38,9 +36,7 @@ export const LocationItem: FC<
                   checkedIcon={<CheckCircle />}
                 />
               )}
-              {!isEdit && weatherInfo && (
-                <img alt={weatherInfo.description} src={weatherInfo.iconUrl} style={{ width: '48px' }} />
-              )}
+              {!isEdit && <WMOIcon code={value.weathercode} />}
               <Stack alignItems="start">
                 <Typography sx={{ fontSize: '1.125rem' }}>{value.name}</Typography>
                 <Typography variant="caption" color="secondary">

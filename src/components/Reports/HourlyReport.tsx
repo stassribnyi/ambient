@@ -5,7 +5,8 @@ import { Precipitation } from '../Precipitation';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
-import type { HourlyForecast } from '../../mappers/mapForecastToHourly';
+import type { HourlyForecast } from '../../mappers';
+import { WMOIcon } from '../WMOIcon';
 
 export const HourlyReport: FC<Readonly<{ value: Array<HourlyForecast> }>> = ({ value }) => {
   return (
@@ -15,7 +16,7 @@ export const HourlyReport: FC<Readonly<{ value: Array<HourlyForecast> }>> = ({ v
           <Table size="small">
             <TableBody>
               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                {value.map(({ time, iconUrl, precipitation, temperature }, idx) => (
+                {value.map(({ time, isDay, precipitation, temperature, weathercode }, idx) => (
                   <TableCell key={idx} sx={{ p: 0.5 }}>
                     <div
                       style={{
@@ -27,7 +28,7 @@ export const HourlyReport: FC<Readonly<{ value: Array<HourlyForecast> }>> = ({ v
                       <strong style={{ fontSize: '1rem', margin: 0 }}>
                         <Temperature value={temperature} />
                       </strong>
-                      <Box component="img" draggable={false} src={iconUrl} sx={{ width: '40px', minWidth: '40px' }} />
+                      <WMOIcon variant={isDay ? 'day' : 'night'} code={weathercode} size={40} />
                       <Box sx={{ margin: 0, fontSize: '0.75rem', mb: 1 }}>
                         <Time value={time} format="HH:mm" />
                       </Box>

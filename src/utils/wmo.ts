@@ -22,9 +22,11 @@ import snowNight from '@bybas/weather-icons/production/fill/openweathermap/13n.s
 import thunderstormDay from '@bybas/weather-icons/production/fill/openweathermap/11d.svg';
 import thunderstormNight from '@bybas/weather-icons/production/fill/openweathermap/11n.svg';
 
+import notAvailable from '@bybas/weather-icons/production/fill/all/not-available.svg';
+
 // TODO: convert into function and add fallback
 export const WMO = {
-  '0': {
+  0: {
     day: {
       description: 'Sunny',
       iconUrl: sunny,
@@ -34,7 +36,7 @@ export const WMO = {
       iconUrl: clear,
     },
   },
-  '1': {
+  1: {
     day: {
       description: 'Mainly Sunny',
       iconUrl: sunny,
@@ -44,7 +46,7 @@ export const WMO = {
       iconUrl: clear,
     },
   },
-  '2': {
+  2: {
     day: {
       description: 'Partly Cloudy',
       iconUrl: partlySunny,
@@ -54,7 +56,7 @@ export const WMO = {
       iconUrl: partlyClear,
     },
   },
-  '3': {
+  3: {
     day: {
       description: 'Cloudy',
       iconUrl: cloudyDay,
@@ -64,7 +66,7 @@ export const WMO = {
       iconUrl: cloudyNight,
     },
   },
-  '45': {
+  45: {
     day: {
       description: 'Foggy',
       iconUrl: foggyDay,
@@ -74,7 +76,7 @@ export const WMO = {
       iconUrl: foggyNight,
     },
   },
-  '48': {
+  48: {
     day: {
       description: 'Rime Fog',
       iconUrl: foggyDay,
@@ -84,7 +86,7 @@ export const WMO = {
       iconUrl: foggyNight,
     },
   },
-  '51': {
+  51: {
     day: {
       description: 'Light Drizzle',
       iconUrl: drizzleDay,
@@ -94,7 +96,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '53': {
+  53: {
     day: {
       description: 'Drizzle',
       iconUrl: drizzleDay,
@@ -104,7 +106,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '55': {
+  55: {
     day: {
       description: 'Heavy Drizzle',
       iconUrl: drizzleDay,
@@ -114,7 +116,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '56': {
+  56: {
     day: {
       description: 'Light Freezing Drizzle',
       iconUrl: drizzleDay,
@@ -124,7 +126,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '57': {
+  57: {
     day: {
       description: 'Freezing Drizzle',
       iconUrl: drizzleDay,
@@ -134,7 +136,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '61': {
+  61: {
     day: {
       description: 'Light Rain',
       iconUrl: rainDay,
@@ -144,7 +146,7 @@ export const WMO = {
       iconUrl: rainNight,
     },
   },
-  '63': {
+  63: {
     day: {
       description: 'Rain',
       iconUrl: rainDay,
@@ -154,7 +156,7 @@ export const WMO = {
       iconUrl: rainNight,
     },
   },
-  '65': {
+  65: {
     day: {
       description: 'Heavy Rain',
       iconUrl: rainDay,
@@ -164,7 +166,7 @@ export const WMO = {
       iconUrl: rainNight,
     },
   },
-  '66': {
+  66: {
     day: {
       description: 'Light Freezing Rain',
       iconUrl: rainDay,
@@ -174,7 +176,7 @@ export const WMO = {
       iconUrl: rainNight,
     },
   },
-  '67': {
+  67: {
     day: {
       description: 'Freezing Rain',
       iconUrl: rainDay,
@@ -184,7 +186,7 @@ export const WMO = {
       iconUrl: rainNight,
     },
   },
-  '71': {
+  71: {
     day: {
       description: 'Light Snow',
       iconUrl: snowDay,
@@ -194,7 +196,7 @@ export const WMO = {
       iconUrl: snowNight,
     },
   },
-  '73': {
+  73: {
     day: {
       description: 'Snow',
       iconUrl: snowDay,
@@ -204,7 +206,7 @@ export const WMO = {
       iconUrl: snowNight,
     },
   },
-  '75': {
+  75: {
     day: {
       description: 'Heavy Snow',
       iconUrl: snowDay,
@@ -214,7 +216,7 @@ export const WMO = {
       iconUrl: snowNight,
     },
   },
-  '77': {
+  77: {
     day: {
       description: 'Snow Grains',
       iconUrl: snowDay,
@@ -224,7 +226,7 @@ export const WMO = {
       iconUrl: snowNight,
     },
   },
-  '80': {
+  80: {
     day: {
       description: 'Light Showers',
       iconUrl: drizzleDay,
@@ -234,7 +236,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '81': {
+  81: {
     day: {
       description: 'Showers',
       iconUrl: drizzleDay,
@@ -244,7 +246,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '82': {
+  82: {
     day: {
       description: 'Heavy Showers',
       iconUrl: drizzleDay,
@@ -254,7 +256,7 @@ export const WMO = {
       iconUrl: drizzleNight,
     },
   },
-  '85': {
+  85: {
     day: {
       description: 'Light Snow Showers',
       iconUrl: snowDay,
@@ -264,7 +266,7 @@ export const WMO = {
       iconUrl: snowNight,
     },
   },
-  '86': {
+  86: {
     day: {
       description: 'Snow Showers',
       iconUrl: snowDay,
@@ -274,7 +276,7 @@ export const WMO = {
       iconUrl: snowNight,
     },
   },
-  '95': {
+  95: {
     day: {
       description: 'Thunderstorm',
       iconUrl: thunderstormDay,
@@ -284,7 +286,7 @@ export const WMO = {
       iconUrl: thunderstormNight,
     },
   },
-  '96': {
+  96: {
     day: {
       description: 'Light Thunderstorms With Hail',
       iconUrl: thunderstormDay,
@@ -294,7 +296,7 @@ export const WMO = {
       iconUrl: thunderstormNight,
     },
   },
-  '99': {
+  99: {
     day: {
       description: 'Thunderstorm With Hail',
       iconUrl: thunderstormDay,
@@ -305,3 +307,22 @@ export const WMO = {
     },
   },
 };
+
+const FALLBACK = { iconUrl: notAvailable, description: 'N/A' };
+
+// FIXME: use better typing
+export function getWMODetails(code?: keyof typeof WMO): (typeof WMO)[keyof typeof WMO] {
+  if (typeof code !== 'number') {
+    return {
+      day: FALLBACK,
+      night: FALLBACK,
+    };
+  }
+
+  return (
+    WMO[code] ?? {
+      day: FALLBACK,
+      night: FALLBACK,
+    }
+  );
+}

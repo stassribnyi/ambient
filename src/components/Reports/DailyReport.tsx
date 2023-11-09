@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Table, TableBody, TableRow, TableCell, Stack, Box, useTheme, useMediaQuery } from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, Stack, useTheme, useMediaQuery } from '@mui/material';
 import { isToday } from 'date-fns';
 
 import { Precipitation } from '../Precipitation';
@@ -7,6 +7,7 @@ import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
 import type { DailyForecast } from '../../mappers/mapForecastToDaily';
+import { WMOIcon } from '../WMOIcon';
 
 export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ value }) => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
   return (
     <Table aria-label="10 Days forecast" size="small">
       <TableBody>
-        {value.map(({ time, description, iconUrl, temperature, precipitationProbability }, idx) => (
+        {value.map(({ time, weathercode, temperature, precipitationProbability }, idx) => (
           <TableRow
             key={idx}
             sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { ...(isMobile ? { p: 0 } : null) } }}
@@ -25,7 +26,7 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
               <Precipitation showLabel level={precipitationProbability} size={12} />
             </TableCell>
             <TableCell align="center">
-              <Box component="img" src={iconUrl} sx={{ minWidth: '32px', width: '32px' }} alt={description} />
+              <WMOIcon code={weathercode} size={32} />
             </TableCell>
             <TableCell align="center" sx={{ width: '4rem', fontSize: '1rem' }}>
               <Stack direction="row" gap={1} justifyContent="space-between">

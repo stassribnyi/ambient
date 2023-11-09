@@ -1,6 +1,5 @@
 import { changeTimeZone } from '../utils/changeTimezone';
 import { WeatherInfo } from '../vite-env';
-import { WMO } from '../utils/wmo';
 
 type Range = Readonly<{
   min: number;
@@ -13,25 +12,19 @@ export type DailyForecast = Readonly<{
   sunset: Date;
   temperature: Range;
   precipitationProbability: number;
-  description?: string;
-  iconUrl?: string;
+  weathercode: WeatherInfo['daily']['weathercode'][0];
 }>;
 
-export function mapForecastToDaily(weatherInfo: WeatherInfo): Array<DailyForecast> {
-  return weatherInfo.daily.time
-    .map((t, idx) => ({
-      idx,
-      time: changeTimeZone(new Date(t), weatherInfo.timezone),
-    }))
-    .map(({ time, idx }) => ({
-      ...WMO[weatherInfo.daily.weathercode[idx]]?.day,
-      time,
-      temperature: {
-        min: weatherInfo.daily.temperature_2m_min[idx],
-        max: weatherInfo.daily.temperature_2m_max[idx],
-      },
-      precipitationProbability: weatherInfo.daily.precipitation_probability_max[idx],
-      sunrise: changeTimeZone(new Date(weatherInfo.daily.sunrise[idx]), weatherInfo.timezone),
-      sunset: changeTimeZone(new Date(weatherInfo.daily.sunset[idx]), weatherInfo.timezone),
-    }));
+export function mapForecastToDaily({ daily, timezone }: WeatherInfo): Array<DailyForecast> {
+  return daily.time.map((time, idx) => ({
+    time: changeTimeZone(new Date(time), timezone),
+    weathercode: daily.weathercode[idx],
+    temperature: {
+      min: daily.temperature_2m_min[idx],
+      max: daily.temperature_2m_max[idx],
+    },
+    precipitationProbability: daily.precipitation_probability_max[idx],
+    sunrise: changeTimeZone(new Date(daily.sunrise[idx]), timezone),
+    sunset: changeTimeZone(new Date(daily.sunset[idx]), timezone),
+  }));
 }

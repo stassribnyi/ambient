@@ -12,6 +12,7 @@ import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 
 import type { CurrentForecast } from '../../mappers/mapForecastToCurrent';
+import { WMOIcon } from '../WMOIcon';
 
 const Tile: FC<PropsWithChildren<Readonly<{ iconUrl: string; title: string }>>> = ({ iconUrl, children, title }) => {
   return (
@@ -31,7 +32,6 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
   value: {
     apparentTemperature,
     description,
-    iconUrl,
     isDay,
     relativeHumidity,
     sunriseTime,
@@ -39,6 +39,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
     temperature,
     uvIndex,
     windspeed,
+    weathercode,
   },
 }) => {
   return (
@@ -53,7 +54,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         }}
       >
         {/* TODO: use css to make items same size */}
-        <Box component="img" alt={description} src={iconUrl} sx={{ width: '184px', height: '184px' }} />
+        <WMOIcon variant={isDay ? 'day' : 'night'} code={weathercode} size={184} />
         <Stack alignItems="center" justifyContent="center">
           <Typography variant="h2">
             <Temperature value={temperature} />

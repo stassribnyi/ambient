@@ -21,13 +21,13 @@ import { useEffect } from 'react';
 
 import { Time } from './components/Time';
 
-function setRelIcon(iconUrl: string) {
-  const link = document.querySelector('link[rel="icon"]');
+// function setRelIcon(iconUrl: string) {
+//   const link = document.querySelector('link[rel="icon"]');
 
-  if (link) {
-    link.setAttribute('href', iconUrl);
-  }
-}
+//   if (link) {
+//     link.setAttribute('href', iconUrl);
+//   }
+// }
 
 function App() {
   const [settings, setSettings] = useUserSettings();
@@ -44,9 +44,9 @@ function App() {
 
     document.title = `${current.name}, ${current.country} - ${forecast.current.temperature}°, ${forecast.current.description} | Ambient`;
 
-    if (forecast.current.iconUrl) {
-      setRelIcon(forecast.current.iconUrl);
-    }
+    // if (forecast.current.iconUrl) {
+    //   setRelIcon(forecast.current.iconUrl);
+    // }
   }, [current.country, current.name, current.temperature, forecast]);
 
   const handleMeasurementSystemChange = () =>
