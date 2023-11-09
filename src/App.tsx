@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowDownward, LocationOn } from '@mui/icons-material';
 import {
   Alert,
@@ -11,23 +13,11 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { Chart, InfoBlock, MenuDialog, UnitSwitch } from './components';
+
+import { AtmosphericConditionChart, InfoBlock, MenuDialog, UnitSwitch, Time } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 
-import './App.css';
 import { useForecast, useLocations, useUserSettings } from './hooks';
-import PullToRefresh from 'react-simple-pull-to-refresh';
-import { useEffect } from 'react';
-
-import { Time } from './components/Time';
-
-// function setRelIcon(iconUrl: string) {
-//   const link = document.querySelector('link[rel="icon"]');
-
-//   if (link) {
-//     link.setAttribute('href', iconUrl);
-//   }
-// }
 
 function App() {
   const [settings, setSettings] = useUserSettings();
@@ -43,10 +33,6 @@ function App() {
     }
 
     document.title = `${current.name}, ${current.country} - ${forecast.current.temperature}°, ${forecast.current.description} | Ambient`;
-
-    // if (forecast.current.iconUrl) {
-    //   setRelIcon(forecast.current.iconUrl);
-    // }
   }, [current.country, current.name, current.temperature, forecast]);
 
   const handleMeasurementSystemChange = () =>
@@ -132,7 +118,7 @@ function App() {
               {!isMobile ? (
                 <Grid xs={12}>
                   <InfoBlock title="Atmospheric Conditions">
-                    <Chart series={forecast.series} />
+                    <AtmosphericConditionChart series={forecast.series} />
                   </InfoBlock>
                 </Grid>
               ) : null}

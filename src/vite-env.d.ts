@@ -2,6 +2,8 @@
 
 import { WMO } from './utils/wmo';
 
+export type WMOCode = keyof typeof WMO;
+
 export interface WeatherInfo {
   latitude: number;
   longitude: number;
@@ -47,7 +49,7 @@ export interface Current {
   rain: number;
   showers: number;
   snowfall: number;
-  weathercode: keyof typeof WMO;
+  weathercode: WMOCode;
   cloudcover: number;
   pressure_msl: number;
   surface_pressure: number;
@@ -76,7 +78,7 @@ export interface Hourly {
   precipitation: number[];
   relative_humidity_2m: number[];
   cloud_cover: number[];
-  weathercode: Array<keyof typeof WMO>;
+  weathercode: Array<WMOCode>;
 }
 
 export interface DailyUnits {
@@ -91,7 +93,7 @@ export interface DailyUnits {
 
 export interface Daily {
   time: string[];
-  weathercode: Array<keyof typeof WMO>;
+  weathercode: Array<WMOCode>;
   sunrise: string[];
   sunset: string[];
   temperature_2m_max: number[];
@@ -106,7 +108,7 @@ export interface Location {
   admin1: string;
   latitude: number;
   longitude: number;
-  weathercode?: keyof typeof WMO;
+  weathercode?: WMOCode;
   temperature?: number;
 }
 

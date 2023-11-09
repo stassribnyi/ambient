@@ -1,7 +1,7 @@
 import { subHours, addHours, isSameDay, isWithinInterval } from 'date-fns';
 
 import { changeTimeZone } from '../utils';
-import { WeatherInfo } from '../vite-env';
+import { WeatherInfo, WMOCode } from '../vite-env';
 
 import type { DailyForecast } from './mapForecastToDaily';
 
@@ -10,7 +10,7 @@ export type HourlyForecast = Readonly<{
   isDay: boolean;
   temperature: number;
   precipitation: number;
-  weathercode: WeatherInfo['hourly']['weathercode'][0];
+  weathercode: WMOCode;
   uvIndex: number;
 }>;
 

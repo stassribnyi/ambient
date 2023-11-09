@@ -1,24 +1,23 @@
 import { FC } from 'react';
 import { format } from 'date-fns';
+// TODO: gzipped size is way to big, consider using different library
 import { LineSeriesType, LineChart, mangoFusionPaletteLight as chartPalette } from '@mui/x-charts';
 
 import { SeriesForecast } from '../mappers';
 
-const formatPercentage = (scale: number) => `${scale}%`;
-const formatDate = (date: Date) => format(date, 'MMM dd');
+const percentageFormatter = (scale: number) => `${scale}%`;
+const dateFormatter = (date: Date) => format(date, 'MMM dd');
 
 const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
   area: true,
   curve: 'natural',
   showMark: false,
-  valueFormatter: (scale: number) => `${scale}%`,
+  valueFormatter: percentageFormatter,
 };
 
-export const Chart: FC<
-  Readonly<{
-    series: SeriesForecast;
-  }>
-> = ({ series: { time, cloud_cover, relative_humidity_2m, precipitation_probability } }) => {
+export const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
+  series: { time, cloudCover, humidity, precipitation },
+}) => {
   return (
     <LineChart
       sx={{ width: '100%' }}
@@ -28,31 +27,31 @@ export const Chart: FC<
       yAxis={[
         {
           data: [0, 25, 50, 75, 100],
-          valueFormatter: formatPercentage,
+          valueFormatter: percentageFormatter,
         },
       ]}
       xAxis={[
         {
           data: time,
           scaleType: 'time',
-          valueFormatter: formatDate,
+          valueFormatter: dateFormatter,
         },
       ]}
       series={[
         {
           ...DEFAULT_SERIES_OPTIONS,
-          data: cloud_cover,
+          data: cloudCover,
           label: 'Cloud Cover',
         },
         {
           ...DEFAULT_SERIES_OPTIONS,
           area: false,
-          data: relative_humidity_2m,
+          data: humidity,
           label: 'Relative Humidity',
         },
         {
           ...DEFAULT_SERIES_OPTIONS,
-          data: precipitation_probability,
+          data: precipitation,
           color: '#ab47bc',
           label: 'Precipitation probability',
         },

@@ -1,9 +1,11 @@
 import { FC } from 'react';
-import { getWMODetails, WMO } from '../utils';
 import { Box } from '@mui/material';
 
+import { getWMODetails } from '../utils';
+import { WMOCode } from '../vite-env';
+
 type WMOIconProps = Readonly<{
-  code?: keyof typeof WMO;
+  code?: WMOCode;
   variant?: 'day' | 'night';
   size?: number;
 }>;

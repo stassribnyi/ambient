@@ -24,7 +24,6 @@ import thunderstormNight from '@bybas/weather-icons/production/fill/openweatherm
 
 import notAvailable from '@bybas/weather-icons/production/fill/all/not-available.svg';
 
-// TODO: convert into function and add fallback
 export const WMO = {
   0: {
     day: {

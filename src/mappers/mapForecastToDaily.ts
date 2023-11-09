@@ -1,5 +1,5 @@
 import { changeTimeZone } from '../utils/changeTimezone';
-import { WeatherInfo } from '../vite-env';
+import { WeatherInfo, WMOCode } from '../vite-env';
 
 type Range = Readonly<{
   min: number;
@@ -12,7 +12,7 @@ export type DailyForecast = Readonly<{
   sunset: Date;
   temperature: Range;
   precipitationProbability: number;
-  weathercode: WeatherInfo['daily']['weathercode'][0];
+  weathercode: WMOCode;
 }>;
 
 export function mapForecastToDaily({ daily, timezone }: WeatherInfo): Array<DailyForecast> {

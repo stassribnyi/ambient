@@ -10,9 +10,10 @@ import { Windspeed } from '../Windspeed';
 import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
-
-import type { CurrentForecast } from '../../mappers/mapForecastToCurrent';
 import { WMOIcon } from '../WMOIcon';
+
+import type { CurrentForecast } from '../../mappers';
+import { getWMODetails } from '../../utils';
 
 const Tile: FC<PropsWithChildren<Readonly<{ iconUrl: string; title: string }>>> = ({ iconUrl, children, title }) => {
   return (
@@ -31,7 +32,6 @@ const Tile: FC<PropsWithChildren<Readonly<{ iconUrl: string; title: string }>>> 
 export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
   value: {
     apparentTemperature,
-    description,
     isDay,
     relativeHumidity,
     sunriseTime,
@@ -42,6 +42,9 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
     weathercode,
   },
 }) => {
+  const details = getWMODetails(weathercode);
+  const { description } = isDay ? details.day : details.night;
+
   return (
     <Stack gap={2} flex={1}>
       <Box

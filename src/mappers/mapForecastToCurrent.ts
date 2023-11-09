@@ -1,8 +1,8 @@
 import { isSameDay, isSameHour } from 'date-fns';
 
-import { changeTimeZone, uvIndexToScale, windspeedToBeaufortScale, WMO } from '../utils';
+import { changeTimeZone, uvIndexToScale, windspeedToBeaufortScale } from '../utils';
 
-import { WeatherInfo } from '../vite-env';
+import { WeatherInfo, WMOCode } from '../vite-env';
 
 import type { DailyForecast } from './mapForecastToDaily';
 import type { HourlyForecast } from './mapForecastToHourly';
@@ -24,7 +24,7 @@ export type CurrentForecast = Readonly<{
   description?: string;
   uvIndex: Scale;
   windspeed: Scale;
-  weathercode: WeatherInfo['current']['weathercode'];
+  weathercode: WMOCode;
 }>;
 
 export function mapForecastToCurrent(
@@ -37,10 +37,7 @@ export function mapForecastToCurrent(
   const currentHour = hourlyForecast.find((hour) => isSameHour(currentDateTimeZone, hour.time));
   const currentDay = dailyForecast.find((day) => isSameDay(currentDateTimeZone, day.time));
 
-  const details = WMO[currentForecast.weathercode];
-
   return {
-    ...(currentForecast.is_day ? details?.day : details?.night),
     time: currentDateTimeZone,
     isDay: currentForecast.is_day,
     temperature: currentForecast.temperature_2m,
