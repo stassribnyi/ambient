@@ -1,35 +1,22 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
 import { BeaufortScale } from '../vite-env';
 
-import windBeaufort0 from '@bybas/weather-icons/production/fill/all/wind-beaufort-0.svg';
-import windBeaufort1 from '@bybas/weather-icons/production/fill/all/wind-beaufort-1.svg';
-import windBeaufort2 from '@bybas/weather-icons/production/fill/all/wind-beaufort-2.svg';
-import windBeaufort3 from '@bybas/weather-icons/production/fill/all/wind-beaufort-3.svg';
-import windBeaufort4 from '@bybas/weather-icons/production/fill/all/wind-beaufort-4.svg';
-import windBeaufort5 from '@bybas/weather-icons/production/fill/all/wind-beaufort-5.svg';
-import windBeaufort6 from '@bybas/weather-icons/production/fill/all/wind-beaufort-6.svg';
-import windBeaufort7 from '@bybas/weather-icons/production/fill/all/wind-beaufort-7.svg';
-import windBeaufort8 from '@bybas/weather-icons/production/fill/all/wind-beaufort-8.svg';
-import windBeaufort9 from '@bybas/weather-icons/production/fill/all/wind-beaufort-9.svg';
-import windBeaufort10 from '@bybas/weather-icons/production/fill/all/wind-beaufort-10.svg';
-import windBeaufort11 from '@bybas/weather-icons/production/fill/all/wind-beaufort-11.svg';
-import windBeaufort12 from '@bybas/weather-icons/production/fill/all/wind-beaufort-12.svg';
+import { type Icons, Meteocon } from './Meteocon';
 
-const WIND_BEAUFORT = new Map<BeaufortScale | undefined, string>([
-  [0, windBeaufort0],
-  [1, windBeaufort1],
-  [2, windBeaufort2],
-  [3, windBeaufort3],
-  [4, windBeaufort4],
-  [5, windBeaufort5],
-  [6, windBeaufort6],
-  [7, windBeaufort7],
-  [8, windBeaufort8],
-  [9, windBeaufort9],
-  [10, windBeaufort10],
-  [11, windBeaufort11],
-  [12, windBeaufort12],
+const WIND_BEAUFORT_ICON = new Map<BeaufortScale | undefined, Icons>([
+  [0, 'beaufort-0'],
+  [1, 'beaufort-1'],
+  [2, 'beaufort-2'],
+  [3, 'beaufort-3'],
+  [4, 'beaufort-4'],
+  [5, 'beaufort-5'],
+  [6, 'beaufort-6'],
+  [7, 'beaufort-7'],
+  [8, 'beaufort-8'],
+  [9, 'beaufort-9'],
+  [10, 'beaufort-10'],
+  [11, 'beaufort-11'],
+  [12, 'beaufort-12'],
 ]);
 
 export const WIND_BEAUFORT_DESCRIPTION = new Map<BeaufortScale | undefined, string>([
@@ -53,9 +40,9 @@ type BeaufortIconProps = Readonly<{
   size?: number;
 }>;
 
-export const BeaufortIcon: FC<BeaufortIconProps> = ({ scale, size = 48 }) => {
-  const iconUrl = WIND_BEAUFORT.get(scale) || windBeaufort0;
+export const BeaufortIcon: FC<BeaufortIconProps> = ({ scale, size }) => {
+  const iconName = WIND_BEAUFORT_ICON.get(scale) || 'beaufort-0';
   const description = WIND_BEAUFORT_DESCRIPTION.get(scale) || 'N/A';
 
-  return <Box component="img" alt={description} src={iconUrl} sx={{ width: `${size}px` }} />;
+  return <Meteocon alt={description} name={iconName} size={size} />;
 };

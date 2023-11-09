@@ -1,46 +1,19 @@
 import { FC, PropsWithChildren } from 'react';
 import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
-import humiditySvg from '@bybas/weather-icons/production/fill/all/humidity.svg';
-import sunriseSvg from '@bybas/weather-icons/production/fill/all/sunrise.svg';
-import sunsetSvg from '@bybas/weather-icons/production/fill/all/sunset.svg';
-
 import { InfoBlock } from '../InfoBlock';
 import { Windspeed } from '../Windspeed';
 import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 import { WMOIcon } from '../WMOIcon';
+import { Meteocon } from '../Meteocon';
 
 import { BeaufortIcon, WIND_BEAUFORT_DESCRIPTION } from '../BeaufortIcon';
 import { UVIndexIcon, UV_INDEX_DESCRIPTION } from '../UVIndexIcon';
 
 import type { CurrentForecast } from '../../mappers';
 import { getWMODetails } from '../../utils';
-
-// TODO: extract and replace all svg with icon component
-const Icon: FC<
-  Readonly<{
-    alt: string;
-    name: 'humidity' | 'sunrise' | 'sunset';
-    size?: number;
-  }>
-> = ({ alt, name, size = 48 }) => {
-  function getIconUrl() {
-    switch (name) {
-      case 'humidity':
-        return humiditySvg;
-      case 'sunrise':
-        return sunriseSvg;
-      case 'sunset':
-        return sunsetSvg;
-      default:
-        return '';
-    }
-  }
-
-  return <Box component="img" src={getIconUrl()} alt={alt} sx={{ width: `${size}px` }} />;
-};
 
 const Tile: FC<PropsWithChildren<Readonly<{ icon: React.ReactNode; title: string }>>> = ({ icon, children, title }) => {
   return (
@@ -99,7 +72,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
       </Box>
       <Grid container spacing={2}>
         <Grid xs={6} md={3}>
-          <Tile title="Humidity" icon={<Icon alt="Humidity" name="humidity" />}>
+          <Tile title="Humidity" icon={<Meteocon alt="Humidity" name="humidity" />}>
             <Humidity value={relativeHumidity} />
           </Tile>
         </Grid>
@@ -118,11 +91,11 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           {isDay ? (
-            <Tile title="Sunset" icon={<Icon alt="Sunset" name="sunset" />}>
+            <Tile title="Sunset" icon={<Meteocon alt="Sunset" name="sunset" />}>
               <Time value={sunsetTime} format="HH:mm" />
             </Tile>
           ) : (
-            <Tile title="Sunrise" icon={<Icon alt="Sunrise" name="sunrise" />}>
+            <Tile title="Sunrise" icon={<Meteocon alt="Sunrise" name="sunrise" />}>
               <Time value={sunriseTime} format="HH:mm" />
             </Tile>
           )}
