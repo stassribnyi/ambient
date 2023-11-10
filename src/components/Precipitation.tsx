@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import raindrop from '../assets/raindrop.svg';
 
@@ -13,9 +13,20 @@ export const Precipitation: FC<
   const height = Math.ceil((size * level) / 100);
 
   return (
-    <Stack direction="row" alignItems="center" gap={0.25}>
+    <Typography
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        color: 'secondary.light',
+        fontSize: size,
+        gap: 0.25,
+        m: 0,
+      }}
+    >
       <Box
+        component="span"
         sx={{
+          display: 'block',
           width: `${size}px`,
           height: `${size}px`,
 
@@ -36,7 +47,9 @@ export const Precipitation: FC<
           alt="Precipitation Probability"
         />
         <Box
+          component="span"
           sx={{
+            display: 'block',
             position: 'absolute',
             bottom: 0,
             height: `${height}px`,
@@ -58,10 +71,10 @@ export const Precipitation: FC<
         </Box>
       </Box>
       {showLabel ? (
-        <Typography color="secondary.light" sx={{ fontSize: size }}>
+        <Typography component="span" sx={{ all: 'inherit' }}>
           {level}%
         </Typography>
       ) : null}
-    </Stack>
+    </Typography>
   );
 };

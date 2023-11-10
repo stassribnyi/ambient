@@ -22,7 +22,7 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
             sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { ...(isMobile ? { p: 0 } : null) } }}
           >
             <TableCell>{isToday(time) ? 'Today' : <Time value={time} format="eeee" />}</TableCell>
-            <TableCell align="center" sx={{ width: '4rem' }}>
+            <TableCell sx={{ width: '4rem' }}>
               <Precipitation showLabel level={precipitationProbability} size={12} />
             </TableCell>
             <TableCell align="center">
