@@ -1,8 +1,8 @@
 /// <reference types="vite/client" />
 
-import { WMO } from './utils/wmo';
+import { WMO_DESCRIPTION } from './utils/wmo';
 
-export type WMOCode = keyof typeof WMO;
+export type WMOCode = keyof typeof WMO_DESCRIPTION;
 export type BeaufortScale = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type UVIndexScale = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 

@@ -39,7 +39,7 @@ export const BaseMenuPage: FC<
       </AppBar>
       <DialogContent
         sx={{
-          p: 0.5,
+          p: 1,
           minHeight: '444px',
           maxHeight: isMobile ? 'auto' : '560px',
           minWidth: '360px',

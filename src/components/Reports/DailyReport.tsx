@@ -5,9 +5,9 @@ import { isToday } from 'date-fns';
 import { Precipitation } from '../Precipitation';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
+import { WMOIcon } from '../Icons';
 
-import type { DailyForecast } from '../../mappers/mapForecastToDaily';
-import { WMOIcon } from '../WMOIcon';
+import type { DailyForecast } from '../../mappers';
 
 export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ value }) => {
   const theme = useTheme();

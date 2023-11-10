@@ -6,14 +6,17 @@ import { Windspeed } from '../Windspeed';
 import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
-import { WMOIcon } from '../WMOIcon';
-import { Meteocon } from '../Meteocon';
-
-import { BeaufortIcon, WIND_BEAUFORT_DESCRIPTION } from '../BeaufortIcon';
-import { UVIndexIcon, UV_INDEX_DESCRIPTION } from '../UVIndexIcon';
+import {
+  BeaufortIcon,
+  Meteocon,
+  UVIndexIcon,
+  WMOIcon,
+  UV_INDEX_DESCRIPTION,
+  WIND_BEAUFORT_DESCRIPTION,
+  WMO_DESCRIPTION,
+} from '../Icons';
 
 import type { CurrentForecast } from '../../mappers';
-import { getWMODetails } from '../../utils';
 
 const Tile: FC<PropsWithChildren<Readonly<{ icon: React.ReactNode; title: string }>>> = ({ icon, children, title }) => {
   return (
@@ -45,8 +48,8 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
     beaufortScale,
   },
 }) => {
-  const details = getWMODetails(weathercode);
-  const { description } = isDay ? details.day : details.night;
+  const details = WMO_DESCRIPTION.get(weathercode);
+  const description = isDay ? details?.day : details?.night;
 
   return (
     <Stack gap={2} flex={1}>
@@ -64,7 +67,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           <Typography variant="h2">
             <Temperature value={temperature} />
           </Typography>
-          <Typography variant="h6">{description}</Typography>
+          <Typography variant="h6">{description ?? 'N/A'}</Typography>
           <Typography color="secondary" variant="caption">
             Feels like <Temperature value={apparentTemperature} />
           </Typography>
@@ -78,7 +81,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <Tile
-            title={WIND_BEAUFORT_DESCRIPTION.get(beaufortScale) || 'N/A'}
+            title={WIND_BEAUFORT_DESCRIPTION.get(beaufortScale) ?? 'N/A'}
             icon={<BeaufortIcon scale={beaufortScale} />}
           >
             <Windspeed value={windspeed} />
@@ -86,7 +89,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <Tile title="UV Index" icon={<UVIndexIcon scale={uvIndex} />}>
-            {UV_INDEX_DESCRIPTION.get(uvIndex) || 'N/A'}
+            {UV_INDEX_DESCRIPTION.get(uvIndex) ?? 'N/A'}
           </Tile>
         </Grid>
         <Grid xs={6} md={3}>

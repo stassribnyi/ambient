@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { UVIndexScale } from '../vite-env';
+import { UVIndexScale } from '../../vite-env';
 
 import { type Icons, Meteocon } from './Meteocon';
 
@@ -17,7 +17,7 @@ const UV_INDEX_ICON = new Map<UVIndexScale | undefined, Icons>([
   [11, 'uv-11'],
 ]);
 
-// TODO: handle Extreme+ index
+// FIXME: move into separate file
 export const UV_INDEX_DESCRIPTION = new Map<UVIndexScale | undefined, string>([
   [1, 'Low'],
   [2, 'Low'],
@@ -38,8 +38,8 @@ type UVIndexIconProps = Readonly<{
 }>;
 
 export const UVIndexIcon: FC<UVIndexIconProps> = ({ scale, size }) => {
-  const iconName = UV_INDEX_ICON.get(scale) || 'uv-n/a';
-  const description = UV_INDEX_DESCRIPTION.get(scale) || 'N/A';
+  const iconName = UV_INDEX_ICON.get(scale);
+  const description = UV_INDEX_DESCRIPTION.get(scale);
 
-  return <Meteocon alt={description} name={iconName} size={size} />;
+  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'uv-n/a'} size={size} />;
 };

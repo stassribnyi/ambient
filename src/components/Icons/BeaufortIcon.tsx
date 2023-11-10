@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { BeaufortScale } from '../vite-env';
+import { BeaufortScale } from '../../vite-env';
 
 import { type Icons, Meteocon } from './Meteocon';
 
@@ -19,6 +19,7 @@ const WIND_BEAUFORT_ICON = new Map<BeaufortScale | undefined, Icons>([
   [12, 'beaufort-12'],
 ]);
 
+// FIXME: move into separate file
 export const WIND_BEAUFORT_DESCRIPTION = new Map<BeaufortScale | undefined, string>([
   [0, 'Calm'],
   [1, 'Light air'],
@@ -41,8 +42,8 @@ type BeaufortIconProps = Readonly<{
 }>;
 
 export const BeaufortIcon: FC<BeaufortIconProps> = ({ scale, size }) => {
-  const iconName = WIND_BEAUFORT_ICON.get(scale) || 'beaufort-0';
-  const description = WIND_BEAUFORT_DESCRIPTION.get(scale) || 'N/A';
+  const iconName = WIND_BEAUFORT_ICON.get(scale);
+  const description = WIND_BEAUFORT_DESCRIPTION.get(scale);
 
-  return <Meteocon alt={description} name={iconName} size={size} />;
+  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'beaufort-0'} size={size} />;
 };
