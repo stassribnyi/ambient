@@ -55,7 +55,7 @@ export const LocationList: FC<
   };
 
   const handleDeleteSelected = () => {
-    setLocations((items) => items.filter((item) => !selected.includes(item)));
+    setLocations((items) => items.filter((item) => !selected.some((s) => s.id === item.id)));
     handleExitEditMode();
   };
 

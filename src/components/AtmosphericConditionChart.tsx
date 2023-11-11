@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { format } from 'date-fns';
-// TODO: gzipped size is way to big, consider using different library
 import { LineSeriesType, LineChart, mangoFusionPaletteLight as chartPalette } from '@mui/x-charts';
 
 import { SeriesForecast } from '../mappers';
@@ -15,7 +14,7 @@ const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
   valueFormatter: percentageFormatter,
 };
 
-export const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
+const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
   series: { time, cloudCover, humidity, precipitation },
 }) => {
   return (
@@ -59,3 +58,5 @@ export const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>>
     />
   );
 };
+
+export default AtmosphericConditionChart;

@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 
 import { Slide, IconButton, Dialog, useTheme, useMediaQuery } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
@@ -23,9 +23,37 @@ const Transition = forwardRef(function Transition(
 });
 
 enum MenuPage {
-  INDEX,
-  SEARCH,
+  INDEX = 'settings',
+  SEARCH = 'search',
 }
+
+// TODO: move into separate file
+const useHash = (): [string, (value?: string | null) => void] => {
+  const [hash, setHash] = useState(() => window.location.hash.replace('#', ''));
+
+  const hashChangeHandler = useCallback(() => {
+    setHash(window.location.hash.replace('#', ''));
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('hashchange', hashChangeHandler);
+
+    return () => {
+      window.removeEventListener('hashchange', hashChangeHandler);
+    };
+  }, [hashChangeHandler]);
+
+  const updateHash = useCallback(
+    (newHash?: string | null) => {
+      if (newHash !== hash) {
+        window.location.hash = newHash ?? '';
+      }
+    },
+    [hash],
+  );
+
+  return [hash, updateHash];
+};
 
 export function MenuDialog() {
   const theme = useTheme();
@@ -33,16 +61,34 @@ export function MenuDialog() {
   const { locations, setLocations } = useLocations();
   const [, setSettings] = useUserSettings();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [page, setPage] = useState<MenuPage>(MenuPage.INDEX);
+  const [hash, setHash] = useHash();
+
+  useEffect(() => {
+    if (!hash) {
+      return;
+    }
+
+    if (hash === MenuPage.INDEX) {
+      setHash(MenuPage.INDEX);
+
+      return;
+    }
+
+    if (hash === MenuPage.SEARCH) {
+      setHash(MenuPage.SEARCH);
+
+      return;
+    }
+
+    setHash('');
+  }, [hash, setHash]);
 
   const handleClickOpen = () => {
-    setIsModalOpen(true);
+    setHash(MenuPage.INDEX);
   };
 
   const handleClose = () => {
-    setPage(MenuPage.INDEX);
-    setIsModalOpen(false);
+    setHash(null);
   };
 
   const handleOptionSelect = (option: Location) => {
@@ -56,14 +102,14 @@ export function MenuDialog() {
 
   // TODO: persist state via url, so back button returns to previous menu page
   function MenuRoutes() {
-    switch (page) {
+    switch (hash) {
       case MenuPage.SEARCH:
-        return <LocationSearch onBackButton={() => setPage(MenuPage.INDEX)} onSubmit={handleOptionSelect} />;
+        return <LocationSearch onBackButton={() => setHash(MenuPage.INDEX)} onSubmit={handleOptionSelect} />;
 
       default:
         return (
           <LocationList
-            onAdd={() => setPage(MenuPage.SEARCH)}
+            onAdd={() => setHash(MenuPage.SEARCH)}
             onBackButton={handleClose}
             onSelect={handleOptionSelect}
           />
@@ -77,7 +123,7 @@ export function MenuDialog() {
         <MenuIcon fontSize="inherit" />
       </IconButton>
       <Dialog
-        open={isModalOpen}
+        open={[MenuPage.INDEX, MenuPage.SEARCH].includes(hash as MenuPage)}
         onClose={handleClose}
         fullScreen={isMobile}
         TransitionComponent={Transition}

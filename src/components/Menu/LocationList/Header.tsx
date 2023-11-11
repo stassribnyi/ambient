@@ -63,6 +63,7 @@ export const Header: FC<
         >
           <MoreVert fontSize="inherit" />
         </IconButton>
+        {/* FIXME: search for less hacky solutions */}
         <Menu
           id="demo-positioned-menu"
           aria-labelledby="demo-positioned-button"
@@ -77,9 +78,9 @@ export const Header: FC<
             vertical: 'bottom',
             horizontal: 'right',
           }}
-          sx={{ '& .MuiList-root': { padding: 0 } }}
+          sx={{ '& .MuiList-root': { padding: 0 }, '& .MuiPaper-root': { borderRadius: 2 } }}
         >
-          <MenuItem sx={{ minHeight: 'auto' }} onClick={onEdit}>
+          <MenuItem sx={{ minHeight: 'auto', padding: '0.5rem 1.5rem', minWidth: '7ch' }} onClick={onEdit}>
             Edit
           </MenuItem>
         </Menu>

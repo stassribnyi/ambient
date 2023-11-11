@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowDownward, LocationOn } from '@mui/icons-material';
 import {
@@ -14,26 +14,34 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { AtmosphericConditionChart, InfoBlock, MenuDialog, UnitSwitch, Time } from './components';
+import { useForecast, useLocations, useUserSettings } from './hooks';
+import { useDocumentTitle } from 'usehooks-ts';
+
+import { Block, MenuDialog, UnitSwitch, Time, WMO_DESCRIPTION, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 
-import { useForecast, useLocations, useUserSettings } from './hooks';
+import { delay } from './utils';
+
+const AtmosphericConditionChart = lazy(async () =>
+  delay(1000).then(() => import('./components/AtmosphericConditionChart')),
+);
 
 function App() {
   const [settings, setSettings] = useUserSettings();
   const { currentForecast: forecast, error, loading, refresh } = useForecast();
   const { current } = useLocations();
 
+  // FIXME: refactor
+  useDocumentTitle(
+    forecast
+      ? `${current.name}, ${current.country} - ${Math.round(forecast.current.temperature)}°, ${
+          WMO_DESCRIPTION.get(forecast.current.weathercode)?.day ?? 'N/A'
+        } | Ambient`
+      : 'Ambient',
+  );
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  useEffect(() => {
-    if (!forecast) {
-      return;
-    }
-
-    document.title = `${current.name}, ${current.country} - ${forecast.current.temperature}°, ${forecast.current.description} | Ambient`;
-  }, [current.country, current.name, current.temperature, forecast]);
 
   const handleMeasurementSystemChange = () =>
     setSettings((prev) => ({
@@ -105,21 +113,23 @@ function App() {
               <Grid xs={12} md={6}>
                 <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
                   <CurrentReport value={forecast.current} />
-                  <InfoBlock title="Today">
+                  <Block title="Today">
                     <HourlyReport value={forecast.hourly} />
-                  </InfoBlock>
+                  </Block>
                 </Stack>
               </Grid>
               <Grid xs={12} md={6}>
-                <InfoBlock title="10-Days Forecast">
+                <Block title="10-Days Forecast">
                   <DailyReport value={forecast.daily} />
-                </InfoBlock>
+                </Block>
               </Grid>
               {!isMobile ? (
                 <Grid xs={12}>
-                  <InfoBlock title="Atmospheric Conditions">
-                    <AtmosphericConditionChart series={forecast.series} />
-                  </InfoBlock>
+                  <Suspense fallback={<Fallback title="Checking Atmospheric Condition For You..." />}>
+                    <Block title="Atmospheric Conditions">
+                      <AtmosphericConditionChart series={forecast.series} />
+                    </Block>
+                  </Suspense>
                 </Grid>
               ) : null}
             </Grid>
