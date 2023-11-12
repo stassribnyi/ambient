@@ -1,14 +1,16 @@
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 
-import { Slide, IconButton, Dialog, useTheme, useMediaQuery } from '@mui/material';
+import { Slide, IconButton, Dialog, useTheme, useMediaQuery, Box, Typography } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { ArrowForward, Menu as MenuIcon } from '@mui/icons-material';
 
 import { LocationSearch } from './LocationSearch';
 import { LocationList } from './LocationList';
 
 import { useLocations, useUserSettings } from '../../hooks';
 import { Location } from '../../vite-env';
+import { BaseMenuPage } from './BaseMenuPage';
+import { Meteocon } from '..';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -25,6 +27,7 @@ const Transition = forwardRef(function Transition(
 enum MenuPage {
   INDEX = 'settings',
   SEARCH = 'search',
+  WELCOME = 'welcome',
 }
 
 // TODO: move into separate file
@@ -68,20 +71,22 @@ export function MenuDialog() {
       return;
     }
 
-    if (hash === MenuPage.INDEX) {
-      setHash(MenuPage.INDEX);
+    if ([MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME].includes(hash as MenuPage)) {
+      setHash(hash);
 
       return;
     }
 
-    if (hash === MenuPage.SEARCH) {
-      setHash(MenuPage.SEARCH);
-
-      return;
-    }
-
-    setHash('');
+    setHash(null);
   }, [hash, setHash]);
+
+  useEffect(() => {
+    if (locations.length > 0 || [MenuPage.WELCOME, MenuPage.SEARCH].includes(hash as MenuPage)) {
+      return;
+    }
+
+    setHash(MenuPage.WELCOME);
+  }, [hash, locations, setHash]);
 
   const handleClickOpen = () => {
     setHash(MenuPage.INDEX);
@@ -100,11 +105,37 @@ export function MenuDialog() {
     handleClose();
   };
 
-  // TODO: persist state via url, so back button returns to previous menu page
   function MenuRoutes() {
     switch (hash) {
       case MenuPage.SEARCH:
         return <LocationSearch onBackButton={() => setHash(MenuPage.INDEX)} onSubmit={handleOptionSelect} />;
+
+      // TODO: move into separate file
+      case MenuPage.WELCOME:
+        return (
+          <BaseMenuPage>
+            <Box sx={{ minHeight: '100%', display: 'grid', placeContent: 'center', placeItems: 'center' }}>
+              <Box sx={{ mb: 8, display: 'grid', placeContent: 'center', placeItems: 'center' }}>
+                <Box sx={{ mb: 2 }}>
+                  <Meteocon alt="clear day" name="partly-sunny" size={256} />
+                </Box>
+                <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                  Ambient
+                </Typography>
+                <Typography color="secondary">Weather Forecast</Typography>
+              </Box>
+
+              <IconButton
+                onClick={() => setHash(MenuPage.SEARCH)}
+                sx={{
+                  backgroundColor: 'secondary.dark',
+                }}
+              >
+                <ArrowForward />
+              </IconButton>
+            </Box>
+          </BaseMenuPage>
+        );
 
       default:
         return (
@@ -123,7 +154,7 @@ export function MenuDialog() {
         <MenuIcon fontSize="inherit" />
       </IconButton>
       <Dialog
-        open={[MenuPage.INDEX, MenuPage.SEARCH].includes(hash as MenuPage)}
+        open={[MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME].includes(hash as MenuPage)}
         onClose={handleClose}
         fullScreen={isMobile}
         TransitionComponent={Transition}

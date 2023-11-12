@@ -33,7 +33,7 @@ function App() {
 
   // FIXME: refactor
   useDocumentTitle(
-    forecast
+    forecast && current
       ? `${current.name}, ${current.country} - ${Math.round(forecast.current.temperature)}°, ${
           WMO_DESCRIPTION.get(forecast.current.weathercode)?.day ?? 'N/A'
         } | Ambient`
@@ -48,6 +48,8 @@ function App() {
       ...prev,
       units: prev.units === 'metric' ? 'imperial' : 'metric',
     }));
+
+  const isReady = forecast && current;
 
   return (
     <>
@@ -81,59 +83,71 @@ function App() {
         }
       >
         <Container maxWidth="xl" sx={{ pt: 2, pb: 2 }}>
-          {forecast && (
+          {
             <Grid container spacing={2}>
               <Grid xs={12}>
                 <Stack>
-                  <Stack direction="row" alignItems="center" sx={{ width: '100%', height: '2.25rem' }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ width: '100%', height: '2.25rem', visibility: isReady ? 'visible' : 'hidden' }}
+                  >
                     <MenuDialog />
-                    <Typography variant="body1">
-                      <Time value={forecast.current.time} format="EEEE, MMM dd" />
-                    </Typography>
+                    {isReady && (
+                      <Typography variant="body1">
+                        <Time value={forecast.current.time} format="EEEE, MMM dd" />
+                      </Typography>
+                    )}
                     <UnitSwitch
                       sx={{ ml: 'auto' }}
                       checked={settings.units === 'metric'}
                       onClick={handleMeasurementSystemChange}
                     />
                   </Stack>
-                  <Typography
-                    color="secondary"
-                    variant="caption"
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.25rem',
-                    }}
-                  >
-                    <LocationOn sx={{ width: '1rem', height: '1rem' }} />
-                    {[current.name, current.admin1, current.country].filter(Boolean).join(', ')}
-                  </Typography>
+                  {isReady && (
+                    <Typography
+                      color="secondary"
+                      variant="caption"
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                      }}
+                    >
+                      <LocationOn sx={{ width: '1rem', height: '1rem' }} />
+                      {[current.name, current.admin1, current.country].filter(Boolean).join(', ')}
+                    </Typography>
+                  )}
                 </Stack>
               </Grid>
-              <Grid xs={12} md={6}>
-                <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
-                  <CurrentReport value={forecast.current} />
-                  <Block title="Today">
-                    <HourlyReport value={forecast.hourly} />
-                  </Block>
-                </Stack>
-              </Grid>
-              <Grid xs={12} md={6}>
-                <Block title="10-Days Forecast">
-                  <DailyReport value={forecast.daily} />
-                </Block>
-              </Grid>
-              {!isMobile ? (
-                <Grid xs={12}>
-                  <Suspense fallback={<Fallback title="Checking Atmospheric Condition For You..." />}>
-                    <Block title="Atmospheric Conditions">
-                      <AtmosphericConditionChart series={forecast.series} />
+              {isReady && (
+                <>
+                  <Grid xs={12} md={6}>
+                    <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
+                      <CurrentReport value={forecast.current} />
+                      <Block title="Today">
+                        <HourlyReport value={forecast.hourly} />
+                      </Block>
+                    </Stack>
+                  </Grid>
+                  <Grid xs={12} md={6}>
+                    <Block title="10-Days Forecast">
+                      <DailyReport value={forecast.daily} />
                     </Block>
-                  </Suspense>
-                </Grid>
-              ) : null}
+                  </Grid>
+                  {!isMobile ? (
+                    <Grid xs={12}>
+                      <Suspense fallback={<Fallback title="Checking Atmospheric Condition For You..." />}>
+                        <Block title="Atmospheric Conditions">
+                          <AtmosphericConditionChart series={forecast.series} />
+                        </Block>
+                      </Suspense>
+                    </Grid>
+                  ) : null}
+                </>
+              )}
             </Grid>
-          )}
+          }
         </Container>
       </PullToRefresh>
     </>

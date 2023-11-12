@@ -25,13 +25,13 @@ export const LocationList: FC<
 > = ({ onBackButton, onAdd, onSelect }) => {
   const { locations, current: favorite, setLocations } = useLocations();
 
-  const otherLocations = locations.filter((l) => l.id !== favorite.id);
+  const otherLocations = locations.filter((l) => l.id !== favorite?.id);
   const [selected, setSelected] = useState<Array<Location>>([]);
   const [isEdit, setIsEdit] = useState(false);
 
   const isActionsVisible = isEdit && selected.length > 0;
   const isAllSelected = selected.length === locations.length;
-  const isSetFavoriteVisible = selected.length === 1 && selected[0].id !== favorite.id;
+  const isSetFavoriteVisible = selected.length === 1 && selected[0].id !== favorite?.id;
 
   const handleSelect = (value: Location) => {
     if (!isEdit) {

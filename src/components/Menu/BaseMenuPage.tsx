@@ -5,13 +5,15 @@ import { ChevronLeft } from '@mui/icons-material';
 
 export const BaseMenuPage: FC<
   PropsWithChildren<
-    Readonly<{
-      header: React.ReactElement;
-      actions?: React.ReactElement;
-      showActions?: boolean;
-      showBackButton?: boolean;
-      handleBackButton?: () => void;
-    }>
+    Readonly<
+      Partial<{
+        header: React.ReactElement;
+        actions: React.ReactElement;
+        showActions: boolean;
+        showBackButton: boolean;
+        handleBackButton: () => void;
+      }>
+    >
   >
 > = ({ actions, children, header, showActions, showBackButton, handleBackButton }) => {
   const theme = useTheme();
@@ -19,29 +21,32 @@ export const BaseMenuPage: FC<
 
   return (
     <>
-      <AppBar sx={{ position: 'relative' }}>
-        <Toolbar>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
-            {showBackButton ? (
-              <IconButton
-                sx={{ fontSize: '2rem' }}
-                edge="start"
-                color="inherit"
-                onClick={handleBackButton}
-                aria-label="close"
-              >
-                <ChevronLeft fontSize="inherit" />
-              </IconButton>
-            ) : null}
-            {header}
-          </Stack>
-        </Toolbar>
-      </AppBar>
+      {header ? (
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+              {showBackButton ? (
+                <IconButton
+                  sx={{ fontSize: '2rem' }}
+                  edge="start"
+                  color="inherit"
+                  onClick={handleBackButton}
+                  aria-label="close"
+                >
+                  <ChevronLeft fontSize="inherit" />
+                </IconButton>
+              ) : null}
+              {header}
+            </Stack>
+          </Toolbar>
+        </AppBar>
+      ) : null}
       <DialogContent
         sx={{
           p: 1,
-          minHeight: '444px',
-          maxHeight: isMobile ? 'auto' : '560px',
+          height: '100%',
+          minHeight: isMobile ? null : '500px',
+          maxHeight: isMobile ? '100%' : '500px',
           minWidth: '360px',
           borderRadius: '16px',
         }}

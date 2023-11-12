@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { useDebounce } from 'usehooks-ts';
 import { ChevronLeft, Close } from '@mui/icons-material';
 import {
@@ -17,7 +17,7 @@ import {
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useLocationSearch } from '../../hooks';
+import { useLocationSearch, useGetCurrentLocation, useLocations } from '../../hooks';
 import { Location } from '../../vite-env';
 
 export function LocationSearch({
@@ -31,6 +31,25 @@ export function LocationSearch({
   const debouncedSearch = useDebounce<string>(search, 500);
 
   const { results, loading } = useLocationSearch(debouncedSearch?.trim());
+  const { current } = useLocations();
+
+  // FIXME: no way to tell what's going on, either add loading/searching/locating state or create a plane async function and handle it manually
+  const { isReady, locate, location } = useGetCurrentLocation();
+
+  useEffect(() => {
+    if (current || !isReady || search) {
+      return;
+    }
+
+    // FIXME: can't clear search input without resetting it to location
+    if (location) {
+      setSearch([location.name, location.country].join(', '));
+
+      return;
+    }
+
+    locate();
+  }, [current, isReady, locate, location, search]);
 
   const handleSelect = (option: Location) => {
     setSearch('');

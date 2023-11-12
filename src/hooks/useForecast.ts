@@ -68,6 +68,10 @@ export const useForecast = () => {
   const { current, locations, setLocations } = useLocations();
 
   const refresh = useCallback(async () => {
+    if (!current) {
+      return;
+    }
+
     setLoading(true);
 
     if (controllerRef.current) {
@@ -125,7 +129,7 @@ export const useForecast = () => {
       })
       .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
       .finally(() => setLoading(false));
-  }, [current.latitude, current.longitude, locations, setLocations]);
+  }, [current, locations, setLocations]);
 
   useEffect(() => {
     refresh();

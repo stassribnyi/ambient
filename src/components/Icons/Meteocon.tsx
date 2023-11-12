@@ -62,6 +62,8 @@ import sunset from '@bybas/weather-icons/production/fill/all/sunset.svg';
 // GENERAL ICONS
 import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
 import notAvailable from '@bybas/weather-icons/production/fill/all/not-available.svg';
+import umbrella from '@bybas/weather-icons/production/fill/all/umbrella.svg';
+import barometer from '@bybas/weather-icons/production/fill/all/barometer.svg';
 
 const OPEN_WEATHER_ICONS = {
   sunny: sunny,
@@ -118,7 +120,12 @@ const SUN_CYCLE_ICONS = {
   sunset: sunset,
 } as const;
 
-const GENERAL_ICONS = { humidity: humidity, 'n/a': notAvailable } as const;
+const GENERAL_ICONS = {
+  barometer: barometer,
+  humidity: humidity,
+  'n/a': notAvailable,
+  umbrella: umbrella,
+} as const;
 
 const ICONS_MAP = {
   ...OPEN_WEATHER_ICONS,
@@ -137,5 +144,5 @@ export const Meteocon: FC<
     size?: number;
   }>
 > = ({ alt, name, size = 48 }) => (
-  <Box component="img" src={ICONS_MAP[name] ?? notAvailable} alt={alt} sx={{ width: `${size}px` }} />
+  <Box draggable={false} component="img" src={ICONS_MAP[name] ?? notAvailable} alt={alt} sx={{ width: `${size}px` }} />
 );
