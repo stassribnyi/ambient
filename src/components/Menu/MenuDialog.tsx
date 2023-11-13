@@ -161,6 +161,11 @@ export function MenuDialog() {
         sx={{
           '& .MuiDialog-container > .MuiPaper-root': {
             backgroundImage: 'none',
+            ...(!isMobile && {
+              minHeight: '500px',
+              maxHeight: '500px',
+              minWidth: '360px',
+            }),
           },
 
           '& header': {

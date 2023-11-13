@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
-import { AppBar, Toolbar, Stack, DialogContent, Slide, useTheme, IconButton, Box } from '@mui/material';
+import { AppBar, Toolbar, Stack, DialogContent, Slide, IconButton, Box } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
 
 export const BaseMenuPage: FC<
@@ -16,9 +15,6 @@ export const BaseMenuPage: FC<
     >
   >
 > = ({ actions, children, header, showActions, showBackButton, handleBackButton }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
   return (
     <>
       {header ? (
@@ -45,9 +41,7 @@ export const BaseMenuPage: FC<
         sx={{
           p: 1,
           height: '100%',
-          minHeight: isMobile ? null : '500px',
-          maxHeight: isMobile ? '100%' : '500px',
-          minWidth: '360px',
+
           borderRadius: '16px',
         }}
       >
