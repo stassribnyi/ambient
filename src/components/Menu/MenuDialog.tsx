@@ -1,16 +1,15 @@
-import { forwardRef, useCallback, useEffect, useState } from 'react';
+import { forwardRef, useEffect } from 'react';
 
-import { Slide, IconButton, Dialog, useTheme, useMediaQuery, Box, Typography } from '@mui/material';
+import { Slide, IconButton, Dialog, useTheme, useMediaQuery } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
-import { ArrowForward, Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 
 import { LocationSearch } from './LocationSearch';
 import { LocationList } from './LocationList';
+import { Welcome } from './Welcome';
 
-import { useLocations, useUserSettings } from '../../hooks';
+import { useHash, useLocations, useUserSettings } from '../../hooks';
 import { Location } from '../../vite-env';
-import { BaseMenuPage } from './BaseMenuPage';
-import { Meteocon } from '..';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -30,33 +29,8 @@ enum MenuPage {
   WELCOME = 'welcome',
 }
 
-// TODO: move into separate file
-const useHash = (): [string, (value?: string | null) => void] => {
-  const [hash, setHash] = useState(() => window.location.hash.replace('#', ''));
-
-  const hashChangeHandler = useCallback(() => {
-    setHash(window.location.hash.replace('#', ''));
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('hashchange', hashChangeHandler);
-
-    return () => {
-      window.removeEventListener('hashchange', hashChangeHandler);
-    };
-  }, [hashChangeHandler]);
-
-  const updateHash = useCallback(
-    (newHash?: string | null) => {
-      if (newHash !== hash) {
-        window.location.hash = newHash ?? '';
-      }
-    },
-    [hash],
-  );
-
-  return [hash, updateHash];
-};
+const SCREEN_LOCK_PAGES = [MenuPage.WELCOME, MenuPage.SEARCH];
+const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 
 export function MenuDialog() {
   const theme = useTheme();
@@ -71,7 +45,7 @@ export function MenuDialog() {
       return;
     }
 
-    if ([MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME].includes(hash as MenuPage)) {
+    if (ALLOWED_PAGES.includes(hash as MenuPage)) {
       setHash(hash);
 
       return;
@@ -81,7 +55,7 @@ export function MenuDialog() {
   }, [hash, setHash]);
 
   useEffect(() => {
-    if (locations.length > 0 || [MenuPage.WELCOME, MenuPage.SEARCH].includes(hash as MenuPage)) {
+    if (locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
       return;
     }
 
@@ -109,34 +83,8 @@ export function MenuDialog() {
     switch (hash) {
       case MenuPage.SEARCH:
         return <LocationSearch onBackButton={() => setHash(MenuPage.INDEX)} onSubmit={handleOptionSelect} />;
-
-      // TODO: move into separate file
       case MenuPage.WELCOME:
-        return (
-          <BaseMenuPage>
-            <Box sx={{ minHeight: '100%', display: 'grid', placeItems: 'center' }}>
-              <Box sx={{ mb: 8, display: 'grid', placeItems: 'center' }}>
-                <Box sx={{ mb: 2 }}>
-                  <Meteocon alt="clear day" name="partly-sunny" size={256} />
-                </Box>
-                <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                  Ambient
-                </Typography>
-                <Typography color="secondary">Weather Forecast</Typography>
-              </Box>
-              <IconButton
-                aria-aria-label="search"
-                onClick={() => setHash(MenuPage.SEARCH)}
-                sx={{
-                  backgroundColor: 'secondary.dark',
-                }}
-              >
-                <ArrowForward />
-              </IconButton>
-            </Box>
-          </BaseMenuPage>
-        );
-
+        return <Welcome onNext={() => setHash(MenuPage.SEARCH)} />;
       default:
         return (
           <LocationList
@@ -154,7 +102,7 @@ export function MenuDialog() {
         <MenuIcon fontSize="inherit" />
       </IconButton>
       <Dialog
-        open={[MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME].includes(hash as MenuPage)}
+        open={ALLOWED_PAGES.includes(hash as MenuPage)}
         onClose={handleClose}
         fullScreen={isMobile}
         TransitionComponent={Transition}
@@ -162,15 +110,16 @@ export function MenuDialog() {
           '& .MuiDialog-container > .MuiPaper-root': {
             backgroundImage: 'none',
             ...(!isMobile && {
-              minHeight: '500px',
-              maxHeight: '500px',
+              minHeight: '568px',
+              maxHeight: '568px',
               minWidth: '360px',
+              overflowY: 'hidden',
             }),
           },
 
           '& header': {
             color: 'secondary.light',
-            backgroundImage: 'none',
+            background: 'none',
             boxShadow: 'none',
             p: '0.5rem 0',
 

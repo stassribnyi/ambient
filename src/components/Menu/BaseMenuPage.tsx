@@ -40,12 +40,20 @@ export const BaseMenuPage: FC<
       <DialogContent
         sx={{
           p: 1,
-          height: '100%',
-
+          display: 'flex',
+          flexDirection: 'column',
           borderRadius: '16px',
         }}
       >
-        {children}
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {children}
+        </Box>
       </DialogContent>
       <Slide mountOnEnter unmountOnExit in={showActions} direction="up">
         <Box>{actions}</Box>

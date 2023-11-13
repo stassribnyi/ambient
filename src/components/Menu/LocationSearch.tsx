@@ -114,7 +114,7 @@ export function LocationSearch({
           </CardContent>
         </Card>
       ) : (
-        <Box sx={{ display: 'grid', placeContent: 'center', height: '100%' }}>
+        <Box sx={{ display: 'grid', placeContent: 'center', flex: '1' }}>
           {isLoading ? (
             <CircularProgress color="secondary" />
           ) : (

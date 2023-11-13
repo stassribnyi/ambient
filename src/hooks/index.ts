@@ -1,3 +1,4 @@
+export { useHash } from './useHash';
 export { useSearch } from './useSearch';
 export { useUserSettings } from './useUserSettings';
 export { useForecast } from './useForecast';
