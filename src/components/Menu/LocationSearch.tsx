@@ -17,7 +17,7 @@ import {
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useLocationSearch, useGetCurrentLocation, useLocations } from '../../hooks';
+import { useGeoposition, useSearch, useLocations } from '../../hooks';
 import { Location } from '../../vite-env';
 
 export function LocationSearch({
@@ -30,32 +30,33 @@ export function LocationSearch({
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce<string>(search, 500);
 
-  const { results, loading } = useLocationSearch(debouncedSearch?.trim());
+  const { isRequesting, position, requestPosition } = useGeoposition();
+  const { isSearching, results } = useSearch(debouncedSearch?.trim());
   const { current } = useLocations();
 
-  // FIXME: no way to tell what's going on, either add loading/searching/locating state or create a plane async function and handle it manually
-  const { isReady, locate, location } = useGetCurrentLocation();
+  useEffect(() => {
+    if (current) {
+      return;
+    }
+
+    requestPosition();
+  }, [current, requestPosition]);
 
   useEffect(() => {
-    if (current || !isReady || search) {
+    if (!position) {
       return;
     }
 
-    // FIXME: can't clear search input without resetting it to location
-    if (location) {
-      setSearch([location.name, location.country].join(', '));
-
-      return;
-    }
-
-    locate();
-  }, [current, isReady, locate, location, search]);
+    setSearch([position.name, position.country].filter(Boolean).join(', '));
+  }, [position]);
 
   const handleSelect = (option: Location) => {
     setSearch('');
     onSubmit(option);
     onBackButton();
   };
+
+  const isLoading = isRequesting || isSearching;
 
   return (
     <BaseMenuPage
@@ -114,7 +115,7 @@ export function LocationSearch({
         </Card>
       ) : (
         <Box sx={{ display: 'grid', placeContent: 'center', height: '100%' }}>
-          {loading ? (
+          {isLoading ? (
             <CircularProgress color="secondary" />
           ) : (
             <DialogContentText>

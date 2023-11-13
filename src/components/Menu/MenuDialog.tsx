@@ -114,8 +114,8 @@ export function MenuDialog() {
       case MenuPage.WELCOME:
         return (
           <BaseMenuPage>
-            <Box sx={{ minHeight: '100%', display: 'grid', placeContent: 'center', placeItems: 'center' }}>
-              <Box sx={{ mb: 8, display: 'grid', placeContent: 'center', placeItems: 'center' }}>
+            <Box sx={{ minHeight: '100%', display: 'grid', placeItems: 'center' }}>
+              <Box sx={{ mb: 8, display: 'grid', placeItems: 'center' }}>
                 <Box sx={{ mb: 2 }}>
                   <Meteocon alt="clear day" name="partly-sunny" size={256} />
                 </Box>
@@ -124,8 +124,8 @@ export function MenuDialog() {
                 </Typography>
                 <Typography color="secondary">Weather Forecast</Typography>
               </Box>
-
               <IconButton
+                aria-aria-label="search"
                 onClick={() => setHash(MenuPage.SEARCH)}
                 sx={{
                   backgroundColor: 'secondary.dark',

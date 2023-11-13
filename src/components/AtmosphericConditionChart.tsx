@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { format } from 'date-fns';
-import { LineSeriesType, LineChart, mangoFusionPaletteLight as chartPalette } from '@mui/x-charts';
+import { LineSeriesType, LineChart } from '@mui/x-charts';
 
 import { SeriesForecast } from '../mappers';
 
@@ -20,7 +20,6 @@ const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
   return (
     <LineChart
       sx={{ width: '100%' }}
-      colors={chartPalette}
       height={300}
       margin={{ top: 56, bottom: 32 }}
       yAxis={[
@@ -40,18 +39,20 @@ const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
         {
           ...DEFAULT_SERIES_OPTIONS,
           data: cloudCover,
+          color: '#9080B8',
           label: 'Cloud Cover',
         },
         {
           ...DEFAULT_SERIES_OPTIONS,
           area: false,
+          color: '#E0CFDF',
           data: humidity,
           label: 'Relative Humidity',
         },
         {
           ...DEFAULT_SERIES_OPTIONS,
           data: precipitation,
-          color: '#ab47bc',
+          color: '#474772',
           label: 'Precipitation probability',
         },
       ]}

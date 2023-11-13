@@ -11,7 +11,7 @@ export const EditHeader: FC<
   }>
 > = ({ selected, onCancel, onToggle }) => (
   <>
-    <Stack direction="row" alignItems="center" sx={{ pl: 1 }}>
+    <Stack direction="row" alignItems="center" sx={{ pl: 1.5 }}>
       <Checkbox
         sx={{ width: 48, height: 48 }}
         edge="start"

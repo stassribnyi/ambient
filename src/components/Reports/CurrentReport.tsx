@@ -28,7 +28,9 @@ const ReportTile: FC<PropsWithChildren<Readonly<{ icon: React.ReactNode; title: 
       <Box sx={{ display: 'grid', placeContent: 'center', placeItems: 'center' }}>
         <Box sx={{ display: 'grid', gap: 1, placeItems: 'center' }}>
           {icon}
-          <Typography variant="body1">{title}</Typography>
+          <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
+            {title}
+          </Typography>
         </Box>
         <Typography variant="caption" color="secondary">
           {children}

@@ -14,10 +14,10 @@ const LOCATION_OPTIONS = {
 
 type SearchResult = Readonly<{ generationtime_ms: number; results?: Array<Location> }>;
 
-export function useLocationSearch(name: string) {
+export function useSearch(name: string) {
   const [results, setResults] = useState<Array<Location>>([]);
   const [error, setError] = useState<null | AxiosError>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
     if (!name) {
@@ -27,7 +27,7 @@ export function useLocationSearch(name: string) {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    setLoading(true);
+    setIsSearching(true);
 
     axios
       .get<SearchResult>(GEOCODING_API_URL, {
@@ -39,10 +39,10 @@ export function useLocationSearch(name: string) {
       })
       .then(({ data: { results } }) => setResults(results ?? []))
       .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
-      .finally(() => setLoading(false));
+      .finally(() => setIsSearching(false));
 
     return () => controller.abort();
   }, [name]);
 
-  return { results, error, loading };
+  return { isSearching, results, error };
 }
