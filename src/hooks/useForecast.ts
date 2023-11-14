@@ -55,6 +55,7 @@ const CURRENT_FORECAST_OPTIONS = {
 
 export const useForecast = () => {
   const [currentForecast, setCurrentForecast] = useState<null | Readonly<{
+    lastUpdated: Date;
     current: CurrentForecast;
     daily: Array<DailyForecast>;
     hourly: Array<HourlyForecast>;
@@ -90,7 +91,7 @@ export const useForecast = () => {
     const othersParams = {
       ...FORECAST_OPTIONS,
       latitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
-      longitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
+      longitude: locations.reduce((lats, city) => [...lats, city.longitude], [] as Array<number>),
     };
 
     await Promise.all([
@@ -106,21 +107,23 @@ export const useForecast = () => {
         const current = mapForecastToCurrent(main.data, daily, hourly);
 
         setCurrentForecast({
+          lastUpdated: new Date(Date.now()),
           current,
           daily,
           hourly,
           series,
         });
 
-        const othersForecast = Array.isArray(others.data) ? others.data : [others.data];
+        const locationsForecast = Array.isArray(others.data) ? others.data : [others.data];
 
-        setForecast(othersForecast);
+        setForecast(locationsForecast);
 
         // TODO: explore other ways to preserve this info
         const updated = locations.map((location, idx) => ({
           ...location,
-          temperature: othersForecast[idx]?.current.temperature_2m,
-          weathercode: othersForecast[idx]?.current.weathercode,
+          temperature: locationsForecast[idx]?.current.temperature_2m,
+          weathercode: locationsForecast[idx]?.current.weathercode,
+          isDay: locationsForecast[idx]?.current.is_day,
         }));
 
         if (JSON.stringify(updated) !== JSON.stringify(locations)) {

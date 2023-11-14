@@ -112,6 +112,7 @@ export interface Location {
   longitude: number;
   weathercode?: WMOCode;
   temperature?: number;
+  isDay?: number;
 }
 
 type MeasurementSystem = 'metric' | 'imperial';

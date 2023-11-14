@@ -1,12 +1,13 @@
 import { Suspense, lazy } from 'react';
 import PullToRefresh from 'react-simple-pull-to-refresh';
-import { ArrowDownward, LocationOn } from '@mui/icons-material';
+import { ArrowDownward, LocationOn, RefreshOutlined } from '@mui/icons-material';
 import {
   Alert,
   Backdrop,
   CircularProgress,
   Container,
   Unstable_Grid2 as Grid,
+  IconButton,
   Snackbar,
   Stack,
   Typography,
@@ -20,11 +21,7 @@ import { useDocumentTitle } from 'usehooks-ts';
 import { Block, MenuDialog, UnitSwitch, Time, WMO_DESCRIPTION, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 
-import { delay } from './utils';
-
-const AtmosphericConditionChart = lazy(async () =>
-  delay(1000).then(() => import('./components/AtmosphericConditionChart')),
-);
+const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
 
 function App() {
   const [settings, setSettings] = useUserSettings();
@@ -144,6 +141,27 @@ function App() {
                       </Suspense>
                     </Grid>
                   ) : null}
+                  <Grid xs={12}>
+                    <Stack alignItems="center" direction="row" sx={{ p: '0 0.5rem' }}>
+                      <IconButton edge="start" onClick={refresh}>
+                        <RefreshOutlined fontSize="inherit" />
+                      </IconButton>
+                      <Typography color="secondary.light" variant="body2">
+                        Updated <Time value={forecast.lastUpdated} format="dd.mm, HH:mm" />
+                      </Typography>
+                      <Typography
+                        component="a"
+                        variant="body2"
+                        color="secondary.light"
+                        href="https://open-meteo.com/en/docs"
+                        rel="noopener"
+                        target="_blank"
+                        sx={{ ml: 'auto' }}
+                      >
+                        Open Meteo
+                      </Typography>
+                    </Stack>
+                  </Grid>
                 </>
               )}
             </Grid>

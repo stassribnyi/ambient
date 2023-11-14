@@ -36,7 +36,7 @@ export const LocationItem: FC<
                   checkedIcon={<CheckCircle />}
                 />
               )}
-              {!isEdit && <WMOIcon code={value.weathercode} />}
+              {!isEdit && <WMOIcon variant={value?.isDay ? 'day' : 'night'} code={value.weathercode} />}
               <Stack alignItems="start">
                 <Typography sx={{ fontSize: '1.125rem' }}>{value.name}</Typography>
                 <Typography variant="caption" color="secondary">
