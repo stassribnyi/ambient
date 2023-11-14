@@ -1,6 +1,6 @@
 import { isSameDay, isSameHour } from 'date-fns';
 
-import { changeTimeZone, uvIndexToScale, windspeedToBeaufortScale } from '../utils';
+import { uvIndexToScale, windspeedToBeaufortScale } from '../utils';
 
 import { BeaufortScale, UVIndexScale, WeatherInfo, WMOCode } from '../vite-env';
 
@@ -8,32 +8,31 @@ import type { DailyForecast } from './mapForecastToDaily';
 import type { HourlyForecast } from './mapForecastToHourly';
 
 export type CurrentForecast = Readonly<{
-  isDay: number;
-  time: Date;
-  temperature: number;
   apparentTemperature: number;
+  beaufortScale: BeaufortScale;
+  isDay: number;
   relativeHumidity: number;
-  sunsetTime: Date;
   sunriseTime: Date;
-  description?: string;
+  sunsetTime: Date;
+  temperature: number;
+  time: Date;
   uvIndex: UVIndexScale;
   windspeed: number;
   weathercode: WMOCode;
-  beaufortScale: BeaufortScale;
 }>;
 
 export function mapForecastToCurrent(
-  { timezone, current: currentForecast }: WeatherInfo,
+  { current: currentForecast }: WeatherInfo,
   dailyForecast: Array<DailyForecast>,
   hourlyForecast: Array<HourlyForecast>,
 ): CurrentForecast {
-  const currentDateTimeZone = changeTimeZone(new Date(), timezone);
+  const currentTime = new Date(currentForecast.time);
 
-  const currentHour = hourlyForecast.find((hour) => isSameHour(currentDateTimeZone, hour.time));
-  const currentDay = dailyForecast.find((day) => isSameDay(currentDateTimeZone, day.time));
+  const currentHour = hourlyForecast.find((hour) => isSameHour(currentTime, hour.time));
+  const currentDay = dailyForecast.find((day) => isSameDay(currentTime, day.time));
 
   return {
-    time: currentDateTimeZone,
+    time: currentTime,
     isDay: currentForecast.is_day,
     temperature: currentForecast.temperature_2m,
     apparentTemperature: currentForecast.apparent_temperature,

@@ -1,4 +1,4 @@
-import { subHours, addHours, isSameDay, isWithinInterval } from 'date-fns';
+import { addHours, isSameDay, isWithinInterval } from 'date-fns';
 
 import { changeTimeZone } from '../utils';
 import { WeatherInfo, WMOCode } from '../vite-env';
@@ -6,12 +6,12 @@ import { WeatherInfo, WMOCode } from '../vite-env';
 import type { DailyForecast } from './mapForecastToDaily';
 
 export type HourlyForecast = Readonly<{
-  time: Date;
   isDay: boolean;
-  temperature: number;
   precipitation: number;
-  weathercode: WMOCode;
+  temperature: number;
+  time: Date;
   uvIndex: number;
+  weathercode: WMOCode;
 }>;
 
 export function mapForecastToHourly(
@@ -19,31 +19,26 @@ export function mapForecastToHourly(
   dailyForecast: Array<DailyForecast>,
 ): Array<HourlyForecast> {
   return hourly.time
-    .map((t, idx) => ({ idx, time: changeTimeZone(t, timezone) }))
+    .map((t, idx) => ({ idx, time: new Date(t) }))
     .filter((slot) => {
-      // FIXME: revisit and fix consistency
       const current = changeTimeZone(new Date(), timezone);
 
-      // -1 hour, so if time is less than hour in the past, we still show forecast
-      // 24(+1) hour, so if time is less than hour in the future, we still show forecast
       return isWithinInterval(slot.time, {
-        start: subHours(current.setMinutes(0, 0, 0), 1),
-        end: addHours(current, 25),
+        start: current.setMinutes(0, 0, 0),
+        end: addHours(current, 23),
       });
     })
     .map(({ time, idx }) => {
-      // FIXME: simplify
       const currentDay = dailyForecast.find((day) => isSameDay(time, day.time));
-
-      const isDay = currentDay ? isWithinInterval(time, { start: currentDay.sunrise, end: currentDay.sunset }) : true;
+      const isDay = currentDay && isWithinInterval(time, { start: currentDay.sunrise, end: currentDay.sunset });
 
       return {
         time,
-        isDay,
-        weathercode: hourly.weathercode[idx],
-        temperature: hourly.temperature_2m[idx],
+        isDay: isDay ?? true,
         precipitation: hourly.precipitation_probability[idx],
+        temperature: hourly.temperature_2m[idx],
         uvIndex: hourly.uv_index[idx],
+        weathercode: hourly.weathercode[idx],
       };
     });
 }

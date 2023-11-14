@@ -1,4 +1,3 @@
-import { changeTimeZone } from '../utils/changeTimezone';
 import { WeatherInfo, WMOCode } from '../vite-env';
 
 type Range = Readonly<{
@@ -7,24 +6,24 @@ type Range = Readonly<{
 }>;
 
 export type DailyForecast = Readonly<{
-  time: Date;
+  precipitationProbability: number;
   sunrise: Date;
   sunset: Date;
   temperature: Range;
-  precipitationProbability: number;
+  time: Date;
   weathercode: WMOCode;
 }>;
 
-export function mapForecastToDaily({ daily, timezone }: WeatherInfo): Array<DailyForecast> {
+export function mapForecastToDaily({ daily }: WeatherInfo): Array<DailyForecast> {
   return daily.time.map((time, idx) => ({
-    time: changeTimeZone(new Date(time), timezone),
-    weathercode: daily.weathercode[idx],
+    precipitationProbability: daily.precipitation_probability_max[idx],
+    sunrise: new Date(daily.sunrise[idx]),
+    sunset: new Date(daily.sunset[idx]),
     temperature: {
       min: daily.temperature_2m_min[idx],
       max: daily.temperature_2m_max[idx],
     },
-    precipitationProbability: daily.precipitation_probability_max[idx],
-    sunrise: changeTimeZone(new Date(daily.sunrise[idx]), timezone),
-    sunset: changeTimeZone(new Date(daily.sunset[idx]), timezone),
+    time: new Date(time),
+    weathercode: daily.weathercode[idx],
   }));
 }
