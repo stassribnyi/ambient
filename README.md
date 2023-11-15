@@ -1,39 +1,83 @@
 # Ambient (Weather Forecast)
 
-[Ambient](https://stassribnyi.github.io/magic-app-redux) is a simple and user-friendly tool to get the weather information for any location. It can show the current, hourly and daily forecast, as well as a chart with atmospheric conditions.
+[Ambient](https://stassribnyi.github.io/ambient) is a simple and user-friendly page with up-to-date weather forecasts for your favorite locations. Explore the daily forecast as well as predictions for the days to come, and analyze weather trends with an atmospheric conditions chart.
+
+## Motivation
+
+My old React project had grown stale, like yesterday’s bread, and I yearned for something more. The other day, as rain tapped insistently against my window, and the wind rattled the panes, inspiration struck.
+
+And so, in the heart of a bustling city, where raindrops danced on umbrellas and wind howled through narrow alleys, there was a beginning for a little weather project called “Ambient.” The idea was dead simple: to provide real-time updates on the ever-changing moods of the sky.
 
 ## Features
 
-- **Current Forecast**: shows the current temperature with a short description, how it feels like, humidity percentage, wind speed by Beaufort scale, UV index by scale and sunrise/sunset time. You can see an example of this feature in the screenshot below:
+- Shows the **Current** temperature with a short description, how it feels like, humidity percentage, wind speed by Beaufort scale, UV index scale and sunrise/sunset time.
 
-![Current forecast](image.png)
+- **Hourly** precipitation probability, temperature, and time for the next 24 hours.
+- **Daily** forecast for the next 10 days.
+- **Atmospheric Conditions Chart** with cloud cover, relative humidity and precipitation probability to visualize weather trends for the next 10 days.
 
-- **Hourly Forecast**: shows the precipitation probability, temperature, and time for the next 24 hours. You can see an example of this feature in the screenshot below:
+## Getting Started
 
-![Hourly forecast](image-1.png)
+1. **Clone the Repository:**
 
-- **Daily Forecast**: shows the same information as the hourly forecast, but for the next 10 days. You can see an example of this feature in the screenshot below:
+   ```bash
+   git clone https://github.com/stassribnyi/ambient.git
+   cd ambient
+   ```
 
-![Daily forecast](image-2.png)
+2. **Install Dependencies:**
 
-- **Atmospheric Conditions Chart**: This feature shows a separate chart with cloud cover, relative humidity and precipitation probability to visualize the atmospheric conditions hourly for 10 days. You can see an example of this feature in the screenshot below:
+   ```bash
+   yarn
+   ```
 
-![Atmospheric conditions chart](image-3.png)
+3. **Run the Development Server:**
+
+   ```bash
+   yarn dev
+   ```
+
+4. **Open Your Browser:**
+   Visit [http://localhost:5173](http://localhost:5173) to see the Ambient (Weather Forecast) in action!
+
+## Available Scripts
+
+- `yarn dev`: Starts the development server.
+- `yarn build`: Builds the production-ready app.
+- `yarn lint`: Lints code using ESLint.
+- `yarn preview`: Previews the production build locally.
+- `yarn predeploy`: Builds the app before deploying.
+- `yarn deploy`: Deploys the app using GitHub Pages.
+- `yarn prepare`: Installs Husky hooks for pre-commit checks.
 
 ## How to use
+
+TODO: Update screenshots
 
 To use Ambient, you need to change location to yours, you can do so via menu in the top left corner. The webpage will then display the current, hourly and daily forecast, as well as the chart, for selected location. You can also change the units of measurement for the temperature and wind speed by clicking on the toggle at the top right corner of the webpage.
 
 ![Ambient UI](image-4.png)
 ![Locations manager](image-5.png)
 
-## Credits
+## Tools and Technologies Used
 
-This webpage was created by Stas Sribnyi using React, Typescript, MUI, Vite and Passion! There are more to it, for more information please check package.json file. The weather data was obtained from openmeteo.com. The icons and images were taken from @bybas/meteocons. The chart was created using MUI-Charts-X.
+- 🚀 React
+- 🛠️ Vite
+- ☑ TypeScript
+- 💅 MUI
+- 🧾 Axios
+- 💬 date-fns
+- 🖼 @bybas/weather-icons
 
-## Built with React, Typescript, MUI, Vite and Passion!
+## Project Preview
 
-## TODO: How to run locally:
+Visit the [Ambient Live Preview](https://stassribnyi.github.io/ambient/) for live demos and more information.
+
+## License
+
+This project is licensed under the MIT License.
+
+## TODO: Apply if necessary
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
