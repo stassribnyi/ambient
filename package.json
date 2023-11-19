@@ -1,7 +1,7 @@
 {
   "name": "ambient",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -48,7 +48,7 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   },
-  "homepage": "https://stassribnyi.github.io/magic-app-redux/",
+  "homepage": "https://stassribnyi.github.io/ambient/",
   "license": "MIT",
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
