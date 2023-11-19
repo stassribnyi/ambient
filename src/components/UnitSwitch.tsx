@@ -1,71 +1,81 @@
 import celsius from '@bybas/weather-icons/production/fill/all/celsius.svg';
 import fahrenheit from '@bybas/weather-icons/production/fill/all/fahrenheit.svg';
 
-import { Switch, styled } from '@mui/material';
+import { css, styled, Switch } from '@mui/material';
 
-// TODO: This is awful, reimplement from scratch
-export const UnitSwitch = styled(Switch)(({ theme }) => ({
-  padding: 0,
-  width: 48,
-  height: 28,
-  '& .MuiSwitch-switchBase': {
-    padding: 0,
-    '&.Mui-checked': {
-      '&.Mui-checked + .MuiSwitch-track, &.Mui-disabled + .MuiSwitch-track': {
-        opacity: 1,
-        backgroundColor: theme.palette.common.white,
-      },
-      '& .MuiSwitch-thumb': {
-        '&:before': {
-          maskImage: `url(${celsius})`,
-        },
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      backgroundColor: theme.palette.secondary.dark,
-      boxShadow: 'none',
-      margin: 2,
-      overflow: 'hidden',
-      width: 24,
-      height: 24,
-      '&:before': {
-        content: "''",
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        left: 0,
-        top: 0,
-        backgroundColor: theme.palette.secondary.light,
-        maskImage: `url(${fahrenheit})`,
-        maskSize: 32,
-        maskPosition: 'center',
-      },
-    },
-  },
-  '& .MuiSwitch-track': {
-    opacity: 1,
-    borderRadius: 28 / 2,
-    '&:before, &:after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      width: 16,
-      height: 16,
-    },
-    '&:before': {
-      backgroundColor: theme.palette.secondary.dark,
-      maskImage: `url(${fahrenheit})`,
-      maskSize: '32px',
-      maskPosition: 'center',
-      left: 4,
-    },
-    '&:after': {
-      backgroundColor: theme.palette.secondary.dark,
-      maskImage: `url(${celsius})`,
-      maskSize: '32px',
-      maskPosition: 'center',
-      right: 4,
-    },
-  },
-}));
+const commonMaskImageStyles = css`
+  content: '';
+
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  transform: translateY(-50%);
+
+  mask-size: 32px;
+  mask-position: center;
+`;
+
+export const UnitSwitch = styled(Switch)`
+  padding: 0;
+  width: 52px;
+  height: 28px;
+
+  & .MuiSwitch-switchBase {
+    padding: 0;
+
+    &,
+    &.Mui-checked,
+    &.Mui-disabled {
+      & + .MuiSwitch-track {
+        opacity: 1;
+        border-radius: 14px;
+        background-color: ${({ theme }) => theme.palette.common.white};
+      }
+    }
+
+    & + .MuiSwitch-track {
+      &:before,
+      &:after {
+        ${commonMaskImageStyles}
+        background-color: ${({ theme }) => theme.palette.secondary.dark};
+      }
+
+      &:before {
+        left: 2px;
+        mask-image: url(${fahrenheit});
+      }
+      &:after {
+        right: 2px;
+        mask-image: url(${celsius});
+      }
+    }
+
+    & .MuiSwitch-thumb {
+      box-shadow: none;
+      background-color: ${({ theme }) => theme.palette.secondary.dark};
+
+      margin: 2px;
+      width: 24px;
+      height: 24px;
+      overflow: hidden;
+      position: relative;
+
+      &:before {
+        ${commonMaskImageStyles}
+        background-color: ${({ theme }) => theme.palette.secondary.light};
+        mask-image: url(${fahrenheit});
+      }
+    }
+
+    &.Mui-checked {
+      transform: translateX(24px);
+
+      & .MuiSwitch-thumb {
+        &:before {
+          mask-image: url(${celsius});
+        }
+      }
+    }
+  }
+`;
