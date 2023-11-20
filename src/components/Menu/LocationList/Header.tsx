@@ -1,7 +1,32 @@
 import { FC, useState } from 'react';
 
-import { MoreVert, RadioButtonUnchecked, CheckCircle, Close, Add } from '@mui/icons-material';
-import { IconButton, Stack, Typography, Menu, MenuItem, Checkbox } from '@mui/material';
+import { Add, CheckCircle, Close, MoreVert, RadioButtonUnchecked } from '@mui/icons-material';
+import {
+  Checkbox,
+  IconButton,
+  PopoverOrigin,
+  Stack,
+  styled,
+  Typography,
+  Menu as MUIMenu,
+  MenuItem as MUIMenuItem,
+} from '@mui/material';
+
+const Menu = styled(MUIMenu)`
+  & .MuiList-root {
+    padding: 0;
+  }
+
+  & .MuiPaper-root {
+    border-radius: 2rem;
+  }
+`;
+
+const MenuItem = styled(MUIMenuItem)`
+  padding: 0.5rem 1.5rem;
+  min-height: 'auto';
+  min-width: 7ch;
+`;
 
 export const EditHeader: FC<
   Readonly<{
@@ -29,6 +54,13 @@ export const EditHeader: FC<
   </>
 );
 
+const EDIT_MENU_ORIGIN: PopoverOrigin = {
+  vertical: 'bottom',
+  horizontal: 'right',
+};
+
+const EDIT_MENU_NAME = 'context-menu';
+
 export const Header: FC<
   Readonly<{
     onAdd: () => void;
@@ -52,37 +84,27 @@ export const Header: FC<
           <Add fontSize="inherit" />
         </IconButton>
         <IconButton
-          id="demo-positioned-button"
-          aria-controls={open ? 'demo-positioned-menu' : undefined}
-          aria-haspopup="true"
+          id={`${EDIT_MENU_NAME}-button`}
+          aria-controls={open ? `${EDIT_MENU_NAME}-menu` : undefined}
           aria-expanded={open ? 'true' : undefined}
-          sx={{ fontSize: '1.85rem' }}
-          edge="end"
+          aria-haspopup="true"
           color="inherit"
+          edge="end"
           onClick={handleClick}
+          sx={{ fontSize: '1.85rem' }}
         >
           <MoreVert fontSize="inherit" />
         </IconButton>
-        {/* FIXME: search for less hacky solutions */}
         <Menu
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
+          id={`${EDIT_MENU_NAME}-menu`}
           anchorEl={anchorEl}
+          anchorOrigin={EDIT_MENU_ORIGIN}
+          aria-labelledby={`${EDIT_MENU_NAME}-button`}
           open={open}
+          transformOrigin={EDIT_MENU_ORIGIN}
           onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          sx={{ '& .MuiList-root': { padding: 0 }, '& .MuiPaper-root': { borderRadius: 2 } }}
         >
-          <MenuItem sx={{ minHeight: 'auto', padding: '0.5rem 1.5rem', minWidth: '7ch' }} onClick={onEdit}>
-            Edit
-          </MenuItem>
+          <MenuItem onClick={onEdit}>Edit</MenuItem>
         </Menu>
       </Stack>
     </Stack>
