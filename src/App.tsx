@@ -31,7 +31,7 @@ function App() {
   // FIXME: refactor
   useDocumentTitle(
     forecast && current
-      ? `${current.name}, ${current.country} - ${Math.round(forecast.current.temperature)}°, ${
+      ? `${current.name}, ${current.country} ${Math.round(forecast.current.temperature)}°, ${
           WMO_DESCRIPTION.get(forecast.current.weathercode)?.day ?? 'N/A'
         } | Ambient`
       : 'Ambient',

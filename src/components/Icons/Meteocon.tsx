@@ -2,68 +2,94 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 // OPEN WEATHER MAP ICONS
-import sunny from '@bybas/weather-icons/production/fill/openweathermap/01d.svg';
-import clear from '@bybas/weather-icons/production/fill/openweathermap/01n.svg';
+// import sunny from '../../assets/svg/01d.svg';
+// import clear from '../../assets/svg/01n.svg';
 
-import partlySunny from '@bybas/weather-icons/production/fill/openweathermap/02d.svg';
-import partlyClear from '@bybas/weather-icons/production/fill/openweathermap/02n.svg';
+// import partlySunny from '../../assets/svg/02d.svg';
+// import partlyClear from '../../assets/svg/02n.svg';
 
-import cloudyDay from '@bybas/weather-icons/production/fill/openweathermap/03d.svg';
-import cloudyNight from '@bybas/weather-icons/production/fill/openweathermap/03n.svg';
+// import cloudyDay from '../../assets/svg/03d.svg';
+// import cloudyNight from '../../assets/svg/03n.svg';
 
-import foggyDay from '@bybas/weather-icons/production/fill/openweathermap/50d.svg';
-import foggyNight from '@bybas/weather-icons/production/fill/openweathermap/50n.svg';
+// import foggyDay from '../../assets/svg/50d.svg';
+// import foggyNight from '../../assets/svg/50n.svg';
 
-import rainDay from '@bybas/weather-icons/production/fill/openweathermap/10d.svg';
-import rainNight from '@bybas/weather-icons/production/fill/openweathermap/10n.svg';
+// import rainDay from '../../assets/svg/10d.svg';
+// import rainNight from '../../assets/svg/10n.svg';
 
-import drizzleDay from '@bybas/weather-icons/production/fill/openweathermap/09d.svg';
-import drizzleNight from '@bybas/weather-icons/production/fill/openweathermap/09n.svg';
+// import drizzleDay from '../../assets/svg/09d.svg';
+// import drizzleNight from '../../assets/svg/09n.svg';
 
-import snowDay from '@bybas/weather-icons/production/fill/openweathermap/13d.svg';
-import snowNight from '@bybas/weather-icons/production/fill/openweathermap/13n.svg';
+// import snowDay from '../../assets/svg/13d.svg';
+// import snowNight from '../../assets/svg/13n.svg';
 
-import thunderstormDay from '@bybas/weather-icons/production/fill/openweathermap/11d.svg';
-import thunderstormNight from '@bybas/weather-icons/production/fill/openweathermap/11n.svg';
+// import thunderstormDay from '../../assets/svg/11d.svg';
+// import thunderstormNight from '../../assets/svg/11n.svg';
+
+import sunny from '../../assets/svg/clear-day.svg';
+import clear from '../../assets/svg/clear-night.svg';
+
+import partlySunny from '../../assets/svg/partly-cloudy-day.svg';
+import partlyClear from '../../assets/svg/partly-cloudy-night.svg';
+
+import cloudyDay from '../../assets/svg/overcast-day.svg';
+import cloudyNight from '../../assets/svg/overcast-night.svg';
+
+import foggyDay from '../../assets/svg/fog-day.svg';
+import foggyNight from '../../assets/svg/fog-night.svg';
+
+import rainDay from '../../assets/svg/partly-cloudy-day-rain.svg';
+import rainNight from '../../assets/svg/partly-cloudy-night-rain.svg';
+
+import drizzleDay from '../../assets/svg/partly-cloudy-day-drizzle.svg';
+import drizzleNight from '../../assets/svg/partly-cloudy-night-drizzle.svg';
+
+import snowDay from '../../assets/svg/overcast-day-snow.svg';
+import snowNight from '../../assets/svg/overcast-night-snow.svg';
+
+import thunderstormDay from '../../assets/svg/thunderstorms-day.svg';
+import thunderstormNight from '../../assets/svg/thunderstorms-night.svg';
 
 // BEAUFORT SCALE ICONS
-import windBeaufort0 from '@bybas/weather-icons/production/fill/all/wind-beaufort-0.svg';
-import windBeaufort1 from '@bybas/weather-icons/production/fill/all/wind-beaufort-1.svg';
-import windBeaufort2 from '@bybas/weather-icons/production/fill/all/wind-beaufort-2.svg';
-import windBeaufort3 from '@bybas/weather-icons/production/fill/all/wind-beaufort-3.svg';
-import windBeaufort4 from '@bybas/weather-icons/production/fill/all/wind-beaufort-4.svg';
-import windBeaufort5 from '@bybas/weather-icons/production/fill/all/wind-beaufort-5.svg';
-import windBeaufort6 from '@bybas/weather-icons/production/fill/all/wind-beaufort-6.svg';
-import windBeaufort7 from '@bybas/weather-icons/production/fill/all/wind-beaufort-7.svg';
-import windBeaufort8 from '@bybas/weather-icons/production/fill/all/wind-beaufort-8.svg';
-import windBeaufort9 from '@bybas/weather-icons/production/fill/all/wind-beaufort-9.svg';
-import windBeaufort10 from '@bybas/weather-icons/production/fill/all/wind-beaufort-10.svg';
-import windBeaufort11 from '@bybas/weather-icons/production/fill/all/wind-beaufort-11.svg';
-import windBeaufort12 from '@bybas/weather-icons/production/fill/all/wind-beaufort-12.svg';
+import windBeaufort0 from '../../assets/svg/wind-beaufort-0.svg';
+import windBeaufort1 from '../../assets/svg/wind-beaufort-1.svg';
+import windBeaufort2 from '../../assets/svg/wind-beaufort-2.svg';
+import windBeaufort3 from '../../assets/svg/wind-beaufort-3.svg';
+import windBeaufort4 from '../../assets/svg/wind-beaufort-4.svg';
+import windBeaufort5 from '../../assets/svg/wind-beaufort-5.svg';
+import windBeaufort6 from '../../assets/svg/wind-beaufort-6.svg';
+import windBeaufort7 from '../../assets/svg/wind-beaufort-7.svg';
+import windBeaufort8 from '../../assets/svg/wind-beaufort-8.svg';
+import windBeaufort9 from '../../assets/svg/wind-beaufort-9.svg';
+import windBeaufort10 from '../../assets/svg/wind-beaufort-10.svg';
+import windBeaufort11 from '../../assets/svg/wind-beaufort-11.svg';
+import windBeaufort12 from '../../assets/svg/wind-beaufort-12.svg';
 
 // UV INDEX ICONS
-import uvIdxNA from '@bybas/weather-icons/production/fill/all/uv-index.svg';
-import uvIdx1 from '@bybas/weather-icons/production/fill/all/uv-index-1.svg';
-import uvIdx2 from '@bybas/weather-icons/production/fill/all/uv-index-2.svg';
-import uvIdx3 from '@bybas/weather-icons/production/fill/all/uv-index-3.svg';
-import uvIdx4 from '@bybas/weather-icons/production/fill/all/uv-index-4.svg';
-import uvIdx5 from '@bybas/weather-icons/production/fill/all/uv-index-5.svg';
-import uvIdx6 from '@bybas/weather-icons/production/fill/all/uv-index-6.svg';
-import uvIdx7 from '@bybas/weather-icons/production/fill/all/uv-index-7.svg';
-import uvIdx8 from '@bybas/weather-icons/production/fill/all/uv-index-8.svg';
-import uvIdx9 from '@bybas/weather-icons/production/fill/all/uv-index-9.svg';
-import uvIdx10 from '@bybas/weather-icons/production/fill/all/uv-index-10.svg';
-import uvIdx11 from '@bybas/weather-icons/production/fill/all/uv-index-11.svg';
+import uvIdxNA from '../../assets/svg/uv-index.svg';
+import uvIdx1 from '../../assets/svg/uv-index-1.svg';
+import uvIdx2 from '../../assets/svg/uv-index-2.svg';
+import uvIdx3 from '../../assets/svg/uv-index-3.svg';
+import uvIdx4 from '../../assets/svg/uv-index-4.svg';
+import uvIdx5 from '../../assets/svg/uv-index-5.svg';
+import uvIdx6 from '../../assets/svg/uv-index-6.svg';
+import uvIdx7 from '../../assets/svg/uv-index-7.svg';
+import uvIdx8 from '../../assets/svg/uv-index-8.svg';
+import uvIdx9 from '../../assets/svg/uv-index-9.svg';
+import uvIdx10 from '../../assets/svg/uv-index-10.svg';
+import uvIdx11 from '../../assets/svg/uv-index-11.svg';
 
 // SUN CYCLE ICONS
-import sunrise from '@bybas/weather-icons/production/fill/all/sunrise.svg';
-import sunset from '@bybas/weather-icons/production/fill/all/sunset.svg';
+import sunrise from '../../assets/svg/sunrise.svg';
+import sunset from '../../assets/svg/sunset.svg';
 
 // GENERAL ICONS
-import humidity from '@bybas/weather-icons/production/fill/all/humidity.svg';
-import notAvailable from '@bybas/weather-icons/production/fill/all/not-available.svg';
-import umbrella from '@bybas/weather-icons/production/fill/all/umbrella.svg';
-import barometer from '@bybas/weather-icons/production/fill/all/barometer.svg';
+import humidity from '../../assets/svg/humidity.svg';
+import notAvailable from '../../assets/svg/not-available.svg';
+import umbrella from '../../assets/svg/umbrella.svg';
+import barometer from '../../assets/svg/barometer.svg';
+
+import { OPEN_WEATHER_ICONS_STATIC } from './MeteoconStatic';
 
 const OPEN_WEATHER_ICONS = {
   sunny: sunny,
@@ -142,7 +168,18 @@ export const Meteocon: FC<
     alt: string;
     name: Icons;
     size?: number;
+    variant?: 'dynamic' | 'static';
   }>
-> = ({ alt, name, size = 48 }) => (
-  <Box draggable={false} component="img" src={ICONS_MAP[name] ?? notAvailable} alt={alt} sx={{ width: `${size}px` }} />
+> = ({ alt, name, size = 48, variant = 'dynamic' }) => (
+  <Box
+    draggable={false}
+    component="img"
+    src={
+      variant === 'static' && Object.keys(OPEN_WEATHER_ICONS_STATIC).includes(name)
+        ? OPEN_WEATHER_ICONS_STATIC[name]
+        : ICONS_MAP[name] ?? notAvailable
+    }
+    alt={alt}
+    sx={{ width: `${size}px` }}
+  />
 );
