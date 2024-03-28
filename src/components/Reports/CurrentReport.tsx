@@ -6,15 +6,7 @@ import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 import { Tile } from '../Tile';
-import {
-  BeaufortIcon,
-  Meteocon,
-  UVIndexIcon,
-  WMOIcon,
-  UV_INDEX_SCALE,
-  WIND_BEAUFORT_SCALE,
-  WMO_DESCRIPTION,
-} from '../Icons';
+import { BeaufortIcon, Meteocon, UVIndexIcon, WMOIcon, UV_INDEX_SCALE, WIND_BEAUFORT_SCALE, WMO_INFO } from '../Icons';
 
 import type { CurrentForecast } from '../../mappers';
 
@@ -54,8 +46,8 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
     beaufortScale,
   },
 }) => {
-  const details = WMO_DESCRIPTION.get(weathercode);
-  const description = isDay ? details?.day : details?.night;
+  const details = WMO_INFO.get(weathercode);
+  const description = (isDay ? details?.day : details?.night)?.description;
 
   return (
     <Stack gap={2} flex={1}>

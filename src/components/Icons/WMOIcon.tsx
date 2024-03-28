@@ -15,7 +15,6 @@ type Variant<T = string> = Readonly<{
   night: T;
 }>;
 
-// FIXME: reuse types
 const WMO_ICON = new Map<WMOCode | undefined, Variant<MeteoconProps['name']>>([
   [0, { day: 'clear-day', night: 'clear-night' }],
   [1, { day: 'clear-day', night: 'clear-night' }],
@@ -47,8 +46,8 @@ const WMO_ICON = new Map<WMOCode | undefined, Variant<MeteoconProps['name']>>([
   [99, { day: 'thunderstorms-day', night: 'thunderstorms-night' }],
 ]);
 
-// FIXME: move into separate file
-export const WMO_DESCRIPTION = new Map<WMOCode | undefined, Variant>([
+// FIXME: move into separate file or use dictionary
+const WMO_DESCRIPTION = new Map<WMOCode | undefined, Variant>([
   [0, { day: 'Sunny', night: 'Clear' }],
   [1, { day: 'Mainly Sunny', night: 'Mainly Clear' }],
   [2, { day: 'Partly Cloudy', night: 'Partly Cloudy' }],
@@ -79,13 +78,23 @@ export const WMO_DESCRIPTION = new Map<WMOCode | undefined, Variant>([
   [99, { day: 'Thunderstorm With Hail', night: 'Thunderstorm With Hail' }],
 ]);
 
+// TODO: rewrite to support localization
+// this is temporary solution to make all icons use same approach
+export const WMO_INFO = new Map<WMOCode | undefined, Variant<{ name: MeteoconProps['name']; description: string }>>(
+  Array.from(WMO_ICON.entries()).map(([code, variant]) => [
+    code as WMOCode,
+    {
+      day: { name: variant.day, description: WMO_DESCRIPTION.get(code)?.day ?? 'N/A' },
+      night: { name: variant.night, description: WMO_DESCRIPTION.get(code)?.night ?? 'N/A' },
+    } as Variant<{ name: MeteoconProps['name']; description: string }>,
+  ]),
+);
+
 export const WMOIcon: FC<WMOIconProps> = ({ code, variant = 'day', size }) => {
-  const details = WMO_DESCRIPTION.get(code);
-  const icons = WMO_ICON.get(code);
+  const details = WMO_INFO.get(code);
 
   const isDay = variant === 'day';
-  const description = isDay ? details?.day : details?.night;
-  const iconName = isDay ? icons?.day : icons?.night;
+  const info = isDay ? details?.day : details?.night;
 
-  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'not-available'} size={size} />;
+  return <Meteocon alt={info?.description ?? 'N/A'} name={info?.name ?? 'not-available'} size={size} />;
 };
