@@ -1,5 +1,5 @@
-import celsius from '../assets/svg/celsius.svg';
-import fahrenheit from '../assets/svg/fahrenheit.svg';
+import celsius from '@assets/svg/celsius.svg';
+import fahrenheit from '@assets/svg/fahrenheit.svg';
 
 import { css, styled, Switch } from '@mui/material';
 
