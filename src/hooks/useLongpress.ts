@@ -1,6 +1,6 @@
 export function useLongPress() {
   return function (callback: () => void) {
-    let timeout: number;
+    let timeout: ReturnType<typeof setTimeout>;
     let preventClick = false;
 
     function start() {

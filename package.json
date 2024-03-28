@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "yarn",
+    "postinstall": "yarn ts:generate:assets",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "ts:generate:assets": "node --loader ts-node/esm typegen.ts"
   },
   "dependencies": {
     "@bybas/weather-icons": "^2.0.0",
@@ -21,6 +23,7 @@
     "@mui/icons-material": "^5.14.15",
     "@mui/material": "^5.14.15",
     "@mui/x-charts": "^6.0.0-alpha.17",
+    "@types/node": "^20.11.30",
     "axios": "^1.6.0",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",
@@ -45,7 +48,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
-    "typescript": "^5.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3",
     "vite": "^4.4.5"
   },
   "homepage": "https://stassribnyi.github.io/ambient/",

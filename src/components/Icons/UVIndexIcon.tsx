@@ -1,20 +1,20 @@
 import { FC } from 'react';
 import { UVIndexScale } from '../../vite-env';
 
-import { type Icons, Meteocon } from './Meteocon';
+import { type MeteoconProps, Meteocon } from './Meteocon';
 
-const UV_INDEX_ICON = new Map<UVIndexScale | undefined, Icons>([
-  [1, 'uv-1'],
-  [2, 'uv-2'],
-  [3, 'uv-3'],
-  [4, 'uv-4'],
-  [5, 'uv-5'],
-  [6, 'uv-6'],
-  [7, 'uv-7'],
-  [8, 'uv-8'],
-  [9, 'uv-9'],
-  [10, 'uv-10'],
-  [11, 'uv-11'],
+const UV_INDEX_ICON = new Map<UVIndexScale | undefined, MeteoconProps['name']>([
+  [1, 'uv-index-1'],
+  [2, 'uv-index-2'],
+  [3, 'uv-index-3'],
+  [4, 'uv-index-4'],
+  [5, 'uv-index-5'],
+  [6, 'uv-index-6'],
+  [7, 'uv-index-7'],
+  [8, 'uv-index-8'],
+  [9, 'uv-index-9'],
+  [10, 'uv-index-10'],
+  [11, 'uv-index-11'],
 ]);
 
 // FIXME: move into separate file
@@ -41,5 +41,5 @@ export const UVIndexIcon: FC<UVIndexIconProps> = ({ scale, size }) => {
   const iconName = UV_INDEX_ICON.get(scale);
   const description = UV_INDEX_DESCRIPTION.get(scale);
 
-  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'uv-n/a'} size={size} />;
+  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'uv-index'} size={size} />;
 };

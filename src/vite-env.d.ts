@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+// FIXME: move into typings
 import { WMO_DESCRIPTION } from './utils/wmo';
 
 export type WMOCode = keyof typeof WMO_DESCRIPTION;

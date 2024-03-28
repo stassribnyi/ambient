@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { WMOCode } from '../../vite-env';
 
-import { type Icons, Meteocon } from './Meteocon';
+import { type MeteoconProps, Meteocon } from './Meteocon';
 
 type WMOIconProps = Readonly<{
   code?: WMOCode;
@@ -14,36 +14,37 @@ type Variant<T = string> = Readonly<{
   day: T;
   night: T;
 }>;
+``;
 
-const WMO_ICON = new Map<WMOCode | undefined, Variant<Icons>>([
-  [0, { day: 'sunny', night: 'clear' }],
-  [1, { day: 'sunny', night: 'clear' }],
-  [2, { day: 'partly-sunny', night: 'partly-clear' }],
-  [3, { day: 'cloudy-day', night: 'cloudy-night' }],
-  [45, { day: 'foggy-day', night: 'foggy-night' }],
-  [48, { day: 'foggy-day', night: 'foggy-night' }],
-  [51, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [53, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [55, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [56, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [57, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [61, { day: 'rain-day', night: 'rain-night' }],
-  [63, { day: 'rain-day', night: 'rain-night' }],
-  [65, { day: 'rain-day', night: 'rain-night' }],
-  [66, { day: 'rain-day', night: 'rain-night' }],
-  [67, { day: 'rain-day', night: 'rain-night' }],
-  [71, { day: 'snow-day', night: 'snow-night' }],
-  [73, { day: 'snow-day', night: 'snow-night' }],
-  [75, { day: 'snow-day', night: 'snow-night' }],
-  [77, { day: 'snow-day', night: 'snow-night' }],
-  [80, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [81, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [82, { day: 'drizzle-day', night: 'drizzle-night' }],
-  [85, { day: 'snow-day', night: 'snow-night' }],
-  [86, { day: 'snow-day', night: 'snow-night' }],
-  [95, { day: 'thunderstorm-day', night: 'thunderstorm-night' }],
-  [96, { day: 'thunderstorm-day', night: 'thunderstorm-night' }],
-  [99, { day: 'thunderstorm-day', night: 'thunderstorm-night' }],
+const WMO_ICON = new Map<WMOCode | undefined, Variant<MeteoconProps['name']>>([
+  [0, { day: 'clear-day', night: 'clear-night' }],
+  [1, { day: 'clear-day', night: 'clear-night' }],
+  [2, { day: 'partly-cloudy-day', night: 'partly-cloudy-night' }],
+  [3, { day: 'overcast-day', night: 'overcast-night' }],
+  [45, { day: 'fog-day', night: 'fog-night' }],
+  [48, { day: 'fog-day', night: 'fog-night' }],
+  [51, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [53, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [55, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [56, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [57, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [61, { day: 'partly-cloudy-day-rain', night: 'partly-cloudy-night-rain' }],
+  [63, { day: 'partly-cloudy-day-rain', night: 'partly-cloudy-night-rain' }],
+  [65, { day: 'partly-cloudy-day-rain', night: 'partly-cloudy-night-rain' }],
+  [66, { day: 'partly-cloudy-day-rain', night: 'partly-cloudy-night-rain' }],
+  [67, { day: 'partly-cloudy-day-rain', night: 'partly-cloudy-night-rain' }],
+  [71, { day: 'overcast-day-snow', night: 'overcast-night-snow' }],
+  [73, { day: 'overcast-day-snow', night: 'overcast-night-snow' }],
+  [75, { day: 'overcast-day-snow', night: 'overcast-night-snow' }],
+  [77, { day: 'overcast-day-snow', night: 'overcast-night-snow' }],
+  [80, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [81, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [82, { day: 'partly-cloudy-day-drizzle', night: 'partly-cloudy-night-drizzle' }],
+  [85, { day: 'overcast-day-snow', night: 'overcast-day-snow' }],
+  [86, { day: 'overcast-day-snow', night: 'overcast-day-snow' }],
+  [95, { day: 'thunderstorms-day', night: 'thunderstorms-night' }],
+  [96, { day: 'thunderstorms-day', night: 'thunderstorms-night' }],
+  [99, { day: 'thunderstorms-day', night: 'thunderstorms-night' }],
 ]);
 
 // FIXME: move into separate file
@@ -86,5 +87,5 @@ export const WMOIcon: FC<WMOIconProps> = ({ code, variant = 'day', size }) => {
   const description = isDay ? details?.day : details?.night;
   const iconName = isDay ? icons?.day : icons?.night;
 
-  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'n/a'} size={size} />;
+  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'not-available'} size={size} />;
 };
