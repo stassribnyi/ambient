@@ -31,5 +31,5 @@ type BeaufortIconProps = Readonly<{
 export const BeaufortIcon: FC<BeaufortIconProps> = ({ scale, size }) => {
   const info = WIND_BEAUFORT_SCALE.get(scale);
 
-  return <Meteocon alt={info?.description ?? 'N/A'} name={info?.name ?? 'wind-beaufort-0'} size={size} />;
+  return <Meteocon animated alt={info?.description ?? 'N/A'} name={info?.name ?? 'wind-beaufort-0'} size={size} />;
 };

@@ -60,7 +60,8 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           justifyContent: 'space-between',
         }}
       >
-        <WMOIcon variant={isDay ? 'day' : 'night'} code={weathercode} size={184} />
+        {/* FIXME: consider defaulting to day */}
+        <WMOIcon animated variant={isDay ? 'day' : 'night'} code={weathercode} size={184} />
         <Stack alignItems="center" justifyContent="center">
           <Typography variant="h2">
             <Temperature value={temperature} />
@@ -73,7 +74,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
       </Box>
       <Grid container spacing={2}>
         <Grid xs={6} md={3}>
-          <ReportTile title="Humidity" icon={<Meteocon alt="Humidity" name="humidity" />}>
+          <ReportTile title="Humidity" icon={<Meteocon animated alt="Humidity" name="humidity" />}>
             <Humidity value={relativeHumidity} />
           </ReportTile>
         </Grid>
@@ -92,11 +93,11 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           {isDay ? (
-            <ReportTile title="Sunset" icon={<Meteocon alt="Sunset" name="sunset" />}>
+            <ReportTile title="Sunset" icon={<Meteocon animated alt="Sunset" name="sunset" />}>
               <Time value={sunsetTime} format="HH:mm" />
             </ReportTile>
           ) : (
-            <ReportTile title="Sunrise" icon={<Meteocon alt="Sunrise" name="sunrise" />}>
+            <ReportTile title="Sunrise" icon={<Meteocon animated alt="Sunrise" name="sunrise" />}>
               <Time value={sunriseTime} format="HH:mm" />
             </ReportTile>
           )}

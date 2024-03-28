@@ -19,7 +19,7 @@ export function Welcome({ onNext }: { onNext: () => void }) {
       >
         <Box sx={{ display: 'grid', placeItems: 'center' }}>
           <Box sx={{ mb: 2 }}>
-            <Meteocon alt="partly cloudy day" name="partly-cloudy-day" size={256} />
+            <Meteocon animated alt="partly cloudy day" name="partly-cloudy-day" size={256} />
           </Box>
           <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
             Ambient

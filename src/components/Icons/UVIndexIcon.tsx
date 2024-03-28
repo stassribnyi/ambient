@@ -26,5 +26,5 @@ type UVIndexIconProps = Readonly<{
 export const UVIndexIcon: FC<UVIndexIconProps> = ({ scale, size }) => {
   const info = UV_INDEX_SCALE.get(scale);
 
-  return <Meteocon alt={info?.description ?? 'N/A'} name={info?.name ?? 'uv-index'} size={size} />;
+  return <Meteocon animated alt={info?.description ?? 'N/A'} name={info?.name ?? 'uv-index'} size={size} />;
 };
