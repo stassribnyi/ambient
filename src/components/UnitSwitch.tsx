@@ -1,5 +1,5 @@
-import celsius from '@bybas/weather-icons/production/fill/all/celsius.svg';
-import fahrenheit from '@bybas/weather-icons/production/fill/all/fahrenheit.svg';
+import celsius from '@assets/svg/celsius.svg';
+import fahrenheit from '@assets/svg/fahrenheit.svg';
 
 import { css, styled, Switch } from '@mui/material';
 

@@ -6,15 +6,7 @@ import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Time } from '../Time';
 import { Tile } from '../Tile';
-import {
-  BeaufortIcon,
-  Meteocon,
-  UVIndexIcon,
-  WMOIcon,
-  UV_INDEX_DESCRIPTION,
-  WIND_BEAUFORT_DESCRIPTION,
-  WMO_DESCRIPTION,
-} from '../Icons';
+import { BeaufortIcon, Meteocon, UVIndexIcon, WMOIcon, UV_INDEX_SCALE, WIND_BEAUFORT_SCALE, WMO_INFO } from '../Icons';
 
 import type { CurrentForecast } from '../../mappers';
 
@@ -54,8 +46,8 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
     beaufortScale,
   },
 }) => {
-  const details = WMO_DESCRIPTION.get(weathercode);
-  const description = isDay ? details?.day : details?.night;
+  const details = WMO_INFO.get(weathercode);
+  const description = (isDay ? details?.day : details?.night)?.description;
 
   return (
     <Stack gap={2} flex={1}>
@@ -68,7 +60,8 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           justifyContent: 'space-between',
         }}
       >
-        <WMOIcon variant={isDay ? 'day' : 'night'} code={weathercode} size={184} />
+        {/* FIXME: consider defaulting to day */}
+        <WMOIcon animated variant={isDay ? 'day' : 'night'} code={weathercode} size={184} />
         <Stack alignItems="center" justifyContent="center">
           <Typography variant="h2">
             <Temperature value={temperature} />
@@ -81,13 +74,13 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
       </Box>
       <Grid container spacing={2}>
         <Grid xs={6} md={3}>
-          <ReportTile title="Humidity" icon={<Meteocon alt="Humidity" name="humidity" />}>
+          <ReportTile title="Humidity" icon={<Meteocon animated alt="Humidity" name="humidity" />}>
             <Humidity value={relativeHumidity} />
           </ReportTile>
         </Grid>
         <Grid xs={6} md={3}>
           <ReportTile
-            title={WIND_BEAUFORT_DESCRIPTION.get(beaufortScale) ?? 'N/A'}
+            title={WIND_BEAUFORT_SCALE.get(beaufortScale)?.description ?? 'N/A'}
             icon={<BeaufortIcon scale={beaufortScale} />}
           >
             <Windspeed value={windspeed} />
@@ -95,16 +88,16 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <ReportTile title="UV Index" icon={<UVIndexIcon scale={uvIndex} />}>
-            {UV_INDEX_DESCRIPTION.get(uvIndex) ?? 'N/A'}
+            {UV_INDEX_SCALE.get(uvIndex)?.description ?? 'N/A'}
           </ReportTile>
         </Grid>
         <Grid xs={6} md={3}>
           {isDay ? (
-            <ReportTile title="Sunset" icon={<Meteocon alt="Sunset" name="sunset" />}>
+            <ReportTile title="Sunset" icon={<Meteocon animated alt="Sunset" name="sunset" />}>
               <Time value={sunsetTime} format="HH:mm" />
             </ReportTile>
           ) : (
-            <ReportTile title="Sunrise" icon={<Meteocon alt="Sunrise" name="sunrise" />}>
+            <ReportTile title="Sunrise" icon={<Meteocon animated alt="Sunrise" name="sunrise" />}>
               <Time value={sunriseTime} format="HH:mm" />
             </ReportTile>
           )}

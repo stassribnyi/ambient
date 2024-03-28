@@ -18,7 +18,7 @@ import {
 import { useForecast, useLocations, useUserSettings } from './hooks';
 import { useDocumentTitle } from 'usehooks-ts';
 
-import { Block, MenuDialog, UnitSwitch, Time, WMO_DESCRIPTION, Fallback } from './components';
+import { Block, MenuDialog, UnitSwitch, Time, WMO_INFO, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 
 const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
@@ -31,8 +31,8 @@ function App() {
   // FIXME: refactor
   useDocumentTitle(
     forecast && current
-      ? `${current.name}, ${current.country} - ${Math.round(forecast.current.temperature)}°, ${
-          WMO_DESCRIPTION.get(forecast.current.weathercode)?.day ?? 'N/A'
+      ? `${current.name}, ${current.country} ${Math.round(forecast.current.temperature)}°, ${
+          WMO_INFO.get(forecast.current.weathercode)?.day?.description ?? 'N/A'
         } | Ambient`
       : 'Ambient',
   );

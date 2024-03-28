@@ -27,7 +27,7 @@ export function LocationSearch({
   onBackButton: () => void;
   onSubmit: (location: Location) => void;
 }) {
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>(''); // FIXME: change naming
   const debouncedSearch = useDebounce<string>(search, 500);
 
   const { isRequesting, position, requestPosition } = useGeoposition();
@@ -56,6 +56,7 @@ export function LocationSearch({
     onBackButton();
   };
 
+  // FIXME: debouncing search phrase causes 'Nothing found' for a split second
   const isLoading = isRequesting || isSearching;
 
   return (

@@ -1,39 +1,26 @@
 import { FC } from 'react';
 import { BeaufortScale } from '../../vite-env';
 
-import { type Icons, Meteocon } from './Meteocon';
+import { type MeteoconProps, Meteocon } from './Meteocon';
 
-const WIND_BEAUFORT_ICON = new Map<BeaufortScale | undefined, Icons>([
-  [0, 'beaufort-0'],
-  [1, 'beaufort-1'],
-  [2, 'beaufort-2'],
-  [3, 'beaufort-3'],
-  [4, 'beaufort-4'],
-  [5, 'beaufort-5'],
-  [6, 'beaufort-6'],
-  [7, 'beaufort-7'],
-  [8, 'beaufort-8'],
-  [9, 'beaufort-9'],
-  [10, 'beaufort-10'],
-  [11, 'beaufort-11'],
-  [12, 'beaufort-12'],
-]);
-
-// FIXME: move into separate file
-export const WIND_BEAUFORT_DESCRIPTION = new Map<BeaufortScale | undefined, string>([
-  [0, 'Calm'],
-  [1, 'Light air'],
-  [2, 'Light Breeze'],
-  [3, 'Gentle Breeze'],
-  [4, 'Moderate Breeze'],
-  [5, 'Fresh Breeze'],
-  [6, 'Strong Breeze'],
-  [7, 'Near Gale'],
-  [8, 'Gale'],
-  [9, 'Severe Gale'],
-  [10, 'Storm'],
-  [11, 'Violent Storm'],
-  [12, 'Hurricane'],
+// FIXME: reuse types
+export const WIND_BEAUFORT_SCALE = new Map<
+  BeaufortScale | undefined,
+  { name: MeteoconProps['name']; description: string }
+>([
+  [0, { name: 'wind-beaufort-0', description: 'Calm' }],
+  [1, { name: 'wind-beaufort-1', description: 'Light Air' }],
+  [2, { name: 'wind-beaufort-2', description: 'Light Breeze' }],
+  [3, { name: 'wind-beaufort-3', description: 'Gentle Breeze' }],
+  [4, { name: 'wind-beaufort-4', description: 'Moderate Breeze' }],
+  [5, { name: 'wind-beaufort-5', description: 'Fresh Breeze' }],
+  [6, { name: 'wind-beaufort-6', description: 'Strong Breeze' }],
+  [7, { name: 'wind-beaufort-7', description: 'Near Gale' }],
+  [8, { name: 'wind-beaufort-8', description: 'Gale' }],
+  [9, { name: 'wind-beaufort-9', description: 'Severe Gale' }],
+  [10, { name: 'wind-beaufort-10', description: 'Storm' }],
+  [11, { name: 'wind-beaufort-11', description: 'Violent Storm' }],
+  [12, { name: 'wind-beaufort-12', description: 'Hurricane' }],
 ]);
 
 type BeaufortIconProps = Readonly<{
@@ -42,8 +29,7 @@ type BeaufortIconProps = Readonly<{
 }>;
 
 export const BeaufortIcon: FC<BeaufortIconProps> = ({ scale, size }) => {
-  const iconName = WIND_BEAUFORT_ICON.get(scale);
-  const description = WIND_BEAUFORT_DESCRIPTION.get(scale);
+  const info = WIND_BEAUFORT_SCALE.get(scale);
 
-  return <Meteocon alt={description ?? 'N/A'} name={iconName ?? 'beaufort-0'} size={size} />;
+  return <Meteocon animated alt={info?.description ?? 'N/A'} name={info?.name ?? 'wind-beaufort-0'} size={size} />;
 };
