@@ -14,8 +14,8 @@ type Variant<T = string> = Readonly<{
   day: T;
   night: T;
 }>;
-``;
 
+// FIXME: reuse types
 const WMO_ICON = new Map<WMOCode | undefined, Variant<MeteoconProps['name']>>([
   [0, { day: 'clear-day', night: 'clear-night' }],
   [1, { day: 'clear-day', night: 'clear-night' }],

@@ -11,8 +11,8 @@ import {
   Meteocon,
   UVIndexIcon,
   WMOIcon,
-  UV_INDEX_DESCRIPTION,
-  WIND_BEAUFORT_DESCRIPTION,
+  UV_INDEX_SCALE,
+  WIND_BEAUFORT_SCALE,
   WMO_DESCRIPTION,
 } from '../Icons';
 
@@ -87,7 +87,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <ReportTile
-            title={WIND_BEAUFORT_DESCRIPTION.get(beaufortScale) ?? 'N/A'}
+            title={WIND_BEAUFORT_SCALE.get(beaufortScale)?.description ?? 'N/A'}
             icon={<BeaufortIcon scale={beaufortScale} />}
           >
             <Windspeed value={windspeed} />
@@ -95,7 +95,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <ReportTile title="UV Index" icon={<UVIndexIcon scale={uvIndex} />}>
-            {UV_INDEX_DESCRIPTION.get(uvIndex) ?? 'N/A'}
+            {UV_INDEX_SCALE.get(uvIndex)?.description ?? 'N/A'}
           </ReportTile>
         </Grid>
         <Grid xs={6} md={3}>
