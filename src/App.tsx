@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowDownward, LocationOn, RefreshOutlined } from '@mui/icons-material';
 import {
@@ -36,6 +36,19 @@ function App() {
         } | Ambient`
       : 'Ambient',
   );
+
+  // TODO: this is temporary fix for scrolling issue with pull to refresh library
+  useEffect(() => {
+    const ptr__children = document.querySelector<HTMLDivElement>('.ptr .ptr__children');
+
+    if (!ptr__children) {
+      return;
+    }
+
+    ptr__children.style.overflowX = 'hidden';
+    ptr__children.style.overflowY = 'auto';
+    ptr__children.style.transform = 'unset';
+  }, []);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
