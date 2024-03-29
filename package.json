@@ -50,7 +50,9 @@
     "prettier": "^3.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-pwa": "^0.19.7",
+    "workbox-window": "^7.0.0"
   },
   "homepage": "https://stassribnyi.github.io/ambient/",
   "license": "MIT",
