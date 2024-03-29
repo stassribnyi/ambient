@@ -6,35 +6,21 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa';
 
 const manifestForPlugin: Partial<VitePWAOptions> = {
   registerType: 'prompt',
-  includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+  includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'maskable-icon.png'],
   manifest: {
     name: 'Ambient',
     short_name: 'Ambient',
     description: 'It is simple and user-friendly page with up-to-date weather forecasts for your favorite locations.',
     icons: [
       {
-        src: '/manifest-icon-192.maskable.png',
+        src: '/android-chrome-192x192.png',
         sizes: '192x192',
         type: 'image/png',
-        purpose: 'any',
       },
       {
-        src: '/manifest-icon-192.maskable.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'maskable',
-      },
-      {
-        src: '/manifest-icon-512.maskable.png',
+        src: '/android-chrome-512x512.png',
         sizes: '512x512',
         type: 'image/png',
-        purpose: 'any',
-      },
-      {
-        src: '/manifest-icon-512.maskable.png',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'maskable',
       },
       {
         src: '/apple-touch-icon.png',
@@ -43,14 +29,14 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
         purpose: 'apple touch icon',
       },
       {
-        src: '/maskable_icon.png',
+        src: '/maskable-icon.png',
         sizes: '225x225',
         type: 'image/png',
         purpose: 'any maskable',
       },
     ],
-    theme_color: 'rgb(171, 71, 188)',
-    background_color: 'rgba(17, 25, 31, 0.85)',
+    theme_color: '#ab47bc',
+    background_color: '#11191f',
     display: 'standalone',
     scope: '/',
     start_url: '/',
