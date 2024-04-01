@@ -1,13 +1,13 @@
-import axios, { AxiosError } from 'axios';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import axios from 'axios';
 
 import { WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
 
 import { mapForecastToCurrent, mapForecastToHourly, mapForecastToDaily, mapForecastToSeries } from '../mappers';
 
-import type { CurrentForecast, HourlyForecast, DailyForecast, SeriesForecast } from '../mappers';
 import { useForecastSnapshotMutation } from './useForecastSnapshots';
+import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 // FIXME: move to .env file
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -56,85 +56,84 @@ const CURRENT_FORECAST_OPTIONS = {
 } as const;
 
 export const useForecast = () => {
-  const [currentForecast, setCurrentForecast] = useState<null | Readonly<{
-    lastUpdated: Date;
-    current: CurrentForecast;
-    daily: Array<DailyForecast>;
-    hourly: Array<HourlyForecast>;
-    series: SeriesForecast;
-  }>>(null);
-
-  const [error, setError] = useState<null | AxiosError>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const controllerRef = useRef<AbortController>();
-
-  const { current, locations } = useLocations();
+  const { current: favorite, locations } = useLocations();
   const updateForecastSnapshots = useForecastSnapshotMutation();
 
+  const {
+    data: currentForecast,
+    error: currentForecastError,
+    isLoading: isCurrentForecastLoading,
+    refetch: refetchCurrentForecast,
+  } = useQuery({
+    queryKey: ['forecast', { id: favorite?.id, lat: favorite?.latitude, long: favorite?.longitude }],
+    queryFn: async ({ signal }) => {
+      const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
+        params: {
+          ...CURRENT_FORECAST_OPTIONS,
+          latitude: favorite?.latitude,
+          longitude: favorite?.longitude,
+        },
+        signal,
+      });
+
+      // TODO: do I really need to reuse it?
+      const series = mapForecastToSeries(data);
+      const daily = mapForecastToDaily(data);
+      const hourly = mapForecastToHourly(data, daily);
+      const current = mapForecastToCurrent(data, daily, hourly);
+
+      return {
+        lastUpdated: new Date(Date.now()),
+        current,
+        daily,
+        hourly,
+        series,
+      };
+    },
+    enabled: !!favorite,
+  });
+
+  // TODO: combine with forecast snapshot and use query key to refetch
+  const {
+    error: snapshotsError,
+    isLoading: isSnapshotLoading,
+    refetch: refetchSnapshots,
+  } = useQuery({
+    queryKey: ['forecast-snapshot-query', locations.map((l) => ({ lat: l.latitude, long: l.longitude }))],
+    queryFn: async ({ signal }) => {
+      const { data } = await axios.get<Array<WeatherInfo>>(WEATHER_API_URL, {
+        params: {
+          ...FORECAST_OPTIONS,
+          latitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
+          longitude: locations.reduce((longs, city) => [...longs, city.longitude], [] as Array<number>),
+        },
+        signal,
+      });
+
+      const locationsForecast = Array.isArray(data) ? data : [data];
+
+      const result = locations.map((location, idx) => ({
+        locationId: location.id,
+        temperature: locationsForecast[idx]?.current.temperature_2m,
+        weathercode: locationsForecast[idx]?.current.weathercode,
+        isDay: locationsForecast[idx]?.current.is_day,
+      }));
+
+      updateForecastSnapshots(result);
+
+      return result;
+    },
+    enabled: locations.length > 0,
+  });
+
   const refresh = useCallback(async () => {
-    if (!current) {
-      return;
-    }
+    await Promise.all([refetchCurrentForecast(), refetchSnapshots()]);
+  }, [refetchCurrentForecast, refetchSnapshots]);
 
-    setLoading(true);
-
-    if (controllerRef.current) {
-      controllerRef.current.abort();
-    }
-
-    controllerRef.current = new AbortController();
-    const signal = controllerRef.current.signal;
-
-    const currentParams = {
-      ...CURRENT_FORECAST_OPTIONS,
-      latitude: current.latitude,
-      longitude: current.longitude,
-    };
-
-    const othersParams = {
-      ...FORECAST_OPTIONS,
-      latitude: locations.reduce((lats, city) => [...lats, city.latitude], [] as Array<number>),
-      longitude: locations.reduce((lats, city) => [...lats, city.longitude], [] as Array<number>),
-    };
-
-    await Promise.all([
-      axios.get<WeatherInfo>(WEATHER_API_URL, { params: currentParams, signal }),
-      // TODO: change type
-      axios.get<Array<WeatherInfo>>(WEATHER_API_URL, { params: othersParams, signal }),
-    ])
-      .then(([main, others]) => {
-        // TODO: do I really need to reuse it?
-        const series = mapForecastToSeries(main.data);
-        const daily = mapForecastToDaily(main.data);
-        const hourly = mapForecastToHourly(main.data, daily);
-        const current = mapForecastToCurrent(main.data, daily, hourly);
-
-        setCurrentForecast({
-          lastUpdated: new Date(Date.now()),
-          current,
-          daily,
-          hourly,
-          series,
-        });
-
-        const locationsForecast = Array.isArray(others.data) ? others.data : [others.data];
-
-        updateForecastSnapshots(
-          locations.map((location, idx) => ({
-            locationId: location.id,
-            temperature: locationsForecast[idx]?.current.temperature_2m,
-            weathercode: locationsForecast[idx]?.current.weathercode,
-            isDay: locationsForecast[idx]?.current.is_day,
-          })),
-        );
-      })
-      .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
-      .finally(() => setLoading(false));
-  }, [current, locations, updateForecastSnapshots]);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  return { currentForecast, error, loading, refresh };
+  return {
+    currentForecast,
+    refresh,
+    error: currentForecastError || snapshotsError,
+    loading: isCurrentForecastLoading || isSnapshotLoading,
+  };
 };
