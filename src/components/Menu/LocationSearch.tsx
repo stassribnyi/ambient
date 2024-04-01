@@ -17,7 +17,7 @@ import {
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useGeoPosition, useSearch, useLocations } from '../../hooks';
+import { useGeoPosition, useSearch } from '../../hooks';
 import { Location } from '../../vite-env';
 
 export function LocationSearch({
@@ -30,17 +30,8 @@ export function LocationSearch({
   const [search, setSearch] = useState<string>(''); // FIXME: change naming
   const debouncedSearch = useDebounce<string>(search, 500);
 
-  const { isRequesting, position, requestPosition } = useGeoPosition();
-  const { isSearching, results } = useSearch(debouncedSearch?.trim());
-  const { current } = useLocations();
-
-  useEffect(() => {
-    if (current) {
-      return;
-    }
-
-    requestPosition();
-  }, [current, requestPosition]);
+  const { isRequesting, position } = useGeoPosition();
+  const { isSearching, results = [] } = useSearch(debouncedSearch?.trim()); // FIXME: fix types
 
   useEffect(() => {
     if (!position) {
