@@ -62,12 +62,13 @@ export const useForecast = () => {
     hourly: Array<HourlyForecast>;
     series: SeriesForecast;
   }>>(null);
+
   const [forecast, setForecast] = useState<null | Array<WeatherInfo>>([]);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const controllerRef = useRef<AbortController>();
 
-  const { current, locations, setLocations } = useLocations();
+  const { current, locations } = useLocations();
 
   const refresh = useCallback(async () => {
     if (!current) {
@@ -120,20 +121,24 @@ export const useForecast = () => {
         setForecast(locationsForecast);
 
         // TODO: explore other ways to preserve this info
-        const updated = locations.map((location, idx) => ({
-          ...location,
-          temperature: locationsForecast[idx]?.current.temperature_2m,
-          weathercode: locationsForecast[idx]?.current.weathercode,
-          isDay: locationsForecast[idx]?.current.is_day,
-        }));
+        // const updated = locations.map((location, idx) => ({
+        //   ...location,
+        //   temperature: locationsForecast[idx]?.current.temperature_2m,
+        //   weathercode: locationsForecast[idx]?.current.weathercode,
+        //   isDay: locationsForecast[idx]?.current.is_day,
+        // }));
 
-        if (JSON.stringify(updated) !== JSON.stringify(locations)) {
-          setLocations(updated);
-        }
+        // if (JSON.stringify(updated) !== JSON.stringify(locations)) {
+        //   setLocations(updated);
+        // }
       })
       .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
       .finally(() => setLoading(false));
-  }, [current, locations, setLocations]);
+  }, [
+    current,
+    locations,
+    // , setLocations
+  ]);
 
   useEffect(() => {
     refresh();

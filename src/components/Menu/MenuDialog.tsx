@@ -8,7 +8,7 @@ import { LocationSearch } from './LocationSearch';
 import { LocationList } from './LocationList';
 import { Welcome } from './Welcome';
 
-import { useHash, useLocations, useUserSettings } from '../../hooks';
+import { useHash, useLocations } from '../../hooks';
 import { Location } from '../../vite-env';
 
 const Transition = forwardRef(function Transition(
@@ -35,8 +35,7 @@ const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 export function MenuDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { locations, setLocations } = useLocations();
-  const [, setSettings] = useUserSettings();
+  const { locations, addLocation, setPrimaryLocation } = useLocations();
 
   const [hash, setHash] = useHash();
 
@@ -72,10 +71,10 @@ export function MenuDialog() {
 
   const handleOptionSelect = (option: Location) => {
     if (!locations.some((item) => item.id === option.id)) {
-      setLocations((items) => [...items, option]);
+      addLocation(option);
     }
 
-    setSettings((prev) => ({ ...prev, currentLocationId: option.id }));
+    setPrimaryLocation(option.id);
     handleClose();
   };
 

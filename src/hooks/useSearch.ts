@@ -20,7 +20,7 @@ export function useSearch(name: string) {
     isLoading: isSearching,
     error,
   } = useQuery({
-    queryKey: ['locations', name],
+    queryKey: ['search', name],
     queryFn: async ({ signal }) => {
       const {
         data: { results = [] },
