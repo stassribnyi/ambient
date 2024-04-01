@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { useCallback, useState } from 'react';
-import { AxiosError } from 'axios';
-
 import { Location } from '../vite-env';
+import { useQuery } from '@tanstack/react-query';
 
+// FIXME: move to .env file
 const REVERSE_GEOCODING_API_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 
 enum AdminAreaLevel {
@@ -35,7 +34,8 @@ type ReverseGeocodeLocation = Readonly<{
   }>;
 }>;
 
-function reverseGeocodeLocationToLocation({
+// TODO: move to mappers?
+function mapToLocation({
   city,
   countryName,
   principalSubdivision,
@@ -59,18 +59,7 @@ function reverseGeocodeLocationToLocation({
   };
 }
 
-async function getLocationByCoords(coords: GeolocationCoordinates) {
-  const { data } = await axios.get<ReverseGeocodeLocation>(REVERSE_GEOCODING_API_URL, {
-    params: {
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-      localityLanguage: 'en',
-    },
-  });
-
-  return reverseGeocodeLocationToLocation(data);
-}
-
+// TODO: move to utils?
 function getPosition(options?: PositionOptions) {
   return new Promise<GeolocationPosition>((resolve, reject) => {
     const geolocation = typeof navigator !== 'undefined' ? navigator.geolocation : undefined;
@@ -85,23 +74,28 @@ function getPosition(options?: PositionOptions) {
   });
 }
 
-export function useGeoposition() {
-  const [position, setPosition] = useState<null | Location>(null);
-  const [isRequesting, setIsRequesting] = useState<boolean>(false);
-  const [error, setError] = useState<null | AxiosError | GeolocationPositionError>(null);
-
-  const requestPosition = useCallback(async () => {
-    try {
-      setIsRequesting(true);
-
+export function useGeoPosition() {
+  const {
+    data: position,
+    isLoading: isRequesting,
+    error,
+    refetch: requestPosition,
+  } = useQuery({
+    queryKey: ['geoposition'],
+    queryFn: async () => {
       const { coords } = await getPosition();
-      setPosition(await getLocationByCoords(coords));
-    } catch (error) {
-      setError(error as AxiosError | GeolocationPositionError);
-    } finally {
-      setIsRequesting(false);
-    }
-  }, []);
+
+      const { data } = await axios.get<ReverseGeocodeLocation>(REVERSE_GEOCODING_API_URL, {
+        params: {
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          localityLanguage: 'en',
+        },
+      });
+
+      return mapToLocation(data);
+    },
+  });
 
   return { isRequesting, position, requestPosition, error };
 }

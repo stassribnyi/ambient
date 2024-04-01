@@ -8,6 +8,7 @@ import { mapForecastToCurrent, mapForecastToHourly, mapForecastToDaily, mapForec
 
 import type { CurrentForecast, HourlyForecast, DailyForecast, SeriesForecast } from '../mappers';
 
+// FIXME: move to .env file
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
 const FORECAST_OPTIONS = {

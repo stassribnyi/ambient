@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 import { Location } from '../vite-env';
 
+// FIXME: move to .env file
 const GEOCODING_API_URL = 'https://geocoding-api.open-meteo.com/v1/search';
 
 const LOCATION_OPTIONS = {
