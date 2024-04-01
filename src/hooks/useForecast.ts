@@ -7,6 +7,7 @@ import { useLocations } from './useLocations';
 import { mapForecastToCurrent, mapForecastToHourly, mapForecastToDaily, mapForecastToSeries } from '../mappers';
 
 import type { CurrentForecast, HourlyForecast, DailyForecast, SeriesForecast } from '../mappers';
+import { useForecastSnapshotMutation } from './useForecastSnapshots';
 
 // FIXME: move to .env file
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -63,12 +64,12 @@ export const useForecast = () => {
     series: SeriesForecast;
   }>>(null);
 
-  const [forecast, setForecast] = useState<null | Array<WeatherInfo>>([]);
   const [error, setError] = useState<null | AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const controllerRef = useRef<AbortController>();
 
   const { current, locations } = useLocations();
+  const updateForecastSnapshots = useForecastSnapshotMutation();
 
   const refresh = useCallback(async () => {
     if (!current) {
@@ -118,31 +119,22 @@ export const useForecast = () => {
 
         const locationsForecast = Array.isArray(others.data) ? others.data : [others.data];
 
-        setForecast(locationsForecast);
-
-        // TODO: explore other ways to preserve this info
-        // const updated = locations.map((location, idx) => ({
-        //   ...location,
-        //   temperature: locationsForecast[idx]?.current.temperature_2m,
-        //   weathercode: locationsForecast[idx]?.current.weathercode,
-        //   isDay: locationsForecast[idx]?.current.is_day,
-        // }));
-
-        // if (JSON.stringify(updated) !== JSON.stringify(locations)) {
-        //   setLocations(updated);
-        // }
+        updateForecastSnapshots(
+          locations.map((location, idx) => ({
+            locationId: location.id,
+            temperature: locationsForecast[idx]?.current.temperature_2m,
+            weathercode: locationsForecast[idx]?.current.weathercode,
+            isDay: locationsForecast[idx]?.current.is_day,
+          })),
+        );
       })
       .catch((error) => setError(error?.code !== AxiosError.ERR_CANCELED ? error : null))
       .finally(() => setLoading(false));
-  }, [
-    current,
-    locations,
-    // , setLocations
-  ]);
+  }, [current, locations, updateForecastSnapshots]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  return { currentForecast, forecast, error, loading, refresh };
+  return { currentForecast, error, loading, refresh };
 };

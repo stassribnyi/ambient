@@ -111,10 +111,14 @@ export interface Location {
   admin1: string;
   latitude: number;
   longitude: number;
+  isPrimary?: boolean;
+}
+
+export interface ForecastSnapshot {
+  locationId: number | string;
   weathercode?: WMOCode;
   temperature?: number;
   isDay?: number;
-  isPrimary?: boolean;
 }
 
 type MeasurementSystem = 'metric' | 'imperial';

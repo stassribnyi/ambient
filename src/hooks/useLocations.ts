@@ -8,34 +8,27 @@ const STORE_NAME = 'locations';
 export const useLocations = () => {
   const queryClient = useQueryClient();
 
-  const { data: locations = [] } = useQuery({
+  const { data: locations = [], isPending } = useQuery({
     queryKey: [STORE_NAME],
     queryFn: async () => {
       const items = await localforage.getItem<Array<Location>>(STORE_NAME);
 
       return items || [];
     },
+    refetchOnMount: false,
   });
 
   const { mutateAsync: addLocation } = useMutation({
+    mutationKey: [STORE_NAME],
     mutationFn: async (location: Location) => {
-      if (locations.some((item) => item.id === location.id)) {
-        return;
-      }
+      locations.forEach((item) => {
+        item.isPrimary = false;
+      });
 
-      await localforage.setItem(STORE_NAME, [...locations, location]);
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: [STORE_NAME] });
-    },
-  });
-
-  const { mutateAsync: setPrimaryLocation } = useMutation({
-    mutationFn: async (id: Location['id']) => {
-      await localforage.setItem(
-        STORE_NAME,
-        locations.map((item) => ({ ...item, isPrimary: item.id === id })),
-      );
+      await localforage.setItem(STORE_NAME, [
+        ...locations.filter((item) => item.id !== location.id),
+        { ...location, isPrimary: true },
+      ]);
     },
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: [STORE_NAME] });
@@ -43,6 +36,7 @@ export const useLocations = () => {
   });
 
   const { mutateAsync: deleteLocations } = useMutation({
+    mutationKey: [STORE_NAME],
     mutationFn: async (ids: Array<Location['id']>) => {
       await localforage.setItem(
         STORE_NAME,
@@ -56,9 +50,9 @@ export const useLocations = () => {
 
   return {
     current: locations.find((location) => location.isPrimary),
+    isPending,
     locations,
     addLocation,
     deleteLocations,
-    setPrimaryLocation,
   };
 };

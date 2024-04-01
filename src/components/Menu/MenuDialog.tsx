@@ -35,7 +35,7 @@ const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 export function MenuDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { locations, addLocation, setPrimaryLocation } = useLocations();
+  const { isPending, locations, addLocation } = useLocations();
 
   const [hash, setHash] = useHash();
 
@@ -54,12 +54,12 @@ export function MenuDialog() {
   }, [hash, setHash]);
 
   useEffect(() => {
-    if (locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
+    if (isPending || locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
       return;
     }
 
     setHash(MenuPage.WELCOME);
-  }, [hash, locations, setHash]);
+  }, [isPending, hash, locations.length, setHash]);
 
   const handleClickOpen = () => {
     setHash(MenuPage.INDEX);
@@ -69,12 +69,9 @@ export function MenuDialog() {
     setHash(null);
   };
 
-  const handleOptionSelect = (option: Location) => {
-    if (!locations.some((item) => item.id === option.id)) {
-      addLocation(option);
-    }
+  const handleOptionSelect = async (option: Location) => {
+    await addLocation(option);
 
-    setPrimaryLocation(option.id);
     handleClose();
   };
 

@@ -6,3 +6,5 @@ export { useLocations } from './useLocations';
 export { useUnitsConverter } from './useUnitsConverter';
 export { useLongPress } from './useLongPress';
 export { useGeoPosition } from './useGeoPosition';
+
+export { useForecastSnapshot, useForecastSnapshotMutation } from './useForecastSnapshots';
