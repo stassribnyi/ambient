@@ -156,7 +156,7 @@ function App() {
                   ) : null}
                   <Grid xs={12}>
                     <Stack alignItems="center" direction="row" sx={{ p: '0 0.5rem' }}>
-                      <IconButton edge="start" onClick={refresh}>
+                      <IconButton edge="start" onClick={() => refresh()}>
                         <RefreshOutlined fontSize="inherit" />
                       </IconButton>
                       <Typography color="secondary.light" variant="body2">
