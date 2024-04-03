@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { Location } from '../vite-env';
 
@@ -18,17 +18,18 @@ type SearchResult = Readonly<{ generationtime_ms: number; results?: Array<Locati
 export function useSearch(name: string) {
   return useQuery({
     queryKey: ['search', name],
-    queryFn: async ({ signal }) => {
-      const {
-        data: { results = [] },
-      } = await axios.get<SearchResult>(GEOCODING_API_URL, {
-        params: { ...SEARCH_OPTIONS, name },
-        signal,
-      });
+    queryFn: name
+      ? async ({ signal }) => {
+          const {
+            data: { results = [] },
+          } = await axios.get<SearchResult>(GEOCODING_API_URL, {
+            params: { ...SEARCH_OPTIONS, name },
+            signal,
+          });
 
-      return results;
-    },
-    enabled: !!name,
+          return results;
+        }
+      : skipToken,
     placeholderData: [],
   });
 }

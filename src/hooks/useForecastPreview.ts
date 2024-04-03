@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { ForecastPreview, WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
@@ -21,23 +21,24 @@ export const useForecastPreview = (locationId: ForecastPreview['locationId']) =>
 
   return useQuery({
     queryKey: ['forecast-preview', { id: selected?.id, lat: selected?.latitude, long: selected?.longitude }],
-    queryFn: async ({ signal }) => {
-      const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
-        params: {
-          ...FORECAST_OPTIONS,
-          latitude: selected?.latitude,
-          longitude: selected?.longitude,
-        },
-        signal,
-      });
+    queryFn: selected
+      ? async ({ signal }) => {
+          const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
+            params: {
+              ...FORECAST_OPTIONS,
+              latitude: selected.latitude,
+              longitude: selected.longitude,
+            },
+            signal,
+          });
 
-      return {
-        locationId: selected?.id,
-        temperature: data?.current.temperature_2m,
-        weathercode: data?.current.weathercode,
-        isDay: data?.current.is_day,
-      };
-    },
-    enabled: !!selected,
+          return {
+            locationId: selected.id,
+            temperature: data.current.temperature_2m,
+            weathercode: data.current.weathercode,
+            isDay: data.current.is_day,
+          };
+        }
+      : skipToken,
   });
 };

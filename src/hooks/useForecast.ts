@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { useLocations } from './useLocations';
 
@@ -50,30 +50,31 @@ export const useForecast = () => {
 
   return useQuery({
     queryKey: ['forecast', { id: primary?.id, lat: primary?.latitude, long: primary?.longitude }],
-    queryFn: async ({ signal }) => {
-      const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
-        params: {
-          ...CURRENT_FORECAST_OPTIONS,
-          latitude: primary?.latitude,
-          longitude: primary?.longitude,
-        },
-        signal,
-      });
+    queryFn: primary
+      ? async ({ signal }) => {
+          const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
+            params: {
+              ...CURRENT_FORECAST_OPTIONS,
+              latitude: primary.latitude,
+              longitude: primary.longitude,
+            },
+            signal,
+          });
 
-      // TODO: do I really need to reuse it?
-      const series = mapForecastToSeries(data);
-      const daily = mapForecastToDaily(data);
-      const hourly = mapForecastToHourly(data, daily);
-      const current = mapForecastToCurrent(data, daily, hourly);
+          // TODO: do I really need to reuse it?
+          const series = mapForecastToSeries(data);
+          const daily = mapForecastToDaily(data);
+          const hourly = mapForecastToHourly(data, daily);
+          const current = mapForecastToCurrent(data, daily, hourly);
 
-      return {
-        current,
-        daily,
-        hourly,
-        series,
-        lastUpdated: new Date(Date.now()),
-      };
-    },
-    enabled: !!primary,
+          return {
+            current,
+            daily,
+            hourly,
+            series,
+            lastUpdated: new Date(Date.now()),
+          };
+        }
+      : skipToken,
   });
 };
