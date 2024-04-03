@@ -114,7 +114,7 @@ export interface Location {
   isPrimary?: boolean;
 }
 
-export interface ForecastSnapshot {
+export interface ForecastPreview {
   locationId: number | string;
   weathercode?: WMOCode;
   temperature?: number;

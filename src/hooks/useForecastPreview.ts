@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
-import { ForecastSnapshot, WeatherInfo } from '../vite-env';
+import { ForecastPreview, WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
 
 const STORE_NAME = 'forecast-preview';
@@ -16,33 +16,30 @@ const FORECAST_OPTIONS = {
   temperature_unit: 'celsius',
 } as const;
 
-export const useForecastPreview = (locationId: ForecastSnapshot['locationId']) => {
+export const useForecastPreview = (locationId: ForecastPreview['locationId']) => {
   const { locations } = useLocations();
 
-  const snapshotLocation = locations.find((item) => item.id === locationId);
+  const current = locations.find((item) => item.id === locationId);
 
   return useQuery({
-    queryKey: [
-      STORE_NAME,
-      { id: snapshotLocation?.id, lat: snapshotLocation?.latitude, long: snapshotLocation?.longitude },
-    ],
+    queryKey: [STORE_NAME, { id: current?.id, lat: current?.latitude, long: current?.longitude }],
     queryFn: async ({ signal }) => {
       const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
         params: {
           ...FORECAST_OPTIONS,
-          latitude: snapshotLocation?.latitude,
-          longitude: snapshotLocation?.longitude,
+          latitude: current?.latitude,
+          longitude: current?.longitude,
         },
         signal,
       });
 
       return {
-        locationId: snapshotLocation?.id,
+        locationId: current?.id,
         temperature: data?.current.temperature_2m,
         weathercode: data?.current.weathercode,
         isDay: data?.current.is_day,
       };
     },
-    enabled: !!snapshotLocation,
+    enabled: !!current,
   });
 };
