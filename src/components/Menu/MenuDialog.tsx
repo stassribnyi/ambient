@@ -35,7 +35,7 @@ const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 export function MenuDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { isPending, primary: location, addLocation } = useLocations();
+  const { locations, addLocation, isPending } = useLocations();
 
   const [hash, setHash] = useHash();
 
@@ -54,12 +54,12 @@ export function MenuDialog() {
   }, [hash, setHash]);
 
   useEffect(() => {
-    if (isPending || location || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
+    if (isPending || locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
       return;
     }
 
     setHash(MenuPage.WELCOME);
-  }, [isPending, hash, location, setHash]);
+  }, [isPending, hash, locations.length, setHash]);
 
   const handleClickOpen = () => {
     setHash(MenuPage.INDEX);
@@ -70,7 +70,14 @@ export function MenuDialog() {
   };
 
   const handleOptionSelect = async (option: Location) => {
+    // TODO: consider adding animation for setting new location as primary?
     await addLocation(option);
+
+    if (!locations.includes(option)) {
+      setHash(MenuPage.INDEX);
+
+      return;
+    }
 
     handleClose();
   };

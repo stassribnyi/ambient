@@ -15,7 +15,6 @@ export const useLocations = () => {
 
       return items || [];
     },
-    refetchOnMount: false,
   });
 
   const { mutateAsync: addLocation } = useMutation({

@@ -44,7 +44,6 @@ export function LocationSearch({
   const handleSelect = (option: Location) => {
     setSearch('');
     onSubmit(option);
-    onBackButton();
   };
 
   // FIXME: debouncing search phrase causes 'Nothing found' for a split second

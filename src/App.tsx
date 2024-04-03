@@ -59,6 +59,7 @@ function App() {
       units: prev.units === 'metric' ? 'imperial' : 'metric',
     }));
 
+  // TODO: use skeleton or do not remove old forecast when changing city to avoid blank screen
   const isReady = forecast && location;
 
   return (
