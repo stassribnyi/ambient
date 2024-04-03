@@ -30,9 +30,7 @@ export const useLocations = () => {
         { ...location, isPrimary: true },
       ]);
     },
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: [STORE_NAME] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [STORE_NAME] }),
   });
 
   const { mutateAsync: deleteLocations } = useMutation({
@@ -43,9 +41,7 @@ export const useLocations = () => {
         locations.filter((location) => !ids.some((id) => id === location.id)),
       );
     },
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: [STORE_NAME] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [STORE_NAME] }),
   });
 
   return {
