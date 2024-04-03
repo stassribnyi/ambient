@@ -35,7 +35,7 @@ const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 export function MenuDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { isPending, current, addLocation } = useLocations();
+  const { isPending, primary: location, addLocation } = useLocations();
 
   const [hash, setHash] = useHash();
 
@@ -54,12 +54,12 @@ export function MenuDialog() {
   }, [hash, setHash]);
 
   useEffect(() => {
-    if (isPending || current || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
+    if (isPending || location || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
       return;
     }
 
     setHash(MenuPage.WELCOME);
-  }, [isPending, hash, current, setHash]);
+  }, [isPending, hash, location, setHash]);
 
   const handleClickOpen = () => {
     setHash(MenuPage.INDEX);

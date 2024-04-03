@@ -75,12 +75,7 @@ function getPosition(options?: PositionOptions) {
 }
 
 export function useGeoPosition() {
-  const {
-    data: position,
-    isLoading: isRequesting,
-    error,
-    refetch: requestPosition,
-  } = useQuery({
+  return useQuery({
     queryKey: ['geoposition'],
     queryFn: async () => {
       const { coords } = await getPosition();
@@ -96,6 +91,4 @@ export function useGeoPosition() {
       return mapToLocation(data);
     },
   });
-
-  return { isRequesting, position, requestPosition, error };
 }

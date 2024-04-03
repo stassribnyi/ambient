@@ -14,12 +14,9 @@ const SEARCH_OPTIONS = {
 
 type SearchResult = Readonly<{ generationtime_ms: number; results?: Array<Location> }>;
 
+// FIXME: fix types, locations should return array and not undefined
 export function useSearch(name: string) {
-  const {
-    data: results,
-    isLoading: isSearching,
-    error,
-  } = useQuery({
+  return useQuery({
     queryKey: ['search', name],
     queryFn: async ({ signal }) => {
       const {
@@ -34,6 +31,4 @@ export function useSearch(name: string) {
     enabled: !!name,
     placeholderData: [],
   });
-
-  return { isSearching, results, error };
 }

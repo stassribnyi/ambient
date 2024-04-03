@@ -45,7 +45,7 @@ export const useLocations = () => {
   });
 
   return {
-    current: locations.find((location) => location.isPrimary),
+    primary: locations.find((location) => location.isPrimary),
     isPending,
     locations,
     addLocation,

@@ -30,8 +30,8 @@ export function LocationSearch({
   const [search, setSearch] = useState<string>(''); // FIXME: change naming
   const debouncedSearch = useDebounce<string>(search, 500);
 
-  const { isRequesting, position } = useGeoPosition();
-  const { isSearching, results = [] } = useSearch(debouncedSearch?.trim()); // FIXME: fix types
+  const { isLoading: isRequesting, data: position } = useGeoPosition();
+  const { isLoading: isSearching, data: results = [] } = useSearch(debouncedSearch?.trim());
 
   useEffect(() => {
     if (!position) {

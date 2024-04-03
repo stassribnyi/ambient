@@ -23,7 +23,7 @@ export const LocationList: FC<
     onSelect: (value: Location) => void;
   }>
 > = ({ onBackButton, onAdd, onSelect }) => {
-  const { locations, current: favorite, deleteLocations } = useLocations();
+  const { locations, primary: favorite, deleteLocations } = useLocations();
 
   const otherLocations = locations.filter((l) => l.id !== favorite?.id);
   const [selected, setSelected] = useState<Array<Location>>([]);

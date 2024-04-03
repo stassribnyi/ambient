@@ -4,8 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { ForecastPreview, WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
 
-const STORE_NAME = 'forecast-preview';
-
 // FIXME: move to .env file
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -13,33 +11,33 @@ const FORECAST_OPTIONS = {
   current: ['temperature_2m', 'is_day', 'weathercode'],
   timezone: 'auto',
   forecast_days: 1,
-  temperature_unit: 'celsius',
+  temperature_unit: 'celsius', // FIXME: reuse global settings
 } as const;
 
 export const useForecastPreview = (locationId: ForecastPreview['locationId']) => {
   const { locations } = useLocations();
 
-  const current = locations.find((item) => item.id === locationId);
+  const selected = locations.find((item) => item.id === locationId);
 
   return useQuery({
-    queryKey: [STORE_NAME, { id: current?.id, lat: current?.latitude, long: current?.longitude }],
+    queryKey: ['forecast-preview', { id: selected?.id, lat: selected?.latitude, long: selected?.longitude }],
     queryFn: async ({ signal }) => {
       const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
         params: {
           ...FORECAST_OPTIONS,
-          latitude: current?.latitude,
-          longitude: current?.longitude,
+          latitude: selected?.latitude,
+          longitude: selected?.longitude,
         },
         signal,
       });
 
       return {
-        locationId: current?.id,
+        locationId: selected?.id,
         temperature: data?.current.temperature_2m,
         weathercode: data?.current.weathercode,
         isDay: data?.current.is_day,
       };
     },
-    enabled: !!current,
+    enabled: !!selected,
   });
 };

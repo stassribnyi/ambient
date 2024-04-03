@@ -1,11 +1,10 @@
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
-import { WeatherInfo } from '../vite-env';
 import { useLocations } from './useLocations';
 
 import { mapForecastToCurrent, mapForecastToHourly, mapForecastToDaily, mapForecastToSeries } from '../mappers';
-
-import { useQuery } from '@tanstack/react-query';
+import { WeatherInfo } from '../vite-env';
 
 // FIXME: move to .env file
 const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -43,25 +42,20 @@ const CURRENT_FORECAST_OPTIONS = {
   timezone: 'auto',
   past_days: 1,
   forecast_days: 10,
-  temperature_unit: 'celsius',
+  temperature_unit: 'celsius', // FIXME: reuse global settings
 } as const;
 
 export const useForecast = () => {
-  const { current: favorite } = useLocations();
+  const { primary } = useLocations();
 
-  const {
-    data: currentForecast,
-    error: currentForecastError,
-    isLoading: isCurrentForecastLoading,
-    refetch: refresh,
-  } = useQuery({
-    queryKey: ['forecast', { id: favorite?.id, lat: favorite?.latitude, long: favorite?.longitude }],
+  return useQuery({
+    queryKey: ['forecast', { id: primary?.id, lat: primary?.latitude, long: primary?.longitude }],
     queryFn: async ({ signal }) => {
       const { data } = await axios.get<WeatherInfo>(WEATHER_API_URL, {
         params: {
           ...CURRENT_FORECAST_OPTIONS,
-          latitude: favorite?.latitude,
-          longitude: favorite?.longitude,
+          latitude: primary?.latitude,
+          longitude: primary?.longitude,
         },
         signal,
       });
@@ -73,20 +67,13 @@ export const useForecast = () => {
       const current = mapForecastToCurrent(data, daily, hourly);
 
       return {
-        lastUpdated: new Date(Date.now()),
         current,
         daily,
         hourly,
         series,
+        lastUpdated: new Date(Date.now()),
       };
     },
-    enabled: !!favorite,
+    enabled: !!primary,
   });
-
-  return {
-    currentForecast,
-    refresh,
-    error: currentForecastError,
-    loading: isCurrentForecastLoading,
-  };
 };
