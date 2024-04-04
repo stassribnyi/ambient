@@ -1,9 +1,10 @@
-import { useUserSettings } from '@/hooks';
+import { FC } from 'react';
+import { css, styled, Switch as MuiSwitch, SxProps, Theme } from '@mui/material';
+
+import { useUserSettings } from '@hooks/useUserSettings';
+
 import celsius from '@assets/svg/celsius.svg';
 import fahrenheit from '@assets/svg/fahrenheit.svg';
-
-import { css, styled, Switch as MuiSwitch, SxProps, Theme } from '@mui/material';
-import { FC } from 'react';
 
 const commonMaskImageStyles = css`
   content: '';
