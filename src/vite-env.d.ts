@@ -111,6 +111,11 @@ export interface Location {
   admin1: string;
   latitude: number;
   longitude: number;
+  isPrimary?: boolean;
+}
+
+export interface ForecastPreview {
+  locationId: number | string;
   weathercode?: WMOCode;
   temperature?: number;
   isDay?: number;

@@ -3,6 +3,7 @@ import path from 'path';
 
 import react from '@vitejs/plugin-react';
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa';
+import eslint from 'vite-plugin-eslint';
 
 const manifestForPlugin: Partial<VitePWAOptions> = {
   registerType: 'prompt',
@@ -67,7 +68,7 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), VitePWA(manifestForPlugin)],
+  plugins: [react(), eslint(), VitePWA(manifestForPlugin)],
   base: '/ambient/',
   resolve: {
     alias: {

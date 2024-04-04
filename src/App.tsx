@@ -25,13 +25,13 @@ const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericCon
 
 function App() {
   const [settings, setSettings] = useUserSettings();
-  const { currentForecast: forecast, error, loading, refresh } = useForecast();
-  const { current } = useLocations();
+  const { data: forecast, isLoading, error, refetch } = useForecast();
+  const { primary: location } = useLocations();
 
   // FIXME: refactor
   useDocumentTitle(
-    forecast && current
-      ? `${current.name}, ${current.country} ${Math.round(forecast.current.temperature)}°, ${
+    forecast && location
+      ? `${location.name}, ${location.country} ${Math.round(forecast.current.temperature)}°, ${
           WMO_INFO.get(forecast.current.weathercode)?.day?.description ?? 'N/A'
         } | Ambient`
       : 'Ambient',
@@ -59,12 +59,13 @@ function App() {
       units: prev.units === 'metric' ? 'imperial' : 'metric',
     }));
 
-  const isReady = forecast && current;
+  // TODO: use skeleton or do not remove old forecast when changing city to avoid blank screen
+  const isReady = forecast && location;
 
   return (
     <>
-      {loading && (
-        <Backdrop sx={{ color: 'secondary.dark', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+      {isLoading && (
+        <Backdrop sx={{ color: 'secondary.dark', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
@@ -76,8 +77,8 @@ function App() {
       <PullToRefresh
         resistance={3}
         pullDownThreshold={56}
-        isPullable={!loading}
-        onRefresh={refresh}
+        isPullable={!isLoading}
+        onRefresh={refetch}
         pullingContent={
           <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
             <ArrowDownward />
@@ -125,7 +126,7 @@ function App() {
                       }}
                     >
                       <LocationOn sx={{ width: '1rem', height: '1rem' }} />
-                      {[current.name, current.admin1, current.country].filter(Boolean).join(', ')}
+                      {[location.name, location.admin1, location.country].filter(Boolean).join(', ')}
                     </Typography>
                   )}
                 </Stack>
@@ -156,7 +157,7 @@ function App() {
                   ) : null}
                   <Grid xs={12}>
                     <Stack alignItems="center" direction="row" sx={{ p: '0 0.5rem' }}>
-                      <IconButton edge="start" onClick={refresh}>
+                      <IconButton edge="start" onClick={() => refetch()}>
                         <RefreshOutlined fontSize="inherit" />
                       </IconButton>
                       <Typography color="secondary.light" variant="body2">

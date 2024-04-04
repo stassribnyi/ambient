@@ -8,7 +8,7 @@ import { LocationSearch } from './LocationSearch';
 import { LocationList } from './LocationList';
 import { Welcome } from './Welcome';
 
-import { useHash, useLocations, useUserSettings } from '../../hooks';
+import { useHash, useLocations } from '../../hooks';
 import { Location } from '../../vite-env';
 
 const Transition = forwardRef(function Transition(
@@ -35,8 +35,7 @@ const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 export function MenuDialog() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { locations, setLocations } = useLocations();
-  const [, setSettings] = useUserSettings();
+  const { locations, addLocation, isPending } = useLocations();
 
   const [hash, setHash] = useHash();
 
@@ -55,12 +54,12 @@ export function MenuDialog() {
   }, [hash, setHash]);
 
   useEffect(() => {
-    if (locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
+    if (isPending || locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
       return;
     }
 
     setHash(MenuPage.WELCOME);
-  }, [hash, locations, setHash]);
+  }, [isPending, hash, locations.length, setHash]);
 
   const handleClickOpen = () => {
     setHash(MenuPage.INDEX);
@@ -70,12 +69,16 @@ export function MenuDialog() {
     setHash(null);
   };
 
-  const handleOptionSelect = (option: Location) => {
-    if (!locations.some((item) => item.id === option.id)) {
-      setLocations((items) => [...items, option]);
+  const handleOptionSelect = async (option: Location) => {
+    // TODO: consider adding animation for setting new location as primary?
+    await addLocation(option);
+
+    if (!locations.includes(option)) {
+      setHash(MenuPage.INDEX);
+
+      return;
     }
 
-    setSettings((prev) => ({ ...prev, currentLocationId: option.id }));
     handleClose();
   };
 

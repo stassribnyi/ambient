@@ -17,7 +17,7 @@ import {
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useGeoposition, useSearch, useLocations } from '../../hooks';
+import { useGeoPosition, useSearch } from '../../hooks';
 import { Location } from '../../vite-env';
 
 export function LocationSearch({
@@ -30,17 +30,8 @@ export function LocationSearch({
   const [search, setSearch] = useState<string>(''); // FIXME: change naming
   const debouncedSearch = useDebounce<string>(search, 500);
 
-  const { isRequesting, position, requestPosition } = useGeoposition();
-  const { isSearching, results } = useSearch(debouncedSearch?.trim());
-  const { current } = useLocations();
-
-  useEffect(() => {
-    if (current) {
-      return;
-    }
-
-    requestPosition();
-  }, [current, requestPosition]);
+  const { isLoading: isRequesting, data: position } = useGeoPosition();
+  const { isLoading: isSearching, data: results = [] } = useSearch(debouncedSearch?.trim());
 
   useEffect(() => {
     if (!position) {
@@ -53,7 +44,6 @@ export function LocationSearch({
   const handleSelect = (option: Location) => {
     setSearch('');
     onSubmit(option);
-    onBackButton();
   };
 
   // FIXME: debouncing search phrase causes 'Nothing found' for a split second

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { RadioButtonUnchecked, CheckCircle } from '@mui/icons-material';
 import { Card, ButtonBase, CardContent, Stack, Checkbox, Typography } from '@mui/material';
 
-import { useLongPress, useUnitsConverter } from '../../../hooks';
+import { useForecastPreview, useLongPress, useUnitsConverter } from '../../../hooks';
 import { Location } from '../../../vite-env';
 import { WMOIcon } from '../../Icons';
 
@@ -17,6 +17,7 @@ export const LocationItem: FC<
 > = ({ isEdit, selected, value, onSelect, onLongPress }) => {
   const handleLongPress = useLongPress();
   const { convert } = useUnitsConverter();
+  const { data: preview } = useForecastPreview(value.id);
 
   return (
     <Card sx={{ mb: 2, borderRadius: '28px' }}>
@@ -36,7 +37,7 @@ export const LocationItem: FC<
                   checkedIcon={<CheckCircle />}
                 />
               )}
-              {!isEdit && <WMOIcon animated variant={value?.isDay ? 'day' : 'night'} code={value.weathercode} />}
+              {!isEdit && <WMOIcon animated variant={preview?.isDay ? 'day' : 'night'} code={preview?.weathercode} />}
               <Stack alignItems="start">
                 <Typography sx={{ fontSize: '1.125rem' }}>{value.name}</Typography>
                 <Typography variant="caption" color="secondary">
@@ -50,7 +51,7 @@ export const LocationItem: FC<
                 sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
                 variant="h5"
               >
-                {value.temperature ? `${Math.floor(convert('temperature', value.temperature))}°` : 'N/A'}
+                {preview?.temperature ? `${Math.floor(convert('temperature', preview.temperature))}°` : 'N/A'}
               </Typography>
             )}
           </Stack>

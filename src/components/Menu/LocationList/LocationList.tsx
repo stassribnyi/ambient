@@ -23,7 +23,7 @@ export const LocationList: FC<
     onSelect: (value: Location) => void;
   }>
 > = ({ onBackButton, onAdd, onSelect }) => {
-  const { locations, current: favorite, setLocations } = useLocations();
+  const { locations, primary: favorite, deleteLocations } = useLocations();
 
   const otherLocations = locations.filter((l) => l.id !== favorite?.id);
   const [selected, setSelected] = useState<Array<Location>>([]);
@@ -54,8 +54,8 @@ export const LocationList: FC<
     setIsEdit(false);
   };
 
-  const handleDeleteSelected = () => {
-    setLocations((items) => items.filter((item) => !selected.some((s) => s.id === item.id)));
+  const handleDeleteSelected = async () => {
+    await deleteLocations(selected.map(({ id }) => id));
     handleExitEditMode();
   };
 

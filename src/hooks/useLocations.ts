@@ -1,47 +1,53 @@
-import { useMemo, useRef } from 'react';
-import { useLocalStorage } from 'usehooks-ts';
+import localforage from 'localforage';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Location } from '../vite-env';
-import { useUserSettings } from './useUserSettings';
 
-// const DEFAULT_LOCATION: Location = {
-//   id: 703448,
-//   name: 'Kyiv',
-//   country: 'Ukraine',
-//   admin1: 'Kyiv City',
-//   latitude: 50.45466,
-//   longitude: 30.5238,
-// };
+const STORE_NAME = 'locations';
 
-function deepCompare<T>(a: T, b: T): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
-// TODO:
-// * refresh button
 export const useLocations = () => {
-  const valueRef = useRef<Array<Location>>([]);
-  const [value, setValue] = useLocalStorage<Array<Location>>('locations', []);
-  const [{ currentLocationId }] = useUserSettings();
+  const queryClient = useQueryClient();
 
-  // this is temp workaround to prevent locations value to be changed each time localStorage gets modified
-  // TODO: wrap or reimplement useLocalStorage logic, so if value hasn't changed reference stays the same
-  const locations = useMemo(() => {
-    if (!deepCompare(value, valueRef.current)) {
-      valueRef.current = value;
-    }
+  const { data: locations = [], isPending } = useQuery({
+    queryKey: [STORE_NAME],
+    queryFn: async () => {
+      const items = await localforage.getItem<Array<Location>>(STORE_NAME);
 
-    return valueRef.current;
-  }, [value]);
+      return items || [];
+    },
+  });
 
-  const current = useMemo(
-    () => locations.find((item) => item.id === currentLocationId),
-    [locations, currentLocationId],
-  );
+  const { mutateAsync: addLocation } = useMutation({
+    mutationKey: [STORE_NAME],
+    mutationFn: async (location: Location) => {
+      locations.forEach((item) => {
+        item.isPrimary = false;
+      });
+
+      await localforage.setItem(STORE_NAME, [
+        ...locations.filter((item) => item.id !== location.id),
+        { ...location, isPrimary: true },
+      ]);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [STORE_NAME] }),
+  });
+
+  const { mutateAsync: deleteLocations } = useMutation({
+    mutationKey: [STORE_NAME],
+    mutationFn: async (ids: Array<Location['id']>) => {
+      await localforage.setItem(
+        STORE_NAME,
+        locations.filter((location) => !ids.some((id) => id === location.id)),
+      );
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [STORE_NAME] }),
+  });
 
   return {
-    current,
+    primary: locations.find((location) => location.isPrimary),
+    isPending,
     locations,
-    setLocations: setValue,
+    addLocation,
+    deleteLocations,
   };
 };
