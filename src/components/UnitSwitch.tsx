@@ -1,7 +1,10 @@
+import { FC } from 'react';
+import { css, styled, Switch as MuiSwitch, SxProps, Theme } from '@mui/material';
+
+import { useUserSettings } from '@hooks/useUserSettings';
+
 import celsius from '@assets/svg/celsius.svg';
 import fahrenheit from '@assets/svg/fahrenheit.svg';
-
-import { css, styled, Switch } from '@mui/material';
 
 const commonMaskImageStyles = css`
   content: '';
@@ -16,7 +19,7 @@ const commonMaskImageStyles = css`
   mask-position: center;
 `;
 
-export const UnitSwitch = styled(Switch)`
+const Switch = styled(MuiSwitch)`
   padding: 0;
   width: 52px;
   height: 28px;
@@ -79,3 +82,19 @@ export const UnitSwitch = styled(Switch)`
     }
   }
 `;
+
+export const UnitSwitch: FC<
+  Readonly<{
+    sx?: SxProps<Theme>;
+  }>
+> = ({ sx }) => {
+  const [settings, setSettings] = useUserSettings();
+
+  const handleMeasurementSystemChange = () =>
+    setSettings((prev) => ({
+      ...prev,
+      units: prev.units === 'metric' ? 'imperial' : 'metric',
+    }));
+
+  return <Switch sx={sx} checked={settings.units === 'metric'} onClick={handleMeasurementSystemChange} />;
+};
