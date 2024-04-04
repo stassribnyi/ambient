@@ -15,7 +15,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { useForecast, useLocations, useUserSettings } from './hooks';
+import { useForecast, useLocations } from './hooks';
 import { useDocumentTitle } from 'usehooks-ts';
 
 import { Block, MenuDialog, UnitSwitch, Time, WMO_INFO, Fallback } from './components';
@@ -24,7 +24,6 @@ import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
 
 function App() {
-  const [settings, setSettings] = useUserSettings();
   const { data: forecast, isLoading, error, refetch } = useForecast();
   const { primary: location } = useLocations();
 
@@ -52,12 +51,6 @@ function App() {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const handleMeasurementSystemChange = () =>
-    setSettings((prev) => ({
-      ...prev,
-      units: prev.units === 'metric' ? 'imperial' : 'metric',
-    }));
 
   // TODO: use skeleton or do not remove old forecast when changing city to avoid blank screen
   const isReady = forecast && location;
@@ -109,11 +102,7 @@ function App() {
                         <Time value={forecast.current.time} format="EEEE, MMM dd" />
                       </Typography>
                     )}
-                    <UnitSwitch
-                      sx={{ ml: 'auto' }}
-                      checked={settings.units === 'metric'}
-                      onClick={handleMeasurementSystemChange}
-                    />
+                    <UnitSwitch sx={{ ml: 'auto' }} />
                   </Stack>
                   {isReady && (
                     <Typography
