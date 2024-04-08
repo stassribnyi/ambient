@@ -20,9 +20,6 @@ const Transition = forwardRef(function Transition(
   return <Slide direction={isMobile ? 'right' : 'down'} ref={ref} {...props} />;
 });
 
-// TODO: use route guards
-// const SCREEN_LOCK_PAGES = [MenuPage.WELCOME, MenuPage.SEARCH];
-
 export function MenuDialog() {
   const theme = useTheme();
   const outlet = useOutlet();
