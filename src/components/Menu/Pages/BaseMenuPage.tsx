@@ -1,14 +1,16 @@
 import { FC, PropsWithChildren } from 'react';
+import { Link } from 'react-router-dom';
+
 import { AppBar, Toolbar, Stack, IconButton } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
+
 import { DialogLayout } from './DialogLayout';
-import { Link } from 'react-router-dom';
 
 export const BaseMenuPage: FC<
   PropsWithChildren<
     Readonly<
       Partial<{
-        backTo?: string | null;
+        backTo: string | null;
         header: React.ReactElement;
       }>
     >

@@ -62,8 +62,8 @@ export const PlacesPage: FC = () => {
     handleExitEditMode();
   };
 
-  const handleSetFavorite = () => {
-    addLocation(selected[0]);
+  const handleSetFavorite = async () => {
+    await addLocation(selected[0]);
     handleExitEditMode();
   };
 
