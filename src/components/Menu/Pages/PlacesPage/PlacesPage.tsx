@@ -1,21 +1,26 @@
 import { FC, PropsWithChildren, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Typography } from '@mui/material';
+import { Box, Slide, Typography } from '@mui/material';
+
+import { useLocations } from '@/hooks';
+import { Location } from '@/vite-env';
 
 import { BaseMenuPage } from '../BaseMenuPage';
 import { LocationItem } from './LocationItem';
 import { ListActions } from './ListActions';
 import { EditHeader, Header } from './Header';
 
-import { useLocations } from '../../../../hooks';
-import { Location } from '../../../../vite-env';
-import { useNavigate } from 'react-router-dom';
-import { MenuPageRoutes } from '../../routes';
-
 const Title: FC<PropsWithChildren> = ({ children }) => (
   <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
     {children}
   </Typography>
+);
+
+const Actions: FC<PropsWithChildren<{ show: boolean }>> = ({ show, children }) => (
+  <Slide mountOnEnter unmountOnExit in={show} direction="up">
+    <Box>{children}</Box>
+  </Slide>
 );
 
 export const PlacesPage: FC = () => {
@@ -65,53 +70,53 @@ export const PlacesPage: FC = () => {
   const handleToggleSelect = () => setSelected(isAllSelected ? [] : locations);
 
   return (
-    <BaseMenuPage
-      showBackButton={!isEdit}
-      showActions={isActionsVisible}
-      actions={
+    <>
+      <BaseMenuPage
+        backTo={!isEdit ? '/' : null}
+        header={
+          // TODO: maybe combine header?
+          isEdit ? (
+            <EditHeader selected={isAllSelected} onCancel={handleExitEditMode} onToggle={handleToggleSelect} />
+          ) : (
+            <Header onEdit={handleEnterEditMode} />
+          )
+        }
+      >
+        {favorite ? (
+          <>
+            <Title>Current location</Title>
+            <LocationItem
+              selected={selected.some((x) => x.id === favorite.id)}
+              isEdit={isEdit}
+              value={favorite}
+              onSelect={handleSelect}
+              onLongPress={handleEnterEditMode}
+            />
+          </>
+        ) : null}
+        {otherLocations.length ? (
+          <>
+            <Title>Other locations</Title>
+            {otherLocations.map((location, idx) => (
+              <LocationItem
+                selected={selected.some((x) => x.id === location.id)}
+                isEdit={isEdit}
+                key={idx}
+                value={location}
+                onSelect={handleSelect}
+                onLongPress={handleEnterEditMode}
+              />
+            ))}
+          </>
+        ) : null}
+      </BaseMenuPage>
+      <Actions show={isActionsVisible}>
         <ListActions
           showSetFavorite={isSetFavoriteVisible}
           onDelete={handleDeleteSelected}
           onSetFavorite={handleSetFavorite}
         />
-      }
-      header={
-        // TODO: maybe combine header?
-        isEdit ? (
-          <EditHeader selected={isAllSelected} onCancel={handleExitEditMode} onToggle={handleToggleSelect} />
-        ) : (
-          <Header onAdd={() => navigate(MenuPageRoutes.SEARCH)} onEdit={handleEnterEditMode} />
-        )
-      }
-      handleBackButton={() => navigate('/')}
-    >
-      {favorite ? (
-        <>
-          <Title>Current location</Title>
-          <LocationItem
-            selected={selected.some((x) => x.id === favorite.id)}
-            isEdit={isEdit}
-            value={favorite}
-            onSelect={handleSelect}
-            onLongPress={handleEnterEditMode}
-          />
-        </>
-      ) : null}
-      {otherLocations.length ? (
-        <>
-          <Title>Other locations</Title>
-          {otherLocations.map((location, idx) => (
-            <LocationItem
-              selected={selected.some((x) => x.id === location.id)}
-              isEdit={isEdit}
-              key={idx}
-              value={location}
-              onSelect={handleSelect}
-              onLongPress={handleEnterEditMode}
-            />
-          ))}
-        </>
-      ) : null}
-    </BaseMenuPage>
+      </Actions>
+    </>
   );
 };

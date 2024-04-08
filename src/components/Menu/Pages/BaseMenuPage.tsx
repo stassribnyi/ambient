@@ -1,47 +1,39 @@
 import { FC, PropsWithChildren } from 'react';
-import { AppBar, Toolbar, Stack, Slide, IconButton, Box } from '@mui/material';
+import { AppBar, Toolbar, Stack, IconButton } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
 import { DialogLayout } from './DialogLayout';
+import { Link } from 'react-router-dom';
 
 export const BaseMenuPage: FC<
   PropsWithChildren<
     Readonly<
       Partial<{
+        backTo?: string | null;
         header: React.ReactElement;
-        actions: React.ReactElement;
-        showActions: boolean;
-        showBackButton: boolean;
-        handleBackButton: () => void;
       }>
     >
   >
-> = ({ actions, children, header, showActions, showBackButton, handleBackButton }) => {
-  return (
-    <>
-      {header ? (
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
-              {showBackButton ? (
-                <IconButton
-                  sx={{ fontSize: '2rem' }}
-                  edge="start"
-                  color="inherit"
-                  onClick={handleBackButton}
-                  aria-label="close"
-                >
-                  <ChevronLeft fontSize="inherit" />
-                </IconButton>
-              ) : null}
-              {header}
-            </Stack>
-          </Toolbar>
-        </AppBar>
-      ) : null}
-      <DialogLayout>{children}</DialogLayout>
-      <Slide mountOnEnter unmountOnExit in={showActions} direction="up">
-        <Box>{actions}</Box>
-      </Slide>
-    </>
-  );
-};
+> = ({ backTo, children, header }) => (
+  <>
+    <AppBar sx={{ position: 'relative' }}>
+      <Toolbar>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+          {backTo ? (
+            <IconButton
+              aria-label="close"
+              component={Link}
+              color="inherit"
+              edge="start"
+              to={backTo}
+              sx={{ fontSize: '2rem' }}
+            >
+              <ChevronLeft fontSize="inherit" />
+            </IconButton>
+          ) : null}
+          {header}
+        </Stack>
+      </Toolbar>
+    </AppBar>
+    <DialogLayout>{children}</DialogLayout>
+  </>
+);

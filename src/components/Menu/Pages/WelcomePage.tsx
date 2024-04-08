@@ -1,8 +1,8 @@
 import { IconButton, Box, Typography } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 import { Meteocon } from '../../Icons';
-import { Link } from 'react-router-dom';
 import { DialogLayout } from './DialogLayout';
 import { MenuPageRoutes } from '../routes';
 

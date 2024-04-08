@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Add, CheckCircle, Close, MoreVert, RadioButtonUnchecked } from '@mui/icons-material';
 import {
@@ -11,6 +12,8 @@ import {
   Menu as MUIMenu,
   MenuItem as MUIMenuItem,
 } from '@mui/material';
+
+import { MenuPageRoutes } from '../../routes';
 
 const Menu = styled(MUIMenu)`
   & .MuiList-root {
@@ -63,10 +66,9 @@ const EDIT_MENU_NAME = 'context-menu';
 
 export const Header: FC<
   Readonly<{
-    onAdd: () => void;
     onEdit: () => void;
   }>
-> = ({ onEdit, onAdd }) => {
+> = ({ onEdit }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -80,7 +82,7 @@ export const Header: FC<
     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
       <Typography sx={{ fontSize: '1.125rem' }}>Manage your location</Typography>
       <Stack direction="row" alignItems="center">
-        <IconButton sx={{ fontSize: '1.85rem' }} edge="end" color="inherit" onClick={onAdd}>
+        <IconButton component={Link} to={MenuPageRoutes.SEARCH} sx={{ fontSize: '1.85rem' }} edge="end" color="inherit">
           <Add fontSize="inherit" />
         </IconButton>
         <IconButton

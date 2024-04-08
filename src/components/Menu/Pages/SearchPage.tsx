@@ -1,6 +1,7 @@
-import { useState, Fragment, useEffect } from 'react';
+import { useState, Fragment, useEffect, FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDebounce } from 'usehooks-ts';
-import { ChevronLeft, Close } from '@mui/icons-material';
+
 import {
   IconButton,
   InputBase,
@@ -11,96 +12,93 @@ import {
   ListItemText,
   Divider,
   CircularProgress,
-  DialogContentText,
+  Stack,
   Box,
+  DialogContentText,
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
+
+import { useGeoPosition, useLocations, useSearch } from '@/hooks';
+import { safeJoin } from '@/utils';
+import { Location } from '@/vite-env';
+
+import { MenuPageRoutes } from '../routes';
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useGeoPosition, useLocations, useSearch } from '../../../hooks';
-import { Location } from '../../../vite-env';
-import { useNavigate } from 'react-router-dom';
-import { MenuPageRoutes } from '../routes';
+const SearchInput: FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => (
+  <Stack direction="row" sx={{ width: '100%' }}>
+    <InputBase
+      autoFocus
+      value={value}
+      sx={{
+        color: 'inherit',
+        width: '100%',
+        fontSize: '1.125rem',
+
+        '.MuiInputBase-input::placeholder': {
+          color: 'white',
+          opacity: 0.75,
+        },
+      }}
+      placeholder="What is your city?"
+      onChange={({ target }) => onChange(target.value)}
+    />
+
+    <IconButton sx={{ fontSize: '1.5rem' }} edge="end" color="inherit" onClick={() => onChange('')}>
+      <Close fontSize="inherit" />
+    </IconButton>
+  </Stack>
+);
 
 export function SearchPage() {
-  const [search, setSearch] = useState<string>(''); // FIXME: change naming
-  const debouncedSearch = useDebounce<string>(search, 500);
-  const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState<string>('');
+  const debouncedSearch = useDebounce<string>(searchInput, 500);
 
-  const { isPending, primary, addLocation } = useLocations();
-  const { isLoading: isRequesting, data: position } = useGeoPosition();
-  const { isLoading: isSearching, data: results = [] } = useSearch(debouncedSearch?.trim());
+  const navigate = useNavigate();
+  const { primary, addLocation } = useLocations();
+  const { isFetching: isFetchingPosition, data: position } = useGeoPosition();
+  const { isFetching: isFetchingPlaces, data: results = [] } = useSearch(debouncedSearch?.trim());
 
   useEffect(() => {
     if (!position) {
       return;
     }
 
-    setSearch([position.name, position.country].filter(Boolean).join(', '));
+    setSearchInput(safeJoin([position.admin1, position.country]));
   }, [position]);
 
-  const handleSelect = async (option: Location) => {
-    setSearch('');
-    await addLocation(option);
+  const handleSelect = async (place: Location) => {
+    await addLocation(place);
+    setSearchInput('');
     navigate(MenuPageRoutes.SETTINGS);
   };
 
-  // FIXME: debouncing search phrase causes 'Nothing found' for a split second
-  const isLoading = isPending || isRequesting || isSearching;
+  const isFetching = isFetchingPosition || isFetchingPlaces;
+  const isResultVisible = results.length && !isFetching;
+
+  const feedback = searchInput.length === 0 ? 'Please enter your location.' : 'Nothing has been found.';
 
   return (
     <BaseMenuPage
-      header={
-        <>
-          <IconButton
-            sx={{ fontSize: '2rem' }}
-            edge="start"
-            color="inherit"
-            onClick={() => navigate(primary ? MenuPageRoutes.SETTINGS : MenuPageRoutes.WELCOME)}
-            aria-label="close"
-          >
-            <ChevronLeft fontSize="inherit" />
-          </IconButton>
-
-          <InputBase
-            autoFocus
-            value={search}
-            sx={{
-              color: 'inherit',
-              width: '100%',
-              fontSize: '1.125rem',
-
-              '.MuiInputBase-input::placeholder': {
-                color: 'white',
-                opacity: 0.75,
-              },
-            }}
-            placeholder="What is your city?"
-            onChange={({ target }) => setSearch(target.value)}
-          />
-
-          <IconButton sx={{ fontSize: '1.5rem' }} edge="end" color="inherit" onClick={() => setSearch('')}>
-            <Close fontSize="inherit" />
-          </IconButton>
-        </>
-      }
+      backTo={primary ? MenuPageRoutes.SETTINGS : MenuPageRoutes.WELCOME}
+      header={<SearchInput value={searchInput} onChange={setSearchInput} />}
     >
-      {results.length && search.length ? (
+      {isResultVisible ? (
         <Card>
           <CardContent>
             <List disablePadding>
-              {results.map((location, idx) => (
+              {results.map((place, idx) => (
                 <Fragment key={idx}>
-                  <ListItem disableGutters onClick={() => handleSelect(location)}>
+                  <ListItem disableGutters onClick={() => handleSelect(place)}>
                     <ListItemText
-                      primary={location.name}
-                      primaryTypographyProps={{
-                        fontSize: '1.125rem',
-                      }}
-                      secondaryTypographyProps={{
-                        color: '#ce93d8',
-                      }}
-                      secondary={[location.admin1, location.country].filter(Boolean).join(', ')}
+                      primary={place.name}
+                      primaryTypographyProps={{ fontSize: '1.125rem' }}
+                      secondaryTypographyProps={{ color: '#ce93d8' }}
+                      secondary={safeJoin([place.admin1, place.country])}
                     />
                   </ListItem>
                   {idx !== results.length - 1 && <Divider />}
@@ -111,13 +109,7 @@ export function SearchPage() {
         </Card>
       ) : (
         <Box sx={{ display: 'grid', placeContent: 'center', flex: '1' }}>
-          {isLoading ? (
-            <CircularProgress color="secondary" />
-          ) : (
-            <DialogContentText>
-              {search.length === 0 ? 'Please enter your location.' : 'Nothing has been found.'}
-            </DialogContentText>
-          )}
+          {isFetching ? <CircularProgress color="secondary" /> : <DialogContentText>{feedback}</DialogContentText>}
         </Box>
       )}
     </BaseMenuPage>

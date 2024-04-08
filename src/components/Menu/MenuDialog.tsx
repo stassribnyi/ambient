@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { useOutlet, useNavigate } from 'react-router-dom';
 
 import { Slide, IconButton, Dialog, useTheme, useMediaQuery } from '@mui/material';
@@ -6,6 +6,7 @@ import type { TransitionProps } from '@mui/material/transitions';
 import { Menu as MenuIcon } from '@mui/icons-material';
 
 import { MenuPageRoutes } from './routes';
+import { useLocations } from '@/hooks';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -27,6 +28,13 @@ export function MenuDialog() {
   const outlet = useOutlet();
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isPending, primary } = useLocations();
+
+  useEffect(() => {
+    if (!isPending && !primary) {
+      navigate(MenuPageRoutes.WELCOME);
+    }
+  }, [navigate, isPending, primary]);
 
   return (
     <>
@@ -35,7 +43,7 @@ export function MenuDialog() {
       </IconButton>
       <Dialog
         open={!!outlet}
-        onClose={() => navigate('/')}
+        onClose={() => (primary ? navigate('/') : null)}
         fullScreen={isMobile}
         TransitionComponent={Transition}
         sx={{
