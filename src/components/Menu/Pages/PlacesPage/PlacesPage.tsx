@@ -10,6 +10,7 @@ import { EditHeader, Header } from './Header';
 import { useLocations } from '../../../../hooks';
 import { Location } from '../../../../vite-env';
 import { useNavigate } from 'react-router-dom';
+import { MenuPageRoutes } from '../../routes';
 
 const Title: FC<PropsWithChildren> = ({ children }) => (
   <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
@@ -32,6 +33,7 @@ export const PlacesPage: FC = () => {
   const handleSelect = (value: Location) => {
     if (!isEdit) {
       addLocation(value);
+      navigate('/');
 
       return;
     }
@@ -78,7 +80,7 @@ export const PlacesPage: FC = () => {
         isEdit ? (
           <EditHeader selected={isAllSelected} onCancel={handleExitEditMode} onToggle={handleToggleSelect} />
         ) : (
-          <Header onAdd={() => navigate('/search')} onEdit={handleEnterEditMode} />
+          <Header onAdd={() => navigate(MenuPageRoutes.SEARCH)} onEdit={handleEnterEditMode} />
         )
       }
       handleBackButton={() => navigate('/')}
