@@ -1,10 +1,11 @@
 import { forwardRef } from 'react';
+import { useOutlet, useNavigate } from 'react-router-dom';
 
 import { Slide, IconButton, Dialog, useTheme, useMediaQuery } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
 import { Menu as MenuIcon } from '@mui/icons-material';
 
-import { useOutlet, useNavigate } from 'react-router-dom';
+import { MenuPageRoutes } from './routes';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -18,14 +19,8 @@ const Transition = forwardRef(function Transition(
   return <Slide direction={isMobile ? 'right' : 'down'} ref={ref} {...props} />;
 });
 
-enum MenuPage {
-  INDEX = 'settings',
-  SEARCH = 'search',
-  WELCOME = 'welcome',
-}
-
+// TODO: use route guards
 // const SCREEN_LOCK_PAGES = [MenuPage.WELCOME, MenuPage.SEARCH];
-// const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 
 export function MenuDialog() {
   const theme = useTheme();
@@ -33,22 +28,14 @@ export function MenuDialog() {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleClickOpen = () => {
-    navigate(MenuPage.INDEX);
-  };
-
-  const handleClose = () => {
-    navigate('/');
-  };
-
   return (
     <>
-      <IconButton edge="start" sx={{ fontSize: '2rem' }} onClick={handleClickOpen}>
+      <IconButton edge="start" sx={{ fontSize: '2rem' }} onClick={() => navigate(MenuPageRoutes.SETTINGS)}>
         <MenuIcon fontSize="inherit" />
       </IconButton>
       <Dialog
         open={!!outlet}
-        onClose={handleClose}
+        onClose={() => navigate('/')}
         fullScreen={isMobile}
         TransitionComponent={Transition}
         sx={{

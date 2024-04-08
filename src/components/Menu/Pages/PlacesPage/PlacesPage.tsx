@@ -7,8 +7,8 @@ import { LocationItem } from './LocationItem';
 import { ListActions } from './ListActions';
 import { EditHeader, Header } from './Header';
 
-import { useLocations } from '../../../hooks';
-import { Location } from '../../../vite-env';
+import { useLocations } from '../../../../hooks';
+import { Location } from '../../../../vite-env';
 import { useNavigate } from 'react-router-dom';
 
 const Title: FC<PropsWithChildren> = ({ children }) => (
@@ -17,7 +17,7 @@ const Title: FC<PropsWithChildren> = ({ children }) => (
   </Typography>
 );
 
-export const LocationList: FC = () => {
+export const PlacesPage: FC = () => {
   const navigate = useNavigate();
   const { locations, primary: favorite, addLocation, deleteLocations } = useLocations();
 

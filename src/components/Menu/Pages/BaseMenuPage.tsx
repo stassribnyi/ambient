@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from 'react';
-import { AppBar, Toolbar, Stack, DialogContent, Slide, IconButton, Box } from '@mui/material';
+import { AppBar, Toolbar, Stack, Slide, IconButton, Box } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
+import { DialogLayout } from './DialogLayout';
 
 export const BaseMenuPage: FC<
   PropsWithChildren<
@@ -37,24 +38,7 @@ export const BaseMenuPage: FC<
           </Toolbar>
         </AppBar>
       ) : null}
-      <DialogContent
-        sx={{
-          p: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          borderRadius: '16px',
-        }}
-      >
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          {children}
-        </Box>
-      </DialogContent>
+      <DialogLayout>{children}</DialogLayout>
       <Slide mountOnEnter unmountOnExit in={showActions} direction="up">
         <Box>{actions}</Box>
       </Slide>

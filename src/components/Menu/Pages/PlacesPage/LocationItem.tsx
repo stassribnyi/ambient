@@ -2,9 +2,9 @@ import { FC } from 'react';
 import { RadioButtonUnchecked, CheckCircle } from '@mui/icons-material';
 import { Card, ButtonBase, CardContent, Stack, Checkbox, Typography } from '@mui/material';
 
-import { useForecastPreview, useLongPress, useUnitsConverter } from '../../../hooks';
-import { Location } from '../../../vite-env';
-import { WMOIcon } from '../../Icons';
+import { useForecastPreview, useLongPress, useUnitsConverter } from '../../../../hooks';
+import { Location } from '../../../../vite-env';
+import { WMOIcon } from '../../../Icons';
 
 export const LocationItem: FC<
   Readonly<{

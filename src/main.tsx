@@ -10,9 +10,10 @@ import App from './App.tsx';
 
 import { Layout } from './components';
 import { ErrorPage } from './components/ErrorPage.tsx';
-import { Welcome } from './components/Menu/Welcome.tsx';
-import { LocationList } from './components/Menu/LocationList';
-import { LocationSearch } from './components/Menu/LocationSearch.tsx';
+
+import { WelcomePage, PlacesPage, SearchPage } from './components/Menu/Pages';
+
+import { MenuPageRoutes } from './components/Menu/routes.ts';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,20 +28,20 @@ const router = createHashRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
-
     // loader: https://reactrouter.com/en/main/route/loader,
+
     children: [
       {
-        path: 'welcome',
-        element: <Welcome />,
+        path: MenuPageRoutes.WELCOME,
+        element: <WelcomePage />,
       },
       {
-        path: 'settings',
-        element: <LocationList />,
+        path: MenuPageRoutes.SETTINGS,
+        element: <PlacesPage />,
       },
       {
-        path: 'search',
-        element: <LocationSearch />,
+        path: MenuPageRoutes.SEARCH,
+        element: <SearchPage />,
       },
     ],
   },

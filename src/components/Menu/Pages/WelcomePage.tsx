@@ -1,13 +1,14 @@
 import { IconButton, Box, Typography } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 
-import { BaseMenuPage } from './BaseMenuPage';
-import { Meteocon } from '../Icons';
+import { Meteocon } from '../../Icons';
 import { Link } from 'react-router-dom';
+import { DialogLayout } from './DialogLayout';
+import { MenuPageRoutes } from '../routes';
 
-export function Welcome() {
+export function WelcomePage() {
   return (
-    <BaseMenuPage>
+    <DialogLayout>
       <Box
         sx={{
           pb: 4,
@@ -27,10 +28,15 @@ export function Welcome() {
           </Typography>
           <Typography color="secondary">Weather Forecast</Typography>
         </Box>
-        <IconButton component={Link} aria-aria-label="search" to="/search" sx={{ backgroundColor: 'secondary.dark' }}>
+        <IconButton
+          component={Link}
+          aria-aria-label="search"
+          to={MenuPageRoutes.SEARCH}
+          sx={{ backgroundColor: 'secondary.dark' }}
+        >
           <ArrowForward />
         </IconButton>
       </Box>
-    </BaseMenuPage>
+    </DialogLayout>
   );
 }

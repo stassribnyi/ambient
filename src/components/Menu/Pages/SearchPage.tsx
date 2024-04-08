@@ -17,11 +17,12 @@ import {
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useGeoPosition, useLocations, useSearch } from '../../hooks';
-import { Location } from '../../vite-env';
+import { useGeoPosition, useLocations, useSearch } from '../../../hooks';
+import { Location } from '../../../vite-env';
 import { useNavigate } from 'react-router-dom';
+import { MenuPageRoutes } from '../routes';
 
-export function LocationSearch() {
+export function SearchPage() {
   const [search, setSearch] = useState<string>(''); // FIXME: change naming
   const debouncedSearch = useDebounce<string>(search, 500);
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export function LocationSearch() {
   const handleSelect = async (option: Location) => {
     setSearch('');
     await addLocation(option);
-    navigate('/settings');
+    navigate(MenuPageRoutes.SETTINGS);
   };
 
   // FIXME: debouncing search phrase causes 'Nothing found' for a split second
@@ -55,7 +56,7 @@ export function LocationSearch() {
             sx={{ fontSize: '2rem' }}
             edge="start"
             color="inherit"
-            onClick={() => navigate(primary ? '/' : '/welcome')}
+            onClick={() => navigate(primary ? MenuPageRoutes.SETTINGS : MenuPageRoutes.WELCOME)}
             aria-label="close"
           >
             <ChevronLeft fontSize="inherit" />
