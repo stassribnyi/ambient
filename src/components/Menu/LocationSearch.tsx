@@ -17,19 +17,16 @@ import {
 
 import { BaseMenuPage } from './BaseMenuPage';
 
-import { useGeoPosition, useSearch } from '../../hooks';
+import { useGeoPosition, useLocations, useSearch } from '../../hooks';
 import { Location } from '../../vite-env';
+import { useNavigate } from 'react-router-dom';
 
-export function LocationSearch({
-  onBackButton,
-  onSubmit,
-}: {
-  onBackButton: () => void;
-  onSubmit: (location: Location) => void;
-}) {
+export function LocationSearch() {
   const [search, setSearch] = useState<string>(''); // FIXME: change naming
   const debouncedSearch = useDebounce<string>(search, 500);
+  const navigate = useNavigate();
 
+  const { isPending, primary, addLocation } = useLocations();
   const { isLoading: isRequesting, data: position } = useGeoPosition();
   const { isLoading: isSearching, data: results = [] } = useSearch(debouncedSearch?.trim());
 
@@ -41,19 +38,26 @@ export function LocationSearch({
     setSearch([position.name, position.country].filter(Boolean).join(', '));
   }, [position]);
 
-  const handleSelect = (option: Location) => {
+  const handleSelect = async (option: Location) => {
     setSearch('');
-    onSubmit(option);
+    await addLocation(option);
+    navigate('/settings');
   };
 
   // FIXME: debouncing search phrase causes 'Nothing found' for a split second
-  const isLoading = isRequesting || isSearching;
+  const isLoading = isPending || isRequesting || isSearching;
 
   return (
     <BaseMenuPage
       header={
         <>
-          <IconButton sx={{ fontSize: '2rem' }} edge="start" color="inherit" onClick={onBackButton} aria-label="close">
+          <IconButton
+            sx={{ fontSize: '2rem' }}
+            edge="start"
+            color="inherit"
+            onClick={() => navigate(primary ? '/' : '/welcome')}
+            aria-label="close"
+          >
             <ChevronLeft fontSize="inherit" />
           </IconButton>
 

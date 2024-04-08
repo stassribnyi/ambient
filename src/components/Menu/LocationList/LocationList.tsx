@@ -9,6 +9,7 @@ import { EditHeader, Header } from './Header';
 
 import { useLocations } from '../../../hooks';
 import { Location } from '../../../vite-env';
+import { useNavigate } from 'react-router-dom';
 
 const Title: FC<PropsWithChildren> = ({ children }) => (
   <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
@@ -16,14 +17,9 @@ const Title: FC<PropsWithChildren> = ({ children }) => (
   </Typography>
 );
 
-export const LocationList: FC<
-  Readonly<{
-    onBackButton: () => void;
-    onAdd: () => void;
-    onSelect: (value: Location) => void;
-  }>
-> = ({ onBackButton, onAdd, onSelect }) => {
-  const { locations, primary: favorite, deleteLocations } = useLocations();
+export const LocationList: FC = () => {
+  const navigate = useNavigate();
+  const { locations, primary: favorite, addLocation, deleteLocations } = useLocations();
 
   const otherLocations = locations.filter((l) => l.id !== favorite?.id);
   const [selected, setSelected] = useState<Array<Location>>([]);
@@ -35,7 +31,7 @@ export const LocationList: FC<
 
   const handleSelect = (value: Location) => {
     if (!isEdit) {
-      onSelect(value);
+      addLocation(value);
 
       return;
     }
@@ -60,7 +56,7 @@ export const LocationList: FC<
   };
 
   const handleSetFavorite = () => {
-    onSelect(selected[0]);
+    addLocation(selected[0]);
     handleExitEditMode();
   };
 
@@ -82,10 +78,10 @@ export const LocationList: FC<
         isEdit ? (
           <EditHeader selected={isAllSelected} onCancel={handleExitEditMode} onToggle={handleToggleSelect} />
         ) : (
-          <Header onAdd={onAdd} onEdit={handleEnterEditMode} />
+          <Header onAdd={() => navigate('/search')} onEdit={handleEnterEditMode} />
         )
       }
-      handleBackButton={onBackButton}
+      handleBackButton={() => navigate('/')}
     >
       {favorite ? (
         <>

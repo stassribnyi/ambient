@@ -1,15 +1,10 @@
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
 
 import { Slide, IconButton, Dialog, useTheme, useMediaQuery } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
 import { Menu as MenuIcon } from '@mui/icons-material';
 
-import { LocationSearch } from './LocationSearch';
-import { LocationList } from './LocationList';
-import { Welcome } from './Welcome';
-
-import { useHash, useLocations } from '../../hooks';
-import { Location } from '../../vite-env';
+import { useOutlet, useNavigate } from 'react-router-dom';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,75 +24,22 @@ enum MenuPage {
   WELCOME = 'welcome',
 }
 
-const SCREEN_LOCK_PAGES = [MenuPage.WELCOME, MenuPage.SEARCH];
-const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
+// const SCREEN_LOCK_PAGES = [MenuPage.WELCOME, MenuPage.SEARCH];
+// const ALLOWED_PAGES = [MenuPage.INDEX, MenuPage.SEARCH, MenuPage.WELCOME];
 
 export function MenuDialog() {
   const theme = useTheme();
+  const outlet = useOutlet();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { locations, addLocation, isPending } = useLocations();
-
-  const [hash, setHash] = useHash();
-
-  useEffect(() => {
-    if (!hash) {
-      return;
-    }
-
-    if (ALLOWED_PAGES.includes(hash as MenuPage)) {
-      setHash(hash);
-
-      return;
-    }
-
-    setHash(null);
-  }, [hash, setHash]);
-
-  useEffect(() => {
-    if (isPending || locations.length > 0 || SCREEN_LOCK_PAGES.includes(hash as MenuPage)) {
-      return;
-    }
-
-    setHash(MenuPage.WELCOME);
-  }, [isPending, hash, locations.length, setHash]);
 
   const handleClickOpen = () => {
-    setHash(MenuPage.INDEX);
+    navigate(MenuPage.INDEX);
   };
 
   const handleClose = () => {
-    setHash(null);
+    navigate('/');
   };
-
-  const handleOptionSelect = async (option: Location) => {
-    // TODO: consider adding animation for setting new location as primary?
-    await addLocation(option);
-
-    if (!locations.includes(option)) {
-      setHash(MenuPage.INDEX);
-
-      return;
-    }
-
-    handleClose();
-  };
-
-  function MenuRoutes() {
-    switch (hash) {
-      case MenuPage.SEARCH:
-        return <LocationSearch onBackButton={() => setHash(MenuPage.INDEX)} onSubmit={handleOptionSelect} />;
-      case MenuPage.WELCOME:
-        return <Welcome onNext={() => setHash(MenuPage.SEARCH)} />;
-      default:
-        return (
-          <LocationList
-            onAdd={() => setHash(MenuPage.SEARCH)}
-            onBackButton={handleClose}
-            onSelect={handleOptionSelect}
-          />
-        );
-    }
-  }
 
   return (
     <>
@@ -105,7 +47,7 @@ export function MenuDialog() {
         <MenuIcon fontSize="inherit" />
       </IconButton>
       <Dialog
-        open={ALLOWED_PAGES.includes(hash as MenuPage)}
+        open={!!outlet}
         onClose={handleClose}
         fullScreen={isMobile}
         TransitionComponent={Transition}
@@ -134,7 +76,7 @@ export function MenuDialog() {
           },
         }}
       >
-        <MenuRoutes />
+        {outlet}
       </Dialog>
     </>
   );

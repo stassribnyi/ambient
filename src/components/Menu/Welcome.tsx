@@ -3,8 +3,9 @@ import { ArrowForward } from '@mui/icons-material';
 
 import { BaseMenuPage } from './BaseMenuPage';
 import { Meteocon } from '../Icons';
+import { Link } from 'react-router-dom';
 
-export function Welcome({ onNext }: { onNext: () => void }) {
+export function Welcome() {
   return (
     <BaseMenuPage>
       <Box
@@ -26,7 +27,7 @@ export function Welcome({ onNext }: { onNext: () => void }) {
           </Typography>
           <Typography color="secondary">Weather Forecast</Typography>
         </Box>
-        <IconButton aria-aria-label="search" onClick={onNext} sx={{ backgroundColor: 'secondary.dark' }}>
+        <IconButton component={Link} aria-aria-label="search" to="/search" sx={{ backgroundColor: 'secondary.dark' }}>
           <ArrowForward />
         </IconButton>
       </Box>
