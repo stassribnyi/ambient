@@ -2,9 +2,12 @@ import { FC } from 'react';
 import { RadioButtonUnchecked, CheckCircle } from '@mui/icons-material';
 import { Card, ButtonBase, CardContent, Stack, Checkbox, Typography } from '@mui/material';
 
-import { useForecastPreview, useLongPress, useUnitsConverter } from '../../../hooks';
-import { Location } from '../../../vite-env';
-import { WMOIcon } from '../../Icons';
+import { useForecastPreview, useLongPress, useUnitsConverter } from '@/hooks';
+import { safeJoin } from '@/utils';
+
+import { WMOIcon } from '@components/Icons';
+
+import { Location } from '@/vite-env';
 
 export const LocationItem: FC<
   Readonly<{
@@ -41,7 +44,7 @@ export const LocationItem: FC<
               <Stack alignItems="start">
                 <Typography sx={{ fontSize: '1.125rem' }}>{value.name}</Typography>
                 <Typography variant="caption" color="secondary">
-                  {[value.admin1, value.country].filter(Boolean).join(', ')}
+                  {safeJoin([value.admin1, value.country])}
                 </Typography>
               </Stack>
             </Stack>

@@ -104,6 +104,7 @@ export interface Daily {
   precipitation_probability_max: number[];
 }
 
+// TODO: change to places
 export interface Location {
   id: number | string;
   name: string;

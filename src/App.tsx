@@ -20,6 +20,7 @@ import { useDocumentTitle } from 'usehooks-ts';
 
 import { Block, MenuDialog, UnitSwitch, Time, WMO_INFO, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
+import { safeJoin } from './utils';
 
 const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
 
@@ -115,7 +116,7 @@ function App() {
                       }}
                     >
                       <LocationOn sx={{ width: '1rem', height: '1rem' }} />
-                      {[location.name, location.admin1, location.country].filter(Boolean).join(', ')}
+                      {safeJoin([location.name, location.admin1, location.country])}
                     </Typography>
                   )}
                 </Stack>
