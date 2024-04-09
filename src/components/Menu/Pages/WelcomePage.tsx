@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 import { IconButton, Box, Typography } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 
-import { DialogLayout } from './DialogLayout';
+import { DialogContent } from './DialogContent';
 import { Meteocon } from '../../Icons';
 
 import { MenuPageRoutes } from '../routes';
 
 export const WelcomePage: FC = () => (
-  <DialogLayout>
+  <DialogContent>
     <Box
       sx={{
         pb: 4,
@@ -39,5 +39,5 @@ export const WelcomePage: FC = () => (
         <ArrowForward />
       </IconButton>
     </Box>
-  </DialogLayout>
+  </DialogContent>
 );

@@ -28,8 +28,6 @@ const router = createHashRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
-    // loader: https://reactrouter.com/en/main/route/loader,
-
     children: [
       {
         path: MenuPageRoutes.WELCOME,

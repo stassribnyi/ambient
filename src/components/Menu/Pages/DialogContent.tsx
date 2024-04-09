@@ -1,10 +1,9 @@
 import { FC, PropsWithChildren } from 'react';
-import { DialogContent, Box } from '@mui/material';
+import { DialogContent as Content, Box } from '@mui/material';
 
-// TODO: use different name
-export const DialogLayout: FC<PropsWithChildren> = ({ children }) => {
+export const DialogContent: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <DialogContent
+    <Content
       sx={{
         p: 1,
         display: 'flex',
@@ -21,6 +20,6 @@ export const DialogLayout: FC<PropsWithChildren> = ({ children }) => {
       >
         {children}
       </Box>
-    </DialogContent>
+    </Content>
   );
 };

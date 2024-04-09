@@ -35,9 +35,9 @@ export const PlacesPage: FC = () => {
   const isAllSelected = selected.length === locations.length;
   const isSetFavoriteVisible = selected.length === 1 && selected[0].id !== favorite?.id;
 
-  const handleSelect = (value: Location) => {
+  const handleSelect = async (value: Location) => {
     if (!isEdit) {
-      addLocation(value);
+      await addLocation(value);
       navigate('/');
 
       return;

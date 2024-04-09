@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Stack, IconButton } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
 
-import { DialogLayout } from './DialogLayout';
+import { DialogContent } from './DialogContent';
 
 export const BaseMenuPage: FC<
   PropsWithChildren<
@@ -36,6 +36,6 @@ export const BaseMenuPage: FC<
         </Stack>
       </Toolbar>
     </AppBar>
-    <DialogLayout>{children}</DialogLayout>
+    <DialogContent>{children}</DialogContent>
   </>
 );

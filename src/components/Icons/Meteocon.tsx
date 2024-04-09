@@ -26,6 +26,6 @@ export const Meteocon: FC<MeteoconProps> = ({ alt, name, animated = false, size 
     component="img"
     src={getMeteoconUrl(name, animated ? 'animated' : 'static')}
     alt={alt}
-    sx={{ width: `${size}px` }}
+    sx={{ width: `${size}px`, height: `${size}px` }}
   />
 );
