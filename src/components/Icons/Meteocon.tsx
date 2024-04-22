@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
+import { Box, SxProps, Theme } from '@mui/material';
 
 import type { MeteoconSvg } from '@typings/assets';
 
@@ -9,6 +9,7 @@ export type MeteoconProps = Readonly<{
   name: MeteoconSvg;
   size?: number;
   variant?: 'animated' | 'static';
+  sx?: SxProps<Theme>;
 }>;
 
 function getMeteoconUrl(name: MeteoconProps['name'], variant: MeteoconProps['variant']) {
@@ -20,12 +21,12 @@ function getMeteoconUrl(name: MeteoconProps['name'], variant: MeteoconProps['var
   return url.href;
 }
 
-export const Meteocon: FC<MeteoconProps> = ({ alt, name, animated = false, size = 48 }) => (
+export const Meteocon: FC<MeteoconProps> = ({ alt, name, animated = false, size = 48, sx }) => (
   <Box
     draggable={false}
     component="img"
     src={getMeteoconUrl(name, animated ? 'animated' : 'static')}
     alt={alt}
-    sx={{ width: `${size}px`, height: `${size}px` }}
+    sx={{ width: `${size}px`, height: `${size}px`, ...sx }}
   />
 );

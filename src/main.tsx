@@ -11,7 +11,7 @@ import App from './App.tsx';
 import { Layout } from './components';
 import { ErrorPage } from './components/ErrorPage.tsx';
 
-import { WelcomePage, PlacesPage, SearchPage } from './components/Menu/Pages';
+import { WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
 
 import { MenuPageRoutes } from './components/Menu/routes.ts';
 
@@ -35,6 +35,10 @@ const router = createHashRouter([
       },
       {
         path: MenuPageRoutes.SETTINGS,
+        element: <SettingsPage />,
+      },
+      {
+        path: MenuPageRoutes.PLACES,
         element: <PlacesPage />,
       },
       {

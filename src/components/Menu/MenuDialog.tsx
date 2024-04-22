@@ -50,6 +50,7 @@ export function MenuDialog() {
               minHeight: '568px',
               maxHeight: '568px',
               minWidth: '360px',
+              maxWidth: '360px',
               overflowY: 'hidden',
             }),
           },
