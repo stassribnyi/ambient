@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { IconButton, Box, Typography } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 
+import { Branding } from '@/components';
+
 import { DialogContent } from './DialogContent';
-import { Meteocon } from '../../Icons';
 
 import { MenuPageRoutes } from '../routes';
 
@@ -21,15 +22,7 @@ export const WelcomePage: FC = () => (
         justifyContent: 'space-between',
       }}
     >
-      <Box sx={{ display: 'grid', placeItems: 'center' }}>
-        <Box sx={{ mb: 2 }}>
-          <Meteocon animated alt="partly cloudy day" name="partly-cloudy-day" size={256} />
-        </Box>
-        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-          Ambient
-        </Typography>
-        <Typography color="secondary">Weather Forecast</Typography>
-      </Box>
+      <Branding />
       <IconButton
         component={Link}
         aria-aria-label="search"

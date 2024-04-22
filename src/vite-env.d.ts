@@ -123,3 +123,9 @@ export interface ForecastPreview {
 }
 
 type MeasurementSystem = 'metric' | 'imperial';
+
+interface ImportMetaEnv {
+  readonly PACKAGE_VERSION: string;
+  readonly PACKAGE_REPOSITORY_URL: string;
+  readonly PACKAGE_BUILD_DATE: string;
+}

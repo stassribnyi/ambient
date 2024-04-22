@@ -61,6 +61,10 @@
     "workbox-window": "^7.0.0"
   },
   "homepage": "https://stassribnyi.github.io/ambient/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stassribnyi/ambient.git"
+  },
   "license": "MIT",
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
