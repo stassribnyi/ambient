@@ -4,5 +4,6 @@ export { Layout } from './Layout';
 export { MenuDialog } from './Menu';
 export { Time } from './Time';
 export { UnitSwitch } from './UnitSwitch';
+export { ActionItem } from './ActionItem';
 
 export * from './Icons';

@@ -9,6 +9,7 @@ import { WMOIcon } from '@components/Icons';
 
 import { Location } from '@/vite-env';
 
+// TODO: use ActionItem
 export const LocationItem: FC<
   Readonly<{
     isEdit?: boolean;

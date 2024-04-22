@@ -11,6 +11,8 @@ import { LocationItem } from './LocationItem';
 import { ListActions } from './ListActions';
 import { EditHeader, Header } from './Header';
 
+import { MenuPageRoutes } from '../../routes';
+
 const Title: FC<PropsWithChildren> = ({ children }) => (
   <Typography gutterBottom color="secondary.light" sx={{ pl: 1.5, fontSize: '0.9rem' }}>
     {children}
@@ -72,7 +74,7 @@ export const PlacesPage: FC = () => {
   return (
     <>
       <BaseMenuPage
-        backTo={!isEdit ? '/' : null}
+        backTo={!isEdit ? MenuPageRoutes.SETTINGS : null}
         header={
           // TODO: maybe combine header?
           isEdit ? (

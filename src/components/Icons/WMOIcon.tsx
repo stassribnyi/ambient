@@ -4,12 +4,14 @@ import { WMOCode } from '../../vite-env';
 
 import { type MeteoconProps, Meteocon } from './Meteocon';
 
+// FIXME: this code prop must not be nullable
 type WMOIconProps = Readonly<{
   animated?: boolean;
   code?: WMOCode;
   size?: number;
   variant?: 'day' | 'night';
-}>;
+}> &
+  Pick<MeteoconProps, 'sx'>;
 
 type Variant<T = string> = Readonly<{
   day: T;
@@ -91,13 +93,19 @@ export const WMO_INFO = new Map<WMOCode | undefined, Variant<{ name: MeteoconPro
   ]),
 );
 
-export const WMOIcon: FC<WMOIconProps> = ({ code, size, variant = 'day', animated = false }) => {
+export const WMOIcon: FC<WMOIconProps> = ({ code, size, variant = 'day', animated = false, sx }) => {
   const details = WMO_INFO.get(code);
 
   const isDay = variant === 'day';
   const info = isDay ? details?.day : details?.night;
 
   return (
-    <Meteocon animated={animated} alt={info?.description ?? 'N/A'} name={info?.name ?? 'not-available'} size={size} />
+    <Meteocon
+      animated={animated}
+      alt={info?.description ?? 'N/A'}
+      name={info?.name ?? 'not-available'}
+      size={size}
+      sx={sx}
+    />
   );
 };

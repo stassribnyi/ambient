@@ -11,7 +11,7 @@ export const BaseMenuPage: FC<
     Readonly<
       Partial<{
         backTo: string | null;
-        header: React.ReactElement;
+        header: React.ReactElement; // TODO: make consistent
       }>
     >
   >
