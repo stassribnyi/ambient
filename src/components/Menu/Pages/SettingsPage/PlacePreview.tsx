@@ -14,7 +14,7 @@ export const PlacePreview: FC<{ value: Location; onClick: () => void }> = ({ val
   return (
     <Card>
       <CardActionArea sx={{ p: 2 }} onClick={onClick}>
-        <Grid container spacing={1}>
+        <Grid container gap={1}>
           <Grid xs={12}>
             <Stack direction="row" justifyContent="space-between">
               <WMOIcon
