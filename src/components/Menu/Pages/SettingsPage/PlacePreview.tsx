@@ -4,7 +4,6 @@ import { Card, CardActionArea, Grid, Stack, Typography } from '@mui/material';
 
 import { WMOIcon, Temperature } from '@/components';
 import { useForecastPreview } from '@/hooks';
-import { safeJoin } from '@/utils';
 import { Location } from '@/vite-env';
 
 // TODO: consider reusing location item
@@ -37,7 +36,7 @@ export const PlacePreview: FC<{ value: Location; onClick: () => void }> = ({ val
               color="secondary"
               sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
             >
-              {safeJoin([value.name, value.admin1, value.country])}
+              {value.name}
             </Typography>
           </Grid>
         </Grid>

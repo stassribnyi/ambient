@@ -11,7 +11,7 @@ import App from './App.tsx';
 import { Layout } from './components';
 import { ErrorPage } from './components/ErrorPage.tsx';
 
-import { WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
+import { AboutPage, WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
 
 import { MenuPageRoutes } from './components/Menu/routes.ts';
 
@@ -44,6 +44,10 @@ const router = createHashRouter([
       {
         path: MenuPageRoutes.SEARCH,
         element: <SearchPage />,
+      },
+      {
+        path: MenuPageRoutes.ABOUT,
+        element: <AboutPage />,
       },
     ],
   },

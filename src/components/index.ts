@@ -6,5 +6,6 @@ export { MenuDialog } from './Menu';
 export { Time } from './Time';
 export { UnitSwitch } from './UnitSwitch';
 export { Temperature } from './Temperature';
+export { Branding } from './Branding';
 
 export * from './Icons';
