@@ -23,21 +23,19 @@ const ApplicationInfo: FC<Readonly<PropsWithChildren<{ label: string }>>> = ({ l
   </Typography>
 );
 
-export const AboutPage = () => {
-  return (
-    <BaseMenuPage backTo={MenuPageRoutes.SETTINGS}>
-      <Stack alignItems="center" justifyContent="space-between" sx={{ flex: 1, pb: 4 }}>
-        <Branding variant="compact" />
-        <Stack justifyContent="center">
-          <ApplicationInfo label="Application version">{PACKAGE_VERSION}</ApplicationInfo>
-          <ApplicationInfo label="Last updated at">{PACKAGE_BUILD_DATE}</ApplicationInfo>
-        </Stack>
-        <MuiLink color="secondary.light" component={Link} to={PACKAGE_REPOSITORY_URL} sx={{ display: 'flex', gap: 1 }}>
-          <GitHub />
-          Source code.
-        </MuiLink>
-        <Typography>©{format(new Date(), 'yyyy')} Stas Sribnyi. All rights reserved.</Typography>
+export const AboutPage = () => (
+  <BaseMenuPage backTo={MenuPageRoutes.SETTINGS}>
+    <Stack alignItems="center" justifyContent="space-between" sx={{ flex: 1, pb: 4 }}>
+      <Branding variant="compact" />
+      <Stack justifyContent="center">
+        <ApplicationInfo label="Application version">{PACKAGE_VERSION}</ApplicationInfo>
+        <ApplicationInfo label="Last updated at">{PACKAGE_BUILD_DATE}</ApplicationInfo>
       </Stack>
-    </BaseMenuPage>
-  );
-};
+      <MuiLink color="secondary.light" component={Link} to={PACKAGE_REPOSITORY_URL} sx={{ display: 'flex', gap: 1 }}>
+        <GitHub />
+        Source code.
+      </MuiLink>
+      <Typography>©{format(new Date(), 'yyyy')} Stas Sribnyi. All rights reserved.</Typography>
+    </Stack>
+  </BaseMenuPage>
+);
