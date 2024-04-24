@@ -21,10 +21,13 @@ import { useDocumentTitle } from 'usehooks-ts';
 import { Block, MenuDialog, UnitSwitch, Time, WMO_INFO, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 import { safeJoin } from './utils';
+import { useTranslation } from 'react-i18next';
 
 const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
 
 function App() {
+  const { t } = useTranslation();
+
   const { data: forecast, isLoading, error, refetch } = useForecast();
   const { primary: location } = useLocations();
 
@@ -138,8 +141,8 @@ function App() {
                   </Grid>
                   {!isMobile ? (
                     <Grid xs={12}>
-                      <Suspense fallback={<Fallback title="Checking Atmospheric Condition For You..." />}>
-                        <Block title="Atmospheric Conditions">
+                      <Suspense fallback={<Fallback title={t('atmospheric_conditions.fallback_message')} />}>
+                        <Block title={t('atmospheric_conditions.title')}>
                           <AtmosphericConditionChart series={forecast.series} />
                         </Block>
                       </Suspense>
@@ -151,7 +154,7 @@ function App() {
                         <RefreshOutlined fontSize="inherit" />
                       </IconButton>
                       <Typography color="secondary.light" variant="body2">
-                        Updated <Time value={forecast.lastUpdated} format="dd.mm, HH:mm" />
+                        {t('home.last_updated_at', { date: forecast.lastUpdated })}
                       </Typography>
                       <Typography
                         component="a"

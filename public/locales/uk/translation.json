@@ -1,0 +1,14 @@
+{
+  "home": {
+    "last_updated_at": "Updated {{ date, datetime(month: '2-digit'; day: '2-digit'; hour: '2-digit'; minute: '2-digit') }}"
+  },
+  "atmospheric_conditions": {
+    "title": "Atmospheric Conditions",
+    "cloud_cover": "Cloud Cover",
+    "relative_humidity": "Relative Humidity",
+    "precipitation_probability": "Precipitation probability",
+    "date": "{{ date, datetime(month: 'short'; day: 'numeric') }}",
+    "percentage": "{{ scale, number(style: 'percent') }}",
+    "fallback_message": "Checking Atmospheric Condition For You..."
+  }
+}

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Card, CardActionArea, Grid, Stack, Typography } from '@mui/material';
+import { Card, CardActionArea, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import { WMOIcon, Temperature } from '@/components';
 import { useForecastPreview } from '@/hooks';
