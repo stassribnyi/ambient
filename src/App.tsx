@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowDownward, LocationOn, RefreshOutlined } from '@mui/icons-material';
 import {
@@ -18,10 +19,9 @@ import {
 import { useForecast, useLocations } from './hooks';
 import { useDocumentTitle } from 'usehooks-ts';
 
-import { Block, MenuDialog, UnitSwitch, WMO_INFO, Fallback } from './components';
+import { Block, MenuDialog, UnitSwitch, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 import { safeJoin } from './utils';
-import { useTranslation } from 'react-i18next';
 
 const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
 
@@ -31,11 +31,15 @@ function App() {
   const { data: forecast, isLoading, error, refetch } = useForecast();
   const { primary: location } = useLocations();
 
+  const current = forecast?.current;
+  const weathercode = current?.weathercode;
+  const variant = current?.isDay ? 'day' : 'night';
+
   // FIXME: refactor
   useDocumentTitle(
-    forecast && location
-      ? `${location.name}, ${location.country} ${Math.round(forecast.current.temperature)}°, ${
-          WMO_INFO.get(forecast.current.weathercode)?.day?.description ?? t('common.not_available')
+    current && location
+      ? `${location.name}, ${location.country} ${Math.round(current.temperature)}°, ${
+          weathercode !== undefined ? t(`wmo_codes.${weathercode}.${variant}`) : t('common.not_available')
         } | Ambient`
       : 'Ambient',
   );

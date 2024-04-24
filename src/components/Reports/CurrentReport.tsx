@@ -6,7 +6,7 @@ import { Windspeed } from '../Windspeed';
 import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
 import { Tile } from '../Tile';
-import { BeaufortIcon, Meteocon, UVIndexIcon, WMOIcon, UV_INDEX_SCALE, WIND_BEAUFORT_SCALE, WMO_INFO } from '../Icons';
+import { BeaufortIcon, Meteocon, UVIndexIcon, WMOIcon } from '../Icons';
 
 import type { CurrentForecast } from '../../mappers';
 
@@ -48,8 +48,11 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
 }) => {
   const { t } = useTranslation();
 
-  const details = WMO_INFO.get(weathercode);
-  const description = (isDay ? details?.day : details?.night)?.description;
+  //FIXME: consider defaulting to day
+  const variant = isDay ? 'day' : 'night';
+
+  // TODO: review typescript checks, this should not be possible
+  const description = weathercode !== undefined ? t(`wmo_codes.${weathercode}.${variant}`) : t('common.not_available');
 
   return (
     <Stack gap={2} flex={1}>
@@ -62,13 +65,12 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           justifyContent: 'space-between',
         }}
       >
-        {/* FIXME: consider defaulting to day */}
-        <WMOIcon animated variant={isDay ? 'day' : 'night'} code={weathercode} size={184} />
+        <WMOIcon animated variant={variant} code={weathercode} size={184} />
         <Stack alignItems="center" justifyContent="center">
           <Typography variant="h2">
             <Temperature value={temperature} />
           </Typography>
-          <Typography variant="h6">{description ?? 'N/A'}</Typography>
+          <Typography variant="h6">{description}</Typography>
           <Typography color="secondary" variant="caption">
             Feels like <Temperature value={apparentTemperature} />
           </Typography>
@@ -85,7 +87,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <ReportTile
-            title={WIND_BEAUFORT_SCALE.get(beaufortScale)?.description ?? 'N/A'}
+            title={t(`beaufort_scale_codes.${beaufortScale}`) ?? t('common.not_available')}
             icon={<BeaufortIcon scale={beaufortScale} />}
           >
             <Windspeed value={windspeed} />
@@ -93,7 +95,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid xs={6} md={3}>
           <ReportTile title={t('report.current.uv_index')} icon={<UVIndexIcon scale={uvIndex} />}>
-            {UV_INDEX_SCALE.get(uvIndex)?.description ?? 'N/A'}
+            {t(`uv_index_codes.${uvIndex}`) ?? t('common.not_available')}
           </ReportTile>
         </Grid>
         <Grid xs={6} md={3}>

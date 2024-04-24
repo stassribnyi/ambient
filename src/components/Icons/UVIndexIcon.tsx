@@ -1,30 +1,38 @@
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { UVIndexScale } from '../../vite-env';
 
 import { type MeteoconProps, Meteocon } from './Meteocon';
 
-// FIXME: reuse types
-export const UV_INDEX_SCALE = new Map<UVIndexScale | undefined, { name: MeteoconProps['name']; description: string }>([
-  [1, { name: 'uv-index-1', description: 'Low' }],
-  [2, { name: 'uv-index-2', description: 'Low' }],
-  [3, { name: 'uv-index-3', description: 'Moderate' }],
-  [4, { name: 'uv-index-4', description: 'Moderate' }],
-  [5, { name: 'uv-index-5', description: 'Moderate' }],
-  [6, { name: 'uv-index-6', description: 'High' }],
-  [7, { name: 'uv-index-7', description: 'High' }],
-  [8, { name: 'uv-index-8', description: 'Very High' }],
-  [9, { name: 'uv-index-9', description: 'Very High' }],
-  [10, { name: 'uv-index-10', description: 'Extreme' }],
-  [11, { name: 'uv-index-11', description: 'Extreme' }],
-]);
+const UV_INDEX_SCALE: Record<UVIndexScale, MeteoconProps['name']> = {
+  1: 'uv-index-1',
+  2: 'uv-index-2',
+  3: 'uv-index-3',
+  4: 'uv-index-4',
+  5: 'uv-index-5',
+  6: 'uv-index-6',
+  7: 'uv-index-7',
+  8: 'uv-index-8',
+  9: 'uv-index-9',
+  10: 'uv-index-10',
+  11: 'uv-index-11',
+} as const;
 
 type UVIndexIconProps = Readonly<{
-  scale?: UVIndexScale;
+  scale?: UVIndexScale; //TODO: must not be null
   size?: number;
 }>;
 
 export const UVIndexIcon: FC<UVIndexIconProps> = ({ scale, size }) => {
-  const info = UV_INDEX_SCALE.get(scale);
+  const { t } = useTranslation();
 
-  return <Meteocon animated alt={info?.description ?? 'N/A'} name={info?.name ?? 'uv-index'} size={size} />;
+  return (
+    <Meteocon
+      animated
+      alt={scale ? t(`uv_index_codes.${scale}`) : t('common.not_available')}
+      name={scale ? UV_INDEX_SCALE[scale] : 'uv-index'}
+      size={size}
+    />
+  );
 };

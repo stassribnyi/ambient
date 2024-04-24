@@ -1,9 +1,36 @@
 /// <reference types="vite/client" />
 
 // FIXME: move into @types
-import { WMO_INFO } from './utils/wmo';
+export type WMOCode =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 45
+  | 48
+  | 51
+  | 53
+  | 55
+  | 56
+  | 57
+  | 61
+  | 63
+  | 65
+  | 66
+  | 67
+  | 71
+  | 73
+  | 75
+  | 77
+  | 80
+  | 81
+  | 82
+  | 85
+  | 86
+  | 95
+  | 96
+  | 99;
 
-export type WMOCode = keyof typeof WMO_INFO;
 export type BeaufortScale = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type UVIndexScale = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 

@@ -17,7 +17,7 @@ export const SettingsItem: FC<SettingItemProps> = ({ name, icon, to, unavailable
     <Typography sx={{ fontSize: '1.125rem' }}>
       {name}
       {unavailable ? (
-        <Typography component="p" variant="caption" sx={{ fontStyle: 'italic' }}>
+        <Typography variant="caption" sx={{ fontStyle: 'italic', display: 'block' }}>
           (coming soon)
         </Typography>
       ) : null}

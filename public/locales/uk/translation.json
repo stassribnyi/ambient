@@ -1,14 +1,94 @@
 {
+  "common": {
+    "not_available": "Н/Д",
+    "percent": "{{ value, number(style: 'percent') }}",
+    "time": "{{ time, datetime(hour: '2-digit'; minute: '2-digit') }}"
+  },
   "home": {
-    "last_updated_at": "Updated {{ date, datetime(month: '2-digit'; day: '2-digit'; hour: '2-digit'; minute: '2-digit') }}"
+    "pull_to_refresh": {
+      "pulling_content": "Потягніть вниз, щоб перевірити небо",
+      "refreshing_content": "Перевіряю небо для вас…"
+    },
+    "today": "{{ date, datetime(weekday: 'long'; month: 'short'; day: '2-digit'), capitalize }}",
+    "last_updated_at": "Оновлено {{ date, datetime(month: '2-digit'; day: '2-digit'; hour: '2-digit'; minute: '2-digit') }}"
+  },
+  "report": {
+    "hourly": { "title": "Сьогодні" },
+    "daily": {
+      "title": "Прогноз на 10 днів (Множина)",
+      "weekday": "{{ date, datetime(weekday: 'long'), capitalize }}"
+    },
+    "current": {
+      "humidity": "Вологість",
+      "uv_index": "Індекс УФ",
+      "sunset": "Захід сонця",
+      "sunrise": "Схід сонця"
+    }
   },
   "atmospheric_conditions": {
-    "title": "Atmospheric Conditions",
-    "cloud_cover": "Cloud Cover",
-    "relative_humidity": "Relative Humidity",
-    "precipitation_probability": "Precipitation probability",
+    "title": "Атмосферні умови",
+    "cloud_cover": "Хмарність",
+    "relative_humidity": "Відносна вологість",
+    "precipitation_probability": "Ймовірність опадів",
     "date": "{{ date, datetime(month: 'short'; day: 'numeric') }}",
-    "percentage": "{{ scale, number(style: 'percent') }}",
-    "fallback_message": "Checking Atmospheric Condition For You..."
+    "fallback_message": "Перевіряю атмосферні умови для вас..."
+  },
+  "wmo_codes": {
+    "0": { "day": "Сонячно", "night": "Ясно" },
+    "1": { "day": "Переважно сонячно", "night": "Переважно ясно" },
+    "2": { "day": "Частково хмарно", "night": "Частково хмарно" },
+    "3": { "day": "Хмарно", "night": "Хмарно" },
+    "45": { "day": "Туманно", "night": "Туманно" },
+    "48": { "day": "Морозний туман", "night": "Морозний туман" },
+    "51": { "day": "Легкий мряка", "night": "Легкий мряка" },
+    "53": { "day": "Мряка", "night": "Мряка" },
+    "55": { "day": "Сильний мряка", "night": "Сильний мряка" },
+    "56": { "day": "Легкий крижаний мряка", "night": "Легкий крижаний мряка" },
+    "57": { "day": "Крижаний мряка", "night": "Крижаний мряка" },
+    "61": { "day": "Легкий дощ", "night": "Легкий дощ" },
+    "63": { "day": "Дощ", "night": "Дощ" },
+    "65": { "day": "Сильний дощ", "night": "Сильний дощ" },
+    "66": { "day": "Легкий крижаний дощ", "night": "Легкий крижаний дощ" },
+    "67": { "day": "Крижаний дощ", "night": "Крижаний дощ" },
+    "71": { "day": "Легкий сніг", "night": "Легкий сніг" },
+    "73": { "day": "Сніг", "night": "Сніг" },
+    "75": { "day": "Сильний сніг", "night": "Сильний сніг" },
+    "77": { "day": "Сніжинки", "night": "Сніжинки" },
+    "80": { "day": "Легкий дощ зі снігом", "night": "Легкий дощ зі снігом" },
+    "81": { "day": "Дощ зі снігом", "night": "Дощ зі снігом" },
+    "82": { "day": "Сильний дощ зі снігом", "night": "Сильний дощ зі снігом" },
+    "85": { "day": "Легкі сніжні зливи", "night": "Легкі сніжні зливи" },
+    "86": { "day": "Сніжні зливи", "night": "Сніжні зливи" },
+    "95": { "day": "Гроза", "night": "Гроза" },
+    "96": { "day": "Легка гроза з градом", "night": "Легка гроза з градом" },
+    "99": { "day": "Гроза з градом", "night": "Гроза з градом" }
+  },
+  "uv_index_codes": {
+    "1": "Низький",
+    "2": "Низький",
+    "3": "Середній",
+    "4": "Середній",
+    "5": "Середній",
+    "6": "Високий",
+    "7": "Високий",
+    "8": "Дуже високий",
+    "9": "Дуже високий",
+    "10": "Екстремальний",
+    "11": "Екстремальний"
+  },
+  "beaufort_scale_codes": {
+    "0": "Спокій",
+    "1": "Легкий вітер",
+    "2": "Легкий бриз",
+    "3": "Помірний бриз",
+    "4": "Середній бриз",
+    "5": "Свіжий бриз",
+    "6": "Сильний бриз",
+    "7": "Близький шторм",
+    "8": "Шторм",
+    "9": "Сильний шторм",
+    "10": "Шторм",
+    "11": "Сильний шторм",
+    "12": "Ураган"
   }
 }
