@@ -1,6 +1,29 @@
 {
+  "common": {
+    "not_available": "N/A",
+    "percent": "{{ value, number(style: 'percent') }}",
+    "time": "{{ time, datetime(hour: '2-digit'; minute: '2-digit') }}"
+  },
   "home": {
+    "pull_to_refresh": {
+      "pulling_content": "Pull down to check the sky",
+      "refreshing_content": "Checking the sky for you…"
+    },
+    "today": "{{ date, datetime(weekday: 'long'; month: 'short'; day: '2-digit'), capitalize }}",
     "last_updated_at": "Updated {{ date, datetime(month: '2-digit'; day: '2-digit'; hour: '2-digit'; minute: '2-digit') }}"
+  },
+  "report": {
+    "hourly": { "title": "Today" },
+    "daily": {
+      "title": "10-Days Forecast (Pluralize)",
+      "weekday": "{{ date, datetime(weekday: 'long'), capitalize }}"
+    },
+    "current": {
+      "humidity": "Humidity",
+      "uv_index": "UV Index",
+      "sunset": "Sunset",
+      "sunrise": "Sunrise"
+    }
   },
   "atmospheric_conditions": {
     "title": "Atmospheric Conditions",
@@ -8,7 +31,6 @@
     "relative_humidity": "Relative Humidity",
     "precipitation_probability": "Precipitation probability",
     "date": "{{ date, datetime(month: 'short'; day: 'numeric') }}",
-    "percentage": "{{ scale, number(style: 'percent') }}",
     "fallback_message": "Checking Atmospheric Condition For You..."
   }
 }

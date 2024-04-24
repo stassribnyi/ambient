@@ -9,7 +9,7 @@ const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
 }) => {
   const { t, i18n } = useTranslation();
 
-  const percentageFormatter = (scale: number) => t('atmospheric_conditions.percentage', { scale: scale / 100 });
+  const percentageFormatter = (scale: number) => t('common.percent', { value: scale / 100 });
   const dateFormatter = (date: Date) => t('atmospheric_conditions.date', { date });
 
   const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {

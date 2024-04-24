@@ -29,4 +29,6 @@ i18n
     },
   });
 
+i18n.services.formatter?.add('capitalize', (value: string) => value[0].toUpperCase() + value.slice(1));
+
 export default i18n;

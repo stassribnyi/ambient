@@ -18,7 +18,7 @@ import {
 import { useForecast, useLocations } from './hooks';
 import { useDocumentTitle } from 'usehooks-ts';
 
-import { Block, MenuDialog, UnitSwitch, Time, WMO_INFO, Fallback } from './components';
+import { Block, MenuDialog, UnitSwitch, WMO_INFO, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 import { safeJoin } from './utils';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +35,7 @@ function App() {
   useDocumentTitle(
     forecast && location
       ? `${location.name}, ${location.country} ${Math.round(forecast.current.temperature)}°, ${
-          WMO_INFO.get(forecast.current.weathercode)?.day?.description ?? 'N/A'
+          WMO_INFO.get(forecast.current.weathercode)?.day?.description ?? t('common.not_available')
         } | Ambient`
       : 'Ambient',
   );
@@ -79,14 +79,14 @@ function App() {
         pullingContent={
           <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
             <ArrowDownward />
-            <Typography>Pull down to check the sky</Typography>
+            <Typography>{t('home.pull_to_refresh.pulling_content')}</Typography>
             <ArrowDownward />
           </Stack>
         }
         refreshingContent={
           <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
             <CircularProgress color="inherit" size={24} />
-            <Typography>Checking the sky for you…</Typography>
+            <Typography>{t('home.pull_to_refresh.refreshing_content')}</Typography>
           </Stack>
         }
       >
@@ -102,9 +102,7 @@ function App() {
                   >
                     <MenuDialog />
                     {isReady && (
-                      <Typography variant="body1">
-                        <Time value={forecast.current.time} format="EEEE, MMM dd" />
-                      </Typography>
+                      <Typography variant="body1">{t('home.today', { date: forecast.current.time })}</Typography>
                     )}
                     <UnitSwitch sx={{ ml: 'auto' }} />
                   </Stack>
@@ -129,13 +127,13 @@ function App() {
                   <Grid xs={12} md={6}>
                     <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
                       <CurrentReport value={forecast.current} />
-                      <Block title="Today">
+                      <Block title={t('report.hourly.title')}>
                         <HourlyReport value={forecast.hourly} />
                       </Block>
                     </Stack>
                   </Grid>
                   <Grid xs={12} md={6}>
-                    <Block title="10-Days Forecast">
+                    <Block title={t('report.daily.title')}>
                       <DailyReport value={forecast.daily} />
                     </Block>
                   </Grid>

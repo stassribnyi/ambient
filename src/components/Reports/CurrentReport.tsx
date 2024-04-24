@@ -1,10 +1,10 @@
 import { FC, PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import { Windspeed } from '../Windspeed';
 import { Humidity } from '../Humidity';
 import { Temperature } from '../Temperature';
-import { Time } from '../Time';
 import { Tile } from '../Tile';
 import { BeaufortIcon, Meteocon, UVIndexIcon, WMOIcon, UV_INDEX_SCALE, WIND_BEAUFORT_SCALE, WMO_INFO } from '../Icons';
 
@@ -46,6 +46,8 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
     beaufortScale,
   },
 }) => {
+  const { t } = useTranslation();
+
   const details = WMO_INFO.get(weathercode);
   const description = (isDay ? details?.day : details?.night)?.description;
 
@@ -74,7 +76,10 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
       </Box>
       <Grid container spacing={2}>
         <Grid xs={6} md={3}>
-          <ReportTile title="Humidity" icon={<Meteocon animated alt="Humidity" name="humidity" />}>
+          <ReportTile
+            title={t('report.current.humidity')}
+            icon={<Meteocon animated alt={t('report.current.humidity')} name="humidity" />}
+          >
             <Humidity value={relativeHumidity} />
           </ReportTile>
         </Grid>
@@ -87,18 +92,24 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           </ReportTile>
         </Grid>
         <Grid xs={6} md={3}>
-          <ReportTile title="UV Index" icon={<UVIndexIcon scale={uvIndex} />}>
+          <ReportTile title={t('report.current.uv_index')} icon={<UVIndexIcon scale={uvIndex} />}>
             {UV_INDEX_SCALE.get(uvIndex)?.description ?? 'N/A'}
           </ReportTile>
         </Grid>
         <Grid xs={6} md={3}>
           {isDay ? (
-            <ReportTile title="Sunset" icon={<Meteocon animated alt="Sunset" name="sunset" />}>
-              <Time value={sunsetTime} format="HH:mm" />
+            <ReportTile
+              title={t('report.current.sunset')}
+              icon={<Meteocon animated alt={t('report.current.sunset')} name="sunset" />}
+            >
+              {t('common.time', { time: sunsetTime })}
             </ReportTile>
           ) : (
-            <ReportTile title="Sunrise" icon={<Meteocon animated alt="Sunrise" name="sunrise" />}>
-              <Time value={sunriseTime} format="HH:mm" />
+            <ReportTile
+              title={t('report.current.sunrise')}
+              icon={<Meteocon animated alt={t('report.current.sunrise')} name="sunrise" />}
+            >
+              {t('common.time', { time: sunriseTime })}
             </ReportTile>
           )}
         </Grid>
