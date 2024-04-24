@@ -1,12 +1,10 @@
 import { FC } from 'react';
 import { Box, SxProps, Theme } from '@mui/material';
 
-import type { MeteoconSvg } from '@typings/assets';
-
 export type MeteoconProps = Readonly<{
   animated?: boolean;
   alt: string;
-  name: MeteoconSvg;
+  name: Ambient.MeteoconSvg;
   size?: number;
   variant?: 'animated' | 'static';
   sx?: SxProps<Theme>;
