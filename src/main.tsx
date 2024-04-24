@@ -11,7 +11,7 @@ import App from './App.tsx';
 import { SplashFallback, Layout } from './components';
 import { ErrorPage } from './components/ErrorPage.tsx';
 
-import { AboutPage, WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
+import { AboutPage, LanguagesPage, WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
 
 import { MenuPageRoutes } from './components/Menu/routes.ts';
 
@@ -38,6 +38,10 @@ const router = createHashRouter([
       {
         path: MenuPageRoutes.SETTINGS,
         element: <SettingsPage />,
+      },
+      {
+        path: MenuPageRoutes.LANGUAGES,
+        element: <LanguagesPage />,
       },
       {
         path: MenuPageRoutes.PLACES,

@@ -47,7 +47,7 @@ export const SettingsPage = () => {
         ) : null}
         <Grid>
           {!hasAnyPlaces ? <SettingsItem to={MenuPageRoutes.PLACES} icon={<Explore />} name="Places" /> : null}
-          <SettingsItem to="/" icon={<Translate />} name="Languages" unavailable />
+          <SettingsItem to={MenuPageRoutes.LANGUAGES} icon={<Translate />} name="Languages" />
           <SettingsItem to="/" icon={<DataObject />} name="Advanced" unavailable />
           <SettingsItem to={MenuPageRoutes.ABOUT} icon={<Info />} name="About" />
         </Grid>
