@@ -1,22 +1,24 @@
 import { FC } from 'react';
-import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { LineSeriesType, LineChart } from '@mui/x-charts';
 
 import { SeriesForecast } from '../mappers';
 
-const percentageFormatter = (scale: number) => `${scale}%`;
-const dateFormatter = (date: Date) => format(date, 'MMM dd');
-
-const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
-  area: true,
-  curve: 'natural',
-  showMark: false,
-  valueFormatter: percentageFormatter,
-};
-
 const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
   series: { time, cloudCover, humidity, precipitation },
 }) => {
+  const { t } = useTranslation();
+
+  const percentageFormatter = (scale: number) => t('common.percent', { value: scale / 100 });
+  const dateFormatter = (date: Date) => t('atmospheric_conditions.date', { date });
+
+  const DEFAULT_SERIES_OPTIONS: Partial<LineSeriesType> = {
+    area: true,
+    curve: 'natural',
+    showMark: false,
+    valueFormatter: percentageFormatter,
+  };
+
   return (
     <LineChart
       sx={{ width: '100%' }}
@@ -40,20 +42,20 @@ const AtmosphericConditionChart: FC<Readonly<{ series: SeriesForecast }>> = ({
           ...DEFAULT_SERIES_OPTIONS,
           data: cloudCover,
           color: '#9080B8',
-          label: 'Cloud Cover',
+          label: t('atmospheric_conditions.cloud_cover'),
         },
         {
           ...DEFAULT_SERIES_OPTIONS,
           area: false,
           color: '#E0CFDF',
           data: humidity,
-          label: 'Relative Humidity',
+          label: t('atmospheric_conditions.relative_humidity'),
         },
         {
           ...DEFAULT_SERIES_OPTIONS,
           data: precipitation,
           color: '#474772',
-          label: 'Precipitation probability',
+          label: t('atmospheric_conditions.precipitation_probability'),
         },
       ]}
     />

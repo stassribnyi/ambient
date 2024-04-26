@@ -1,14 +1,16 @@
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Typography } from '@mui/material';
 
 import { Precipitation } from '../Precipitation';
 import { Temperature } from '../Temperature';
-import { Time } from '../Time';
 import { WMOIcon } from '../Icons';
 
 import type { HourlyForecast } from '../../mappers';
 
 export const HourlyReport: FC<Readonly<{ value: Array<HourlyForecast> }>> = ({ value }) => {
+  const { t } = useTranslation();
+
   return (
     <Box component="ul" sx={{ display: 'flex', listStyle: 'none', overflowX: 'auto', m: 0, p: 0, pb: '1rem' }}>
       {value.map(({ time, isDay, precipitation, temperature, weathercode }, idx) => (
@@ -17,8 +19,8 @@ export const HourlyReport: FC<Readonly<{ value: Array<HourlyForecast> }>> = ({ v
             <Temperature value={temperature} />
           </Typography>
           <WMOIcon variant={isDay ? 'day' : 'night'} code={weathercode} size={40} />
-          <Typography sx={{ fontSize: '0.75rem', m: 0, mb: 1 }}>
-            <Time value={time} format="HH:mm" />
+          <Typography sx={{ width: 'max-content', fontSize: '0.75rem', m: 0, mb: 1 }}>
+            {t('common.time', { time })}
           </Typography>
           <Precipitation showLabel level={precipitation} size={12} />
         </Box>

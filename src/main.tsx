@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,12 +8,14 @@ import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import App from './App.tsx';
 
-import { Layout } from './components';
+import { SplashFallback, Layout } from './components';
 import { ErrorPage } from './components/ErrorPage.tsx';
 
-import { AboutPage, WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
+import { AboutPage, LanguagesPage, WelcomePage, PlacesPage, SettingsPage, SearchPage } from './components/Menu/Pages';
 
 import { MenuPageRoutes } from './components/Menu/routes.ts';
+
+import './i18n';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +40,10 @@ const router = createHashRouter([
         element: <SettingsPage />,
       },
       {
+        path: MenuPageRoutes.LANGUAGES,
+        element: <LanguagesPage />,
+      },
+      {
         path: MenuPageRoutes.PLACES,
         element: <PlacesPage />,
       },
@@ -60,10 +66,12 @@ const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Layout>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <Suspense fallback={<SplashFallback />}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </Suspense>
     </Layout>
   </React.StrictMode>,
 );

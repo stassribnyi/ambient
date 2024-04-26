@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { format } from 'date-fns';
 import path from 'path';
 
 import react from '@vitejs/plugin-react';
@@ -79,12 +78,12 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './src/assets'),
       '@components': path.resolve(__dirname, './src/components'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
-      '@typings': path.resolve(__dirname, './src/typings'),
+      '@types': path.resolve(__dirname, './src/@types'),
     },
   },
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(version),
     'import.meta.env.PACKAGE_REPOSITORY_URL': JSON.stringify(repository.url),
-    'import.meta.env.PACKAGE_BUILD_DATE': JSON.stringify(format(new Date(), 'MMM dd, HH:mm')),
+    'import.meta.env.PACKAGE_BUILD_DATE': JSON.stringify(new Date()),
   },
 });

@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowDownward, LocationOn, RefreshOutlined } from '@mui/icons-material';
 import {
@@ -18,21 +19,27 @@ import {
 import { useForecast, useLocations } from './hooks';
 import { useDocumentTitle } from 'usehooks-ts';
 
-import { Block, MenuDialog, UnitSwitch, Time, WMO_INFO, Fallback } from './components';
+import { Block, MenuDialog, UnitSwitch, Fallback } from './components';
 import { CurrentReport, DailyReport, HourlyReport } from './components/Reports';
 import { safeJoin } from './utils';
 
 const AtmosphericConditionChart = lazy(() => import('./components/AtmosphericConditionChart'));
 
 function App() {
+  const { t } = useTranslation();
+
   const { data: forecast, isLoading, error, refetch } = useForecast();
   const { primary: location } = useLocations();
 
+  const current = forecast?.current;
+  const weathercode = current?.weathercode;
+  const variant = current?.isDay ? 'day' : 'night';
+
   // FIXME: refactor
   useDocumentTitle(
-    forecast && location
-      ? `${location.name}, ${location.country} ${Math.round(forecast.current.temperature)}°, ${
-          WMO_INFO.get(forecast.current.weathercode)?.day?.description ?? 'N/A'
+    current && location
+      ? `${location.name}, ${location.country} ${Math.round(current.temperature)}°, ${
+          weathercode !== undefined ? t(`wmo_codes.${weathercode}.${variant}`) : t('common.not_available')
         } | Ambient`
       : 'Ambient',
   );
@@ -76,14 +83,14 @@ function App() {
         pullingContent={
           <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
             <ArrowDownward />
-            <Typography>Pull down to check the sky</Typography>
+            <Typography>{t('home.pull_to_refresh.pulling_content')}</Typography>
             <ArrowDownward />
           </Stack>
         }
         refreshingContent={
           <Stack sx={{ color: 'secondary.light', p: '24px 16px 0' }} justifyContent="center" gap={2} direction="row">
             <CircularProgress color="inherit" size={24} />
-            <Typography>Checking the sky for you…</Typography>
+            <Typography>{t('home.pull_to_refresh.refreshing_content')}</Typography>
           </Stack>
         }
       >
@@ -99,9 +106,7 @@ function App() {
                   >
                     <MenuDialog />
                     {isReady && (
-                      <Typography variant="body1">
-                        <Time value={forecast.current.time} format="EEEE, MMM dd" />
-                      </Typography>
+                      <Typography variant="body1">{t('home.current_date', { date: forecast.current.time })}</Typography>
                     )}
                     <UnitSwitch sx={{ ml: 'auto' }} />
                   </Stack>
@@ -126,20 +131,20 @@ function App() {
                   <Grid xs={12} md={6}>
                     <Stack gap={2} sx={{ justifyContent: 'space-between', height: '100%' }}>
                       <CurrentReport value={forecast.current} />
-                      <Block title="Today">
+                      <Block title={t('report.hourly.title')}>
                         <HourlyReport value={forecast.hourly} />
                       </Block>
                     </Stack>
                   </Grid>
                   <Grid xs={12} md={6}>
-                    <Block title="10-Days Forecast">
+                    <Block title={t('report.daily.title', { count: 10 })}>
                       <DailyReport value={forecast.daily} />
                     </Block>
                   </Grid>
                   {!isMobile ? (
                     <Grid xs={12}>
-                      <Suspense fallback={<Fallback title="Checking Atmospheric Condition For You..." />}>
-                        <Block title="Atmospheric Conditions">
+                      <Suspense fallback={<Fallback title={t('atmospheric_conditions.fallback_message')} />}>
+                        <Block title={t('atmospheric_conditions.title')}>
                           <AtmosphericConditionChart series={forecast.series} />
                         </Block>
                       </Suspense>
@@ -151,7 +156,7 @@ function App() {
                         <RefreshOutlined fontSize="inherit" />
                       </IconButton>
                       <Typography color="secondary.light" variant="body2">
-                        Updated <Time value={forecast.lastUpdated} format="dd.mm, HH:mm" />
+                        {t('home.last_updated_at', { date: forecast.lastUpdated })}
                       </Typography>
                       <Typography
                         component="a"

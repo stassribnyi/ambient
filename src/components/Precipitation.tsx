@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import raindrop from '../assets/raindrop.svg';
+import { Humidity } from './Humidity';
 
 export const Precipitation: FC<
   Readonly<{
@@ -72,7 +73,7 @@ export const Precipitation: FC<
       </Box>
       {showLabel ? (
         <Typography component="span" sx={{ all: 'inherit' }}>
-          {level}%
+          <Humidity value={level} />
         </Typography>
       ) : null}
     </Typography>
