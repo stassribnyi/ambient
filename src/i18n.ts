@@ -28,6 +28,9 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
+    backend: {
+      loadPath: '/ambient/locales/{{lng}}/{{ns}}.json',
+    },
   });
 
 i18n.services.formatter?.add('capitalize', (value: string) => value[0].toUpperCase() + value.slice(1));
