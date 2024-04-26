@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Box, Unstable_Grid2 as Grid, Stack, Typography } from '@mui/material';
 
 import { Windspeed } from '../Windspeed';
@@ -72,7 +72,10 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           </Typography>
           <Typography variant="h6">{description}</Typography>
           <Typography color="secondary" variant="caption">
-            Feels like <Temperature value={apparentTemperature} />
+            <Trans
+              i18nKey="report.current.feels_like"
+              components={{ temperature: <Temperature value={apparentTemperature} /> }}
+            />
           </Typography>
         </Stack>
       </Box>

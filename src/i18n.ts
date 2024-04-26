@@ -4,18 +4,15 @@ import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import en from '../public/locales/en/translation.json';
-import uk from '../public/locales/uk/translation.json';
+import type translation from '../public/locales/en/translation.json';
 
 export const defaultNS = 'translation';
 export const resources = {
   en: {
-    translation: en,
-  },
-  uk: {
-    translation: uk,
+    translation: {} as typeof translation,
   },
 } as const;
+export const supportedLngs = ['en', 'uk'] as const;
 
 i18n
   .use(Backend)
@@ -24,10 +21,10 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    fallbackLng: 'en',
+    fallbackLng: supportedLngs[0],
     debug: true,
     defaultNS,
-    resources,
+    supportedLngs,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },

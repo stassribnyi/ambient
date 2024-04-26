@@ -24,10 +24,11 @@ const Weekday: FC<{ date: Date; selected?: boolean }> = ({ date, selected }) => 
 
 export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ value }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Table aria-label="10 Days forecast" size="small">
+    <Table aria-label={t('report.daily.title', { count: 10 })} size="small">
       <TableBody>
         {value.map(({ time, weathercode, temperature, precipitationProbability }, idx) => (
           <TableRow

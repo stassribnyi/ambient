@@ -1,6 +1,7 @@
 import { useState, Fragment, useEffect, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from 'usehooks-ts';
+import { useTranslation } from 'react-i18next';
 
 import {
   IconButton,
@@ -29,32 +30,43 @@ import { BaseMenuPage } from './BaseMenuPage';
 const SearchInput: FC<{
   value: string;
   onChange: (value: string) => void;
-}> = ({ value, onChange }) => (
-  <Stack direction="row" sx={{ width: '100%' }}>
-    <InputBase
-      autoFocus
-      value={value}
-      sx={{
-        color: 'inherit',
-        width: '100%',
-        fontSize: '1.125rem',
+}> = ({ value, onChange }) => {
+  const { t } = useTranslation();
 
-        '.MuiInputBase-input::placeholder': {
-          color: 'white',
-          opacity: 0.75,
-        },
-      }}
-      placeholder="What is your city?"
-      onChange={({ target }) => onChange(target.value)}
-    />
+  return (
+    <Stack direction="row" sx={{ width: '100%' }}>
+      <InputBase
+        autoFocus
+        value={value}
+        sx={{
+          color: 'inherit',
+          width: '100%',
+          fontSize: '1.125rem',
 
-    <IconButton sx={{ fontSize: '1.5rem' }} edge="end" color="inherit" onClick={() => onChange('')}>
-      <Close fontSize="inherit" />
-    </IconButton>
-  </Stack>
-);
+          '.MuiInputBase-input::placeholder': {
+            color: 'white',
+            opacity: 0.75,
+          },
+        }}
+        placeholder={t('screen.search.placeholder')}
+        onChange={({ target }) => onChange(target.value)}
+      />
+
+      <IconButton
+        aria-label={t('screen.search.clear_all')}
+        sx={{ fontSize: '1.5rem' }}
+        edge="end"
+        color="inherit"
+        onClick={() => onChange('')}
+      >
+        <Close fontSize="inherit" />
+      </IconButton>
+    </Stack>
+  );
+};
 
 export function SearchPage() {
+  const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState<string>('');
   const debouncedSearch = useDebounce<string>(searchInput, 500);
 
@@ -80,7 +92,7 @@ export function SearchPage() {
   const isFetching = isFetchingPosition || isFetchingPlaces;
   const isResultVisible = results.length && !isFetching;
 
-  const feedback = searchInput.length === 0 ? 'Please enter your location.' : 'Nothing has been found.';
+  const feedback = searchInput.length === 0 ? t('screen.search.cta') : t('screen.search.not_found');
 
   return (
     <BaseMenuPage
@@ -108,7 +120,7 @@ export function SearchPage() {
           </CardContent>
         </Card>
       ) : (
-        <Box sx={{ display: 'grid', placeContent: 'center', flex: '1' }}>
+        <Box sx={{ display: 'grid', placeContent: 'center', flex: '1', textAlign: 'center' }}>
           {isFetching ? <CircularProgress color="secondary" /> : <DialogContentText>{feedback}</DialogContentText>}
         </Box>
       )}

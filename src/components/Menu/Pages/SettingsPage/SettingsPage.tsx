@@ -1,4 +1,5 @@
-﻿import { Link, useNavigate } from 'react-router-dom';
+﻿import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Typography, Unstable_Grid2 as Grid, IconButton, Box } from '@mui/material';
 import { Translate, NavigateNext, Explore, DataObject, Info } from '@mui/icons-material';
@@ -14,6 +15,7 @@ import { PlacePreview } from './PlacePreview';
 
 export const SettingsPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { primary, locations, addLocation } = useLocations();
   const secondary = locations.find((x) => x.id !== primary?.id);
 
@@ -25,31 +27,45 @@ export const SettingsPage = () => {
   };
 
   return (
-    <BaseMenuPage backTo="/" header={<Typography sx={{ fontSize: '1.125rem', width: '100%' }}>Settings</Typography>}>
+    <BaseMenuPage
+      backTo="/"
+      header={<Typography sx={{ fontSize: '1.125rem', width: '100%' }}>{t('screen.settings.title')}</Typography>}
+    >
       <Grid container gap={3} direction="column">
         {hasAnyPlaces ? (
           <Grid>
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: primary && secondary ? '1fr 1fr auto' : '1fr auto',
+                gridTemplateColumns: [primary && '1fr', secondary && '1fr', 'auto'].filter(Boolean).join(' '),
                 gap: 2,
                 alignItems: 'center',
               }}
             >
               {primary ? <PlacePreview value={primary} onClick={() => handlePlaceSelect(primary)} /> : null}
               {secondary ? <PlacePreview value={secondary} onClick={() => handlePlaceSelect(secondary)} /> : null}
-              <IconButton component={Link} to={MenuPageRoutes.PLACES}>
+              <IconButton aria-label={t('screen.settings.links.places')} component={Link} to={MenuPageRoutes.PLACES}>
                 <NavigateNext fontSize="large" />
               </IconButton>
             </Box>
           </Grid>
         ) : null}
         <Grid>
-          {!hasAnyPlaces ? <SettingsItem to={MenuPageRoutes.PLACES} icon={<Explore />} name="Places" /> : null}
-          <SettingsItem to={MenuPageRoutes.LANGUAGES} icon={<Translate />} name="Languages" />
-          <SettingsItem to="/" icon={<DataObject />} name="Advanced" unavailable />
-          <SettingsItem to={MenuPageRoutes.ABOUT} icon={<Info />} name="About" />
+          {!hasAnyPlaces ? (
+            <SettingsItem to={MenuPageRoutes.PLACES} icon={<Explore />} name={t('screen.settings.links.places')} />
+          ) : null}
+          <SettingsItem
+            to={MenuPageRoutes.LANGUAGES}
+            icon={<Translate />}
+            name={t('screen.settings.links.languages')}
+          />
+          <SettingsItem
+            to={MenuPageRoutes.SETTINGS}
+            icon={<DataObject />}
+            name={t('screen.settings.links.advanced')}
+            unavailable
+          />
+          <SettingsItem to={MenuPageRoutes.ABOUT} icon={<Info />} name={t('screen.settings.links.about')} />
         </Grid>
       </Grid>
     </BaseMenuPage>

@@ -17,8 +17,8 @@ type ActionButtonProps = {
 };
 
 type ActionCommonProps = Partial<{
-  start: React.ReactElement;
-  end: React.ReactElement;
+  start: React.ReactElement | null;
+  end: React.ReactElement | null;
 }>;
 
 export const ActionItem: FC<Readonly<PropsWithChildren<ActionCommonProps & (ActionLinkProps | ActionButtonProps)>>> = ({
@@ -41,7 +41,7 @@ export const ActionItem: FC<Readonly<PropsWithChildren<ActionCommonProps & (Acti
             alignItems: 'center',
             columnGap: 2,
             display: 'grid',
-            gridTemplateColumns: 'auto 1fr auto',
+            gridTemplateColumns: [start && 'auto', '1fr', end && 'auto'].filter(Boolean).join(' '),
             p: '1.5rem 1.25rem',
           }}
         >

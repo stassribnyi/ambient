@@ -9,20 +9,25 @@
       "pulling_content": "Потягніть вниз, щоб перевірити небо",
       "refreshing_content": "Перевіряю небо для вас…"
     },
-    "today": "{{ date, datetime(weekday: 'long'; month: 'short'; day: '2-digit'), capitalize }}",
+    "current_date": "{{ date, datetime(weekday: 'long'; month: 'short'; day: '2-digit'), capitalize }}",
     "last_updated_at": "Оновлено {{ date, datetime(month: '2-digit'; day: '2-digit'; hour: '2-digit'; minute: '2-digit') }}"
   },
   "report": {
     "hourly": { "title": "Сьогодні" },
     "daily": {
-      "title": "Прогноз на 10 днів (Множина)",
+      "title_one": "Прогноз на {{ count }} день",
+      "title_two": "Прогноз на {{ count }} дні",
+      "title_few": "Прогноз на {{ count }} дні",
+      "title_many": "Прогноз на {{ count }} днів",
+      "title_other": "Прогноз на {{ count }} днів",
       "weekday": "{{ date, datetime(weekday: 'long'), capitalize }}"
     },
     "current": {
       "humidity": "Вологість",
       "uv_index": "Індекс УФ",
       "sunset": "Захід сонця",
-      "sunrise": "Схід сонця"
+      "sunrise": "Схід сонця",
+      "feels_like": "Відчувається як <temperature />"
     }
   },
   "atmospheric_conditions": {
@@ -32,6 +37,46 @@
     "precipitation_probability": "Ймовірність опадів",
     "date": "{{ date, datetime(month: 'short'; day: 'numeric') }}",
     "fallback_message": "Перевіряю атмосферні умови для вас..."
+  },
+  "screen": {
+    "languages": { "title": "Мова" },
+    "settings": {
+      "title": "Налаштування",
+      "links": {
+        "about": "Про програму",
+        "advanced": "Розширені налаштування",
+        "languages": "Мова",
+        "places": "Місця"
+      }
+    },
+    "about": {
+      "app_version": "<label>Версія програми:<value> {{ version }}</value></label>",
+      "last_updated_at": "<label>Останнє оновлення:<value> {{ date, datetime(month: 'short'; day: 'numeric'; hour: '2-digit'; minute: '2-digit') }}</value></label>",
+      "source_code": "Вихідний код.",
+      "copyright": "©{{ date, datetime(year: 'numeric') }} {{ owner }}. Усі права захищено."
+    },
+    "places": {
+      "current_place": "Поточне місце",
+      "other_places": "Інші місця",
+      "header": {
+        "title": "Керуйте вашими місцями",
+        "edit_button": "Редагувати",
+        "search_place": "Пошук",
+        "more_options": "Більше опцій",
+        "select_all": "Вибрати всі",
+        "cancel_selection": "Скасувати вибір"
+      },
+      "actions": {
+        "set_favorite": "Встановити обраним",
+        "delete": "Видалити"
+      }
+    },
+    "search": {
+      "placeholder": "Ваше місто?",
+      "clear_all": "Очистити все",
+      "cta": "Щоб шукати, введіть ваше місце розташування.",
+      "not_found": "Нічого не знайдено."
+    }
   },
   "wmo_codes": {
     "0": { "day": "Сонячно", "night": "Ясно" },

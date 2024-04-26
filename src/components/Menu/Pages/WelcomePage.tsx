@@ -25,7 +25,7 @@ export const WelcomePage: FC = () => (
       <Branding />
       <IconButton
         component={Link}
-        aria-aria-label="search"
+        aria-label="search"
         to={MenuPageRoutes.SEARCH}
         sx={{ backgroundColor: 'secondary.dark' }}
       >

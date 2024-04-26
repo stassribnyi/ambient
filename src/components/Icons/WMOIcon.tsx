@@ -1,9 +1,9 @@
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { WMOCode } from '../../vite-env';
 
 import { type MeteoconProps, Meteocon } from './Meteocon';
-import { useTranslation } from 'react-i18next';
 
 // FIXME: this code prop must not be nullable
 type WMOIconProps = Readonly<{

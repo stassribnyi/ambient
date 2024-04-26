@@ -1,8 +1,8 @@
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BeaufortScale } from '../../vite-env';
 
 import { type MeteoconProps, Meteocon } from './Meteocon';
-import { useTranslation } from 'react-i18next';
 
 const WIND_BEAUFORT_SCALE: Record<BeaufortScale, MeteoconProps['name']> = {
   0: 'wind-beaufort-0',

@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { Box, Slide, Typography } from '@mui/material';
 
@@ -27,6 +28,7 @@ const Actions: FC<PropsWithChildren<{ show: boolean }>> = ({ show, children }) =
 
 export const PlacesPage: FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { locations, primary: favorite, addLocation, deleteLocations } = useLocations();
 
   const otherLocations = locations.filter((l) => l.id !== favorite?.id);
@@ -86,7 +88,7 @@ export const PlacesPage: FC = () => {
       >
         {favorite ? (
           <>
-            <Title>Current location</Title>
+            <Title>{t('screen.places.current_place')}</Title>
             <LocationItem
               selected={selected.some((x) => x.id === favorite.id)}
               isEdit={isEdit}
@@ -98,7 +100,7 @@ export const PlacesPage: FC = () => {
         ) : null}
         {otherLocations.length ? (
           <>
-            <Title>Other locations</Title>
+            <Title>{t('screen.places.other_places')}</Title>
             {otherLocations.map((location, idx) => (
               <LocationItem
                 selected={selected.some((x) => x.id === location.id)}

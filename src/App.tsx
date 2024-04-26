@@ -106,7 +106,7 @@ function App() {
                   >
                     <MenuDialog />
                     {isReady && (
-                      <Typography variant="body1">{t('home.today', { date: forecast.current.time })}</Typography>
+                      <Typography variant="body1">{t('home.current_date', { date: forecast.current.time })}</Typography>
                     )}
                     <UnitSwitch sx={{ ml: 'auto' }} />
                   </Stack>
@@ -137,7 +137,7 @@ function App() {
                     </Stack>
                   </Grid>
                   <Grid xs={12} md={6}>
-                    <Block title={t('report.daily.title')}>
+                    <Block title={t('report.daily.title', { count: 10 })}>
                       <DailyReport value={forecast.daily} />
                     </Block>
                   </Grid>
