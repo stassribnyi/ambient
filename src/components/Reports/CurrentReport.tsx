@@ -48,11 +48,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
 }) => {
   const { t } = useTranslation();
 
-  //FIXME: consider defaulting to day
   const variant = isDay ? 'day' : 'night';
-
-  // TODO: review typescript checks, this should not be possible
-  const description = weathercode !== undefined ? t(`wmo_codes.${weathercode}.${variant}`) : t('common.not_available');
 
   return (
     <Stack gap={2} flex={1}>
@@ -70,7 +66,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
           <Typography variant="h2">
             <Temperature value={temperature} />
           </Typography>
-          <Typography variant="h6">{description}</Typography>
+          <Typography variant="h6">{t(`wmo_codes.${weathercode}.${variant}`)}</Typography>
           <Typography color="secondary" variant="caption">
             <Trans
               i18nKey="report.current.feels_like"

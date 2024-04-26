@@ -21,19 +21,12 @@ const WIND_BEAUFORT_SCALE: Record<BeaufortScale, MeteoconProps['name']> = {
 } as const;
 
 type BeaufortIconProps = Readonly<{
-  scale?: BeaufortScale; //TODO: must not be null
+  scale: BeaufortScale;
   size?: number;
 }>;
 
 export const BeaufortIcon: FC<BeaufortIconProps> = ({ scale, size }) => {
   const { t } = useTranslation();
 
-  return (
-    <Meteocon
-      animated
-      alt={scale ? t(`beaufort_scale_codes.${scale}`) : t('common.not_available')}
-      name={scale ? WIND_BEAUFORT_SCALE[scale] : 'wind-beaufort-0'}
-      size={size}
-    />
-  );
+  return <Meteocon animated alt={t(`beaufort_scale_codes.${scale}`)} name={WIND_BEAUFORT_SCALE[scale]} size={size} />;
 };

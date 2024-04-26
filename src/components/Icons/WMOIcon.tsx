@@ -5,10 +5,9 @@ import { WMOCode } from '../../vite-env';
 
 import { type MeteoconProps, Meteocon } from './Meteocon';
 
-// FIXME: this code prop must not be nullable
 type WMOIconProps = Readonly<{
   animated?: boolean;
-  code?: WMOCode;
+  code: WMOCode;
   size?: number;
   variant?: 'day' | 'night';
 }> &
@@ -56,8 +55,8 @@ export const WMOIcon: FC<WMOIconProps> = ({ code, size, variant = 'day', animate
   return (
     <Meteocon
       animated={animated}
-      alt={code ? t(`wmo_codes.${code}.${variant}`) : t('common.not_available')}
-      name={code ? WMO_ICON[code][variant] : 'not-available'}
+      alt={t(`wmo_codes.${code}.${variant}`)}
+      name={WMO_ICON[code][variant]}
       size={size}
       sx={sx}
     />

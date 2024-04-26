@@ -7,7 +7,7 @@ import { Stack, Checkbox, Typography } from '@mui/material';
 import { useForecastPreview } from '@/hooks';
 import { safeJoin } from '@/utils';
 
-import { WMOIcon, Temperature, ActionItem } from '@/components';
+import { WMOIcon, Temperature, ActionItem, Meteocon } from '@/components';
 
 import { Location } from '@/vite-env';
 
@@ -37,8 +37,10 @@ export const LocationItem: FC<
             checkedIcon={<CheckCircle />}
             sx={{ width: '48px', height: '48px' }}
           />
+        ) : preview ? (
+          <WMOIcon animated variant={preview.isDay ? 'day' : 'night'} code={preview.weathercode} />
         ) : (
-          <WMOIcon animated variant={preview?.isDay ? 'day' : 'night'} code={preview?.weathercode} />
+          <Meteocon alt={t('common.not_available')} name="not-available" />
         )
       }
       end={
@@ -48,7 +50,7 @@ export const LocationItem: FC<
             sx={{ fontSize: '2rem', fontWeight: 300, letterSpacing: '-0.00833em' }}
             variant="h5"
           >
-            {preview?.temperature ? <Temperature value={preview.temperature} /> : t('common.not_available')}
+            {preview ? <Temperature value={preview.temperature} /> : t('common.not_available')}
           </Typography>
         ) : null
       }
