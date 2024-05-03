@@ -33,7 +33,10 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
         {value.map(({ time, weathercode, temperature, precipitationProbability }, idx) => (
           <TableRow
             key={idx}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { ...(isMobile ? { p: 0 } : null) } }}
+            sx={{
+              '&:last-child td, &:last-child th': { border: 0 },
+              '& td': { p: isMobile ? 0 : '0.5rem 1rem' },
+            }}
           >
             <TableCell>
               <Weekday selected={isToday(time)} date={time} />
@@ -42,10 +45,10 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
               <Precipitation showLabel level={precipitationProbability} size={12} />
             </TableCell>
             <TableCell align="center">
-              <WMOIcon code={weathercode} size={32} />
+              <WMOIcon code={weathercode} size={28} />
             </TableCell>
             <TableCell align="center" sx={{ width: '4rem', fontSize: '1rem' }}>
-              <Stack direction="row" gap={1} justifyContent="space-between">
+              <Stack direction="row" gap={2} justifyContent="space-between">
                 <strong>
                   <Temperature value={temperature.max} />
                 </strong>
