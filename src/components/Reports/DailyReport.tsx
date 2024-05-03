@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
-import { Table, TableBody, TableRow, TableCell, Stack, useTheme, useMediaQuery, Typography } from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, useTheme, useMediaQuery, Typography } from '@mui/material';
 import { ArrowRightRounded } from '@mui/icons-material';
 
 import { Precipitation } from '../Precipitation';
@@ -35,7 +35,7 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
             key={idx}
             sx={{
               '&:last-child td, &:last-child th': { border: 0 },
-              '& td': { p: isMobile ? 0 : '0.5rem 1rem' },
+              '& td': { p: isMobile ? '0.25rem 0' : '0.5rem 1rem' },
             }}
           >
             <TableCell>
@@ -45,17 +45,17 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
               <Precipitation showLabel level={precipitationProbability} size={12} />
             </TableCell>
             <TableCell align="center">
-              <WMOIcon code={weathercode} size={28} />
+              <WMOIcon code={weathercode} size={28} sx={{ verticalAlign: 'middle' }} />
             </TableCell>
-            <TableCell align="center" sx={{ width: '4rem', fontSize: '1rem' }}>
-              <Stack direction="row" gap={2} justifyContent="space-between">
+            <TableCell align="center" sx={{ width: '4rem' }}>
+              <Typography sx={{ width: '100%', display: 'inline-flex', gap: 1, justifyContent: 'space-between' }}>
                 <strong>
                   <Temperature value={temperature.max} />
                 </strong>
                 <strong>
                   <Temperature value={temperature.min} />
                 </strong>
-              </Stack>
+              </Typography>
             </TableCell>
           </TableRow>
         ))}
