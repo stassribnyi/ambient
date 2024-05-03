@@ -60,7 +60,7 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
         </Grid>
         <Grid container xs={6} lg={3} md={4} justifyContent="center" alignContent="center">
           <Grid>
-            <Typography variant="h2">
+            <Typography variant="h1" sx={{ fontSize: '5rem' }}>
               <Temperature value={temperature} />
             </Typography>
             <Typography variant="h6">{t(`wmo_codes.${weathercode}.${variant}`)}</Typography>
