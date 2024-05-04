@@ -19,10 +19,15 @@ function getMeteoconUrl(name: MeteoconProps['name'], variant: MeteoconProps['var
   return url.href;
 }
 
+const TRIM_FACTOR = 10;
+
 export const Meteocon: FC<MeteoconProps> = ({ alt, name, animated = false, size = 48, sx }) => {
-  // icons have too much empty space around, which makes it hard to properly place
-  // therefore calculating marging to cut from each side depending on the size of the icon
-  const compensateSpacing = size / 10;
+  // each icon has a lot of empty space around it, making it challenging to place within other UI components.
+  // therefore, each icon should calculate the margin to trim from each side based on its size.
+  const compensateSpacing = size / TRIM_FACTOR;
+
+  // the idea is to generate some arbitrary spacing based on the icon size and trim factor.
+  // since this space is for a single side only, we need to account for both sides.
   const compensatedSize = compensateSpacing * 2;
 
   return (
