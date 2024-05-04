@@ -52,29 +52,27 @@ export const CurrentReport: FC<Readonly<{ value: CurrentForecast }>> = ({
 
   return (
     <Stack gap={2} flex={1}>
-      <Box
-        sx={{
-          gap: 2,
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <WMOIcon animated variant={variant} code={weathercode} size={184} />
-        <Stack alignItems="center" justifyContent="center">
-          <Typography variant="h2">
-            <Temperature value={temperature} />
-          </Typography>
-          <Typography variant="h6">{t(`wmo_codes.${weathercode}.${variant}`)}</Typography>
-          <Typography color="secondary" variant="caption">
-            <Trans
-              i18nKey="report.current.feels_like"
-              components={{ temperature: <Temperature value={apparentTemperature} /> }}
-            />
-          </Typography>
-        </Stack>
-      </Box>
+      <Grid flex={1} container spacing={2} justifyContent="space-between">
+        <Grid container xs={6} lg={3} md={4} justifyContent="center" alignContent="center">
+          <Grid>
+            <WMOIcon animated variant={variant} code={weathercode} size={150} />
+          </Grid>
+        </Grid>
+        <Grid container xs={6} lg={3} md={4} justifyContent="center" alignContent="center">
+          <Grid>
+            <Typography variant="h1" sx={{ fontSize: '5rem' }}>
+              <Temperature value={temperature} />
+            </Typography>
+            <Typography variant="h6">{t(`wmo_codes.${weathercode}.${variant}`)}</Typography>
+            <Typography color="secondary" variant="caption">
+              <Trans
+                i18nKey="report.current.feels_like"
+                components={{ temperature: <Temperature value={apparentTemperature} /> }}
+              />
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid container spacing={2}>
         <Grid xs={6} md={3}>
           <ReportTile

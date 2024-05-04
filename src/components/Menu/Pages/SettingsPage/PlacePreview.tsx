@@ -14,22 +14,14 @@ export const PlacePreview: FC<{ value: Location; onClick: () => void }> = ({ val
 
   return (
     <Card>
-      <CardActionArea sx={{ p: 2 }} onClick={onClick}>
-        <Grid container gap={1}>
+      <CardActionArea sx={{ p: 1.5, pr: 2 }} onClick={onClick}>
+        <Grid container gap={2}>
           <Grid xs={12}>
             <Stack direction="row" justifyContent="space-between">
               {preview ? (
                 <>
-                  <WMOIcon
-                    animated
-                    code={preview.weathercode}
-                    variant={preview.isDay ? 'day' : 'night'}
-                    size={64}
-                    sx={{
-                      m: '-0.75rem 0',
-                    }}
-                  />
-                  <Typography sx={{ fontSize: '1.5rem', letterSpacing: '-0.0125rem' }}>
+                  <WMOIcon animated code={preview.weathercode} variant={preview.isDay ? 'day' : 'night'} />
+                  <Typography sx={{ fontSize: '1.5rem', lineHeight: 1, letterSpacing: '-0.0125rem' }}>
                     <Temperature value={preview.temperature} />
                   </Typography>
                 </>
@@ -47,7 +39,7 @@ export const PlacePreview: FC<{ value: Location; onClick: () => void }> = ({ val
             <Typography
               variant="body2"
               color="secondary"
-              sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              sx={{ lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
             >
               {value.name}
             </Typography>

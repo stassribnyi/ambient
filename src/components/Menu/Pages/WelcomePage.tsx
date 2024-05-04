@@ -15,6 +15,7 @@ export const WelcomePage: FC = () => (
     <Box
       sx={{
         pb: 4,
+        pt: 2,
         flex: 1,
         display: 'flex',
         alignItems: 'center',

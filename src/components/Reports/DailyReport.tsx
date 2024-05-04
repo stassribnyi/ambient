@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
-import { Table, TableBody, TableRow, TableCell, Stack, useTheme, useMediaQuery, Typography } from '@mui/material';
+import { Stack, Table, TableBody, TableRow, TableCell, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { ArrowRightRounded } from '@mui/icons-material';
 
 import { Precipitation } from '../Precipitation';
@@ -33,7 +33,10 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
         {value.map(({ time, weathercode, temperature, precipitationProbability }, idx) => (
           <TableRow
             key={idx}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td': { ...(isMobile ? { p: 0 } : null) } }}
+            sx={{
+              '&:last-child td, &:last-child th': { border: 0 },
+              '& td': { p: isMobile ? '0.25rem 0' : '0.5rem 1rem' },
+            }}
           >
             <TableCell>
               <Weekday selected={isToday(time)} date={time} />
@@ -42,9 +45,9 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
               <Precipitation showLabel level={precipitationProbability} size={12} />
             </TableCell>
             <TableCell align="center">
-              <WMOIcon code={weathercode} size={32} />
+              <WMOIcon code={weathercode} size={28} sx={{ verticalAlign: 'middle' }} />
             </TableCell>
-            <TableCell align="center" sx={{ width: '4rem', fontSize: '1rem' }}>
+            <TableCell sx={{ width: '4rem', fontSize: '1rem' }}>
               <Stack direction="row" gap={1} justifyContent="space-between">
                 <strong>
                   <Temperature value={temperature.max} />
