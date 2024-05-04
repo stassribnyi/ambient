@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
-import { Table, TableBody, TableRow, TableCell, useTheme, useMediaQuery, Typography } from '@mui/material';
+import { Stack, Table, TableBody, TableRow, TableCell, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { ArrowRightRounded } from '@mui/icons-material';
 
 import { Precipitation } from '../Precipitation';
@@ -47,15 +47,15 @@ export const DailyReport: FC<Readonly<{ value: Array<DailyForecast> }>> = ({ val
             <TableCell align="center">
               <WMOIcon code={weathercode} size={28} sx={{ verticalAlign: 'middle' }} />
             </TableCell>
-            <TableCell align="center" sx={{ width: '4rem' }}>
-              <Typography sx={{ width: '100%', display: 'inline-flex', gap: 1, justifyContent: 'space-between' }}>
+            <TableCell sx={{ width: '4rem', fontSize: '1rem' }}>
+              <Stack direction="row" gap={1} justifyContent="space-between">
                 <strong>
                   <Temperature value={temperature.max} />
                 </strong>
                 <strong>
                   <Temperature value={temperature.min} />
                 </strong>
-              </Typography>
+              </Stack>
             </TableCell>
           </TableRow>
         ))}
